@@ -3,7 +3,8 @@ import type { Request } from "express";
 export interface AuthPayload {
   id: string;
   email: string;
-  role: "admin" | "user";
+  roles: string[];
+  permissions: string[];
 }
 
 export interface AuthRequest extends Request {
