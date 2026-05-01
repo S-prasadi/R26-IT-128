@@ -1,0 +1,1637 @@
+{
+  "info": {
+    "_postman_id": "rp01-backend-api",
+    "name": "RP01 Backend API",
+    "description": "Authentication, RBAC, user management.\n\n**Setup:** Import RP01.postman_environment.json, set base_url to http://localhost:8080/api.\n\nRun **Login** first — it auto-stores access_token, refresh_token, user_id.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health check",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Verify the API is reachable. No auth required."
+          },
+          "response": [
+            {
+              "name": "Health check – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"API is healthy\"\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success=true', () => pm.expect(pm.response.json().success).to.be.true);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newuser@olee.ai\",\n  \"password\": \"MyPass123!\",\n  \"full_name\": \"New User\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Create a new account. `full_name` is optional.\n\nReturns `user` + `session` on success (201). Supabase may require email confirmation."
+          },
+          "response": [
+            {
+              "name": "Register – 201 Created",
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Account created\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"5b3795c1-2896-408f-9af2-97bac705d80f\",\n      \"aud\": \"authenticated\",\n      \"role\": \"authenticated\",\n      \"email\": \"rp01-reg-test-1777555720193@olee.ai\",\n      \"email_confirmed_at\": \"2026-04-30T13:28:46.016425827Z\",\n      \"phone\": \"\",\n      \"app_metadata\": {\n        \"provider\": \"email\",\n        \"providers\": [\n          \"email\"\n        ]\n      },\n      \"user_metadata\": {\n        \"email_verified\": true,\n        \"full_name\": \"Reg Test User\"\n      },\n      \"identities\": [\n        {\n          \"identity_id\": \"5b57475f-45d3-4703-906c-82bdb71d1a7a\",\n          \"id\": \"5b3795c1-2896-408f-9af2-97bac705d80f\",\n          \"user_id\": \"5b3795c1-2896-408f-9af2-97bac705d80f\",\n          \"identity_data\": {\n            \"email\": \"rp01-reg-test-1777555720193@olee.ai\",\n            \"email_verified\": false,\n            \"phone_verified\": false,\n            \"sub\": \"5b3795c1-2896-408f-9af2-97bac705d80f\"\n          },\n          \"provider\": \"email\",\n          \"last_sign_in_at\": \"2026-04-30T13:28:46.014757206Z\",\n          \"created_at\": \"2026-04-30T13:28:46.014808Z\",\n          \"updated_at\": \"2026-04-30T13:28:46.014808Z\",\n          \"email\": \"rp01-reg-test-1777555720193@olee.ai\"\n        }\n      ],\n      \"created_at\": \"2026-04-30T13:28:46.006774Z\",\n      \"updated_at\": \"2026-04-30T13:28:46.017115Z\",\n      \"is_anonymous\": false\n    },\n    \"session\": {\n      \"access_token\": \"eyJhbGciOiJFUzI1NiIsImtpZCI6IjM3NDdiNzE4LTc5MTAtNDJjNC05NDlkLWM0YzExOWQ4NTI5YyIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2VscXBicGJnenp4Zm92dHl2dWN0LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI1YjM3OTVjMS0yODk2LTQwOGYtOWFmMi05N2JhYzcwNWQ4MGYiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc3NTU5MzI2LCJpYXQiOjE3Nzc1NTU3MjYsImVtYWlsIjoicnAwMS1yZWctdGVzdC0xNzc3NTU1NzIwMTkzQG9sZWUuYWkiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmdWxsX25hbWUiOiJSZWcgVGVzdCBVc2VyIn0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3Nzc1NTU3MjZ9XSwic2Vzc2lvbl9pZCI6IjZmOTdkMTAwLWI1YzAtNDQzOS05OWYyLTQ0OGE3OTYxY2MzNyIsImlzX2Fub255bW91cyI6ZmFsc2V9.jmd0AzcIP-fd1Ns5Fq23xygpoNl55UYVDA9SIB04hmOKrY5aC3Br0l9MYX5Z9-ZVVdIGl7jx2vFdIj8Qi2q9Lg\",\n      \"token_type\": \"bearer\",\n      \"expires_in\": 3600,\n      \"expires_at\": 1777559326,\n      \"refresh_token\": \"ingiuwbi7b3q\",\n      \"user\": {\n        \"id\": \"5b3795c1-2896-408f-9af2-97bac705d80f\",\n        \"aud\": \"authenticated\",\n        \"role\": \"authenticated\",\n        \"email\": \"rp01-reg-test-1777555720193@olee.ai\",\n        \"email_confirmed_at\": \"2026-04-30T13:28:46.016425Z\",\n        \"phone\": \"\",\n        \"confirmed_at\": \"2026-04-30T13:28:46.016425Z\",\n        \"last_sign_in_at\": \"2026-04-30T13:28:46.180469737Z\",\n        \"app_metadata\": {\n          \"provider\": \"email\",\n          \"providers\": [\n            \"email\"\n          ]\n        },\n        \"user_metadata\": {\n          \"email_verified\": true,\n          \"full_name\": \"Reg Test User\"\n        },\n        \"identities\": [\n          {\n            \"identity_id\": \"5b57475f-45d3-4703-906c-82bdb71d1a7a\",\n            \"id\": \"5b3795c1-2896-408f-9af2-97bac705d80f\",\n            \"user_id\": \"5b3795c1-2896-408f-9af2-97bac705d80f\",\n            \"identity_data\": {\n              \"email\": \"rp01-reg-test-1777555720193@olee.ai\",\n              \"email_verified\": false,\n              \"phone_verified\": false,\n              \"sub\": \"5b3795c1-2896-408f-9af2-97bac705d80f\"\n            },\n            \"provider\": \"email\",\n            \"last_sign_in_at\": \"2026-04-30T13:28:46.014757Z\",\n            \"created_at\": \"2026-04-30T13:28:46.014808Z\",\n            \"updated_at\": \"2026-04-30T13:28:46.014808Z\",\n            \"email\": \"rp01-reg-test-1777555720193@olee.ai\"\n          }\n        ],\n        \"created_at\": \"2026-04-30T13:28:46.006774Z\",\n        \"updated_at\": \"2026-04-30T13:28:46.187313Z\",\n        \"is_anonymous\": false\n      },\n      \"weak_password\": null\n    }\n  }\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"newuser@olee.ai\",\n  \"password\": \"MyPass123!\",\n  \"full_name\": \"New User\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data?.session) {",
+                  "  pm.environment.set('access_token', res.data.session.access_token);",
+                  "  pm.environment.set('refresh_token', res.data.session.refresh_token);",
+                  "  pm.environment.set('user_id', res.data.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{test_email}}\",\n  \"password\": \"{{test_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Authenticate with email + password. On success the test script auto-stores `access_token`, `refresh_token`, and `user_id` in the environment."
+          },
+          "response": [
+            {
+              "name": "Login – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Login successful\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n      \"aud\": \"authenticated\",\n      \"role\": \"authenticated\",\n      \"email\": \"rp01-admin-test@olee.ai\",\n      \"email_confirmed_at\": \"2026-04-30T13:28:33.525874Z\",\n      \"phone\": \"\",\n      \"confirmed_at\": \"2026-04-30T13:28:33.525874Z\",\n      \"last_sign_in_at\": \"2026-04-30T13:28:46.369125838Z\",\n      \"app_metadata\": {\n        \"provider\": \"email\",\n        \"providers\": [\n          \"email\"\n        ]\n      },\n      \"user_metadata\": {\n        \"email_verified\": true,\n        \"full_name\": \"RP01 Admin Tester\"\n      },\n      \"identities\": [\n        {\n          \"identity_id\": \"0132820d-4a97-4483-8548-52bbc61760ed\",\n          \"id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n          \"user_id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n          \"identity_data\": {\n            \"email\": \"rp01-admin-test@olee.ai\",\n            \"email_verified\": false,\n            \"phone_verified\": false,\n            \"sub\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\"\n          },\n          \"provider\": \"email\",\n          \"last_sign_in_at\": \"2026-04-30T13:14:22.350336Z\",\n          \"created_at\": \"2026-04-30T13:14:22.350418Z\",\n          \"updated_at\": \"2026-04-30T13:14:22.350418Z\",\n          \"email\": \"rp01-admin-test@olee.ai\"\n        }\n      ],\n      \"created_at\": \"2026-04-30T13:14:22.329323Z\",\n      \"updated_at\": \"2026-04-30T13:28:46.371074Z\",\n      \"is_anonymous\": false\n    },\n    \"session\": {\n      \"access_token\": \"eyJhbGciOiJFUzI1NiIsImtpZCI6IjM3NDdiNzE4LTc5MTAtNDJjNC05NDlkLWM0YzExOWQ4NTI5YyIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2VscXBicGJnenp4Zm92dHl2dWN0LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIwMWJhYWY0Mi05MDE4LTQ2Y2UtYjJlNC0zNjg3NjJlNmEzZGMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc3NTU5MzI2LCJpYXQiOjE3Nzc1NTU3MjYsImVtYWlsIjoicnAwMS1hZG1pbi10ZXN0QG9sZWUuYWkiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmdWxsX25hbWUiOiJSUDAxIEFkbWluIFRlc3RlciJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzc3NTU1NzI2fV0sInNlc3Npb25faWQiOiIwNzQ3YzU5Yi02YTQ3LTRkZGEtOWZlZS01OTEwNWUyMjAyNzUiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.9wJha_gD5YzGreZrRRbaKJLQCGY0FMnyirG5DsTX1v3z0au9dOTc1IC9MsGQa6spaLBgPbc2Phhn7zy6j56zvA\",\n      \"token_type\": \"bearer\",\n      \"expires_in\": 3600,\n      \"expires_at\": 1777559326,\n      \"refresh_token\": \"qtgws4ppvpou\",\n      \"user\": {\n        \"id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n        \"aud\": \"authenticated\",\n        \"role\": \"authenticated\",\n        \"email\": \"rp01-admin-test@olee.ai\",\n        \"email_confirmed_at\": \"2026-04-30T13:28:33.525874Z\",\n        \"phone\": \"\",\n        \"confirmed_at\": \"2026-04-30T13:28:33.525874Z\",\n        \"last_sign_in_at\": \"2026-04-30T13:28:46.369125838Z\",\n        \"app_metadata\": {\n          \"provider\": \"email\",\n          \"providers\": [\n            \"email\"\n          ]\n        },\n        \"user_metadata\": {\n          \"email_verified\": true,\n          \"full_name\": \"RP01 Admin Tester\"\n        },\n        \"identities\": [\n          {\n            \"identity_id\": \"0132820d-4a97-4483-8548-52bbc61760ed\",\n            \"id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n            \"user_id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n            \"identity_data\": {\n              \"email\": \"rp01-admin-test@olee.ai\",\n              \"email_verified\": false,\n              \"phone_verified\": false,\n              \"sub\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\"\n            },\n            \"provider\": \"email\",\n            \"last_sign_in_at\": \"2026-04-30T13:14:22.350336Z\",\n            \"created_at\": \"2026-04-30T13:14:22.350418Z\",\n            \"updated_at\": \"2026-04-30T13:14:22.350418Z\",\n            \"email\": \"rp01-admin-test@olee.ai\"\n          }\n        ],\n        \"created_at\": \"2026-04-30T13:14:22.329323Z\",\n        \"updated_at\": \"2026-04-30T13:28:46.371074Z\",\n        \"is_anonymous\": false\n      },\n      \"weak_password\": null\n    }\n  }\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"{{test_email}}\",\n  \"password\": \"{{test_password}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const res = pm.response.json();",
+                  "pm.test('Has session tokens', () => {",
+                  "  pm.expect(res.data.session.access_token).to.be.a('string');",
+                  "  pm.expect(res.data.session.refresh_token).to.be.a('string');",
+                  "});",
+                  "if (res.success && res.data?.session) {",
+                  "  pm.environment.set('access_token', res.data.session.access_token);",
+                  "  pm.environment.set('refresh_token', res.data.session.refresh_token);",
+                  "  pm.environment.set('user_id', res.data.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Refresh token",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/auth/refresh",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Exchange a refresh token for a fresh access + refresh token pair."
+          },
+          "response": [
+            {
+              "name": "Refresh – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Session refreshed\",\n  \"data\": {\n    \"user\": {\n      \"id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n      \"aud\": \"authenticated\",\n      \"role\": \"authenticated\",\n      \"email\": \"rp01-admin-test@olee.ai\",\n      \"email_confirmed_at\": \"2026-04-30T13:28:33.525874Z\",\n      \"phone\": \"\",\n      \"confirmed_at\": \"2026-04-30T13:28:33.525874Z\",\n      \"last_sign_in_at\": \"2026-04-30T13:28:46.369125Z\",\n      \"app_metadata\": {\n        \"provider\": \"email\",\n        \"providers\": [\n          \"email\"\n        ]\n      },\n      \"user_metadata\": {\n        \"email_verified\": true,\n        \"full_name\": \"RP01 Admin Tester\"\n      },\n      \"identities\": [\n        {\n          \"identity_id\": \"0132820d-4a97-4483-8548-52bbc61760ed\",\n          \"id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n          \"user_id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n          \"identity_data\": {\n            \"email\": \"rp01-admin-test@olee.ai\",\n            \"email_verified\": false,\n            \"phone_verified\": false,\n            \"sub\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\"\n          },\n          \"provider\": \"email\",\n          \"last_sign_in_at\": \"2026-04-30T13:14:22.350336Z\",\n          \"created_at\": \"2026-04-30T13:14:22.350418Z\",\n          \"updated_at\": \"2026-04-30T13:14:22.350418Z\",\n          \"email\": \"rp01-admin-test@olee.ai\"\n        }\n      ],\n      \"created_at\": \"2026-04-30T13:14:22.329323Z\",\n      \"updated_at\": \"2026-04-30T13:28:46.453577Z\",\n      \"is_anonymous\": false\n    },\n    \"session\": {\n      \"access_token\": \"eyJhbGciOiJFUzI1NiIsImtpZCI6IjM3NDdiNzE4LTc5MTAtNDJjNC05NDlkLWM0YzExOWQ4NTI5YyIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2VscXBicGJnenp4Zm92dHl2dWN0LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIwMWJhYWY0Mi05MDE4LTQ2Y2UtYjJlNC0zNjg3NjJlNmEzZGMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc3NTU5MzI2LCJpYXQiOjE3Nzc1NTU3MjYsImVtYWlsIjoicnAwMS1hZG1pbi10ZXN0QG9sZWUuYWkiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmdWxsX25hbWUiOiJSUDAxIEFkbWluIFRlc3RlciJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzc3NTU1NzI2fV0sInNlc3Npb25faWQiOiIwNzQ3YzU5Yi02YTQ3LTRkZGEtOWZlZS01OTEwNWUyMjAyNzUiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.XVx6v5DLSm3tnEmi6LvSRdDOH3jDaPErYTUfnCOHSEm2Z7T5zIOmwUL5ZNTLBUOrI4xZoSiLp03YTOqCxfVF5g\",\n      \"token_type\": \"bearer\",\n      \"expires_in\": 3600,\n      \"expires_at\": 1777559326,\n      \"refresh_token\": \"gqq5xcaw3gum\",\n      \"user\": {\n        \"id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n        \"aud\": \"authenticated\",\n        \"role\": \"authenticated\",\n        \"email\": \"rp01-admin-test@olee.ai\",\n        \"email_confirmed_at\": \"2026-04-30T13:28:33.525874Z\",\n        \"phone\": \"\",\n        \"confirmed_at\": \"2026-04-30T13:28:33.525874Z\",\n        \"last_sign_in_at\": \"2026-04-30T13:28:46.369125Z\",\n        \"app_metadata\": {\n          \"provider\": \"email\",\n          \"providers\": [\n            \"email\"\n          ]\n        },\n        \"user_metadata\": {\n          \"email_verified\": true,\n          \"full_name\": \"RP01 Admin Tester\"\n        },\n        \"identities\": [\n          {\n            \"identity_id\": \"0132820d-4a97-4483-8548-52bbc61760ed\",\n            \"id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n            \"user_id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n            \"identity_data\": {\n              \"email\": \"rp01-admin-test@olee.ai\",\n              \"email_verified\": false,\n              \"phone_verified\": false,\n              \"sub\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\"\n            },\n            \"provider\": \"email\",\n            \"last_sign_in_at\": \"2026-04-30T13:14:22.350336Z\",\n            \"created_at\": \"2026-04-30T13:14:22.350418Z\",\n            \"updated_at\": \"2026-04-30T13:14:22.350418Z\",\n            \"email\": \"rp01-admin-test@olee.ai\"\n          }\n        ],\n        \"created_at\": \"2026-04-30T13:14:22.329323Z\",\n        \"updated_at\": \"2026-04-30T13:28:46.453577Z\",\n        \"is_anonymous\": false\n      }\n    }\n  }\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data?.session) {",
+                  "  pm.environment.set('access_token', res.data.session.access_token);",
+                  "  pm.environment.set('refresh_token', res.data.session.refresh_token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Forgot password",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/auth/forgot-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "forgot-password"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{test_email}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Send a password-reset email. Optional `redirect_to` (URL) overrides the default reset link destination."
+          },
+          "response": [
+            {
+              "name": "Forgot password – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"email rate limit exceeded\",\n  \"stack\": \"AppError: email rate limit exceeded\\n    at Object.forgotPassword (/Users/dulina/Documents/OutSourse/Research Projects/RP01/Project files/backend/src/services/auth.service.ts:75:22)\\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\\n    at async forgotPassword (/Users/dulina/Documents/OutSourse/Research Projects/RP01/Project files/backend/src/controllers/auth.controller.ts:34:20)\"\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"{{test_email}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success=true', () => pm.expect(pm.response.json().success).to.be.true);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reset password",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/auth/reset-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"NewStrongPass123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Change the authenticated user's password. Requires Bearer token. Password must be ≥8 characters."
+          },
+          "response": [
+            {
+              "name": "Reset password – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Password updated\",\n  \"data\": {\n    \"success\": true\n  }\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"password\": \"NewStrongPass123!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success=true', () => pm.expect(pm.response.json().success).to.be.true);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get current user (me)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Fetch the authenticated user's profile + permissions. Requires Bearer token."
+          },
+          "response": [
+            {
+              "name": "Get me – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Profile fetched\",\n  \"data\": {\n    \"id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n    \"email\": \"rp01-admin-test@olee.ai\",\n    \"full_name\": \"RP01 Admin Tester (updated)\",\n    \"avatar_url\": null,\n    \"is_active\": true,\n    \"created_at\": \"2026-04-30T13:14:22.328913+00:00\",\n    \"updated_at\": \"2026-04-30T13:16:15.866188+00:00\",\n    \"roles\": [\n      \"admin\"\n    ],\n    \"permissions\": [\n      \"permissions:read\",\n      \"users:read\",\n      \"roles:write\",\n      \"permissions:assign\",\n      \"users:write\",\n      \"roles:read\",\n      \"users:delete\",\n      \"roles:delete\"\n    ]\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const res = pm.response.json();",
+                  "pm.test('Has user id', () => pm.expect(res.data.id).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Revoke the current session. Requires Bearer token. After this the `access_token` is invalid."
+          },
+          "response": [
+            {
+              "name": "Logout – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Logged out\",\n  \"data\": {\n    \"success\": true\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.environment.unset('access_token');",
+                  "pm.environment.unset('refresh_token');"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/users?page=1&limit=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (default 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Items per page, max 100 (default 20)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true,
+                  "description": "Filter by full_name or email"
+                }
+              ]
+            },
+            "description": "Paginated user list. Requires `users:read` permission."
+          },
+          "response": [
+            {
+              "name": "List users – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Users fetched\",\n  \"data\": {\n    \"items\": [\n      {\n        \"id\": \"5b3795c1-2896-408f-9af2-97bac705d80f\",\n        \"email\": \"rp01-reg-test-1777555720193@olee.ai\",\n        \"full_name\": \"Reg Test User\",\n        \"avatar_url\": null,\n        \"is_active\": true,\n        \"created_at\": \"2026-04-30T13:28:46.006466+00:00\",\n        \"updated_at\": \"2026-04-30T13:28:46.006466+00:00\"\n      },\n      {\n        \"id\": \"a5bb0567-7c28-46f3-8be0-bad235b7453b\",\n        \"email\": \"rp01-reg-test-1777554863177@olee.ai\",\n        \"full_name\": \"Reg Test User\",\n        \"avatar_url\": null,\n        \"is_active\": true,\n        \"created_at\": \"2026-04-30T13:14:23.75915+00:00\",\n        \"updated_at\": \"2026-04-30T13:14:23.75915+00:00\"\n      },\n      {\n        \"id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n        \"email\": \"rp01-admin-test@olee.ai\",\n        \"full_name\": \"RP01 Admin Tester (updated)\",\n        \"avatar_url\": null,\n        \"is_active\": true,\n        \"created_at\": \"2026-04-30T13:14:22.328913+00:00\",\n        \"updated_at\": \"2026-04-30T13:16:15.866188+00:00\"\n      },\n      {\n        \"id\": \"d1921f47-8499-4525-962b-d1ae55892797\",\n        \"email\": \"auth-test-1777497046616@example.com\",\n        \"full_name\": \"Auth Test User\",\n        \"avatar_url\": null,\n        \"is_active\": true,\n        \"created_at\": \"2026-04-29T21:10:47.236205+00:00\",\n        \"updated_at\": \"2026-04-29T21:10:47.236205+00:00\"\n      }\n    ],\n    \"page\": 1,\n    \"limit\": 20,\n    \"total\": 4\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const res = pm.response.json();",
+                  "pm.test('Returns array', () => pm.expect(res.data.users).to.be.an('array'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get user by id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
+            },
+            "description": "Fetch a single user profile by UUID. Requires `users:read` permission."
+          },
+          "response": [
+            {
+              "name": "Get user – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User fetched\",\n  \"data\": {\n    \"id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n    \"email\": \"rp01-admin-test@olee.ai\",\n    \"full_name\": \"RP01 Admin Tester (updated)\",\n    \"avatar_url\": null,\n    \"is_active\": true,\n    \"created_at\": \"2026-04-30T13:14:22.328913+00:00\",\n    \"updated_at\": \"2026-04-30T13:16:15.866188+00:00\",\n    \"roles\": [\n      {\n        \"id\": \"c4962802-4218-4009-954c-44c76672a5dd\",\n        \"name\": \"admin\"\n      }\n    ],\n    \"permissions\": [\n      \"permissions:read\",\n      \"users:read\",\n      \"roles:write\",\n      \"permissions:assign\",\n      \"users:write\",\n      \"roles:read\",\n      \"users:delete\",\n      \"roles:delete\"\n    ]\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Has id', () => pm.expect(pm.response.json().data.id).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update user",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Updated Name\",\n  \"avatar_url\": \"https://example.com/avatar.png\",\n  \"is_active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Partially update a user. All fields optional. Requires `users:write` permission."
+          },
+          "response": [
+            {
+              "name": "Update user – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User updated\",\n  \"data\": {\n    \"id\": \"01baaf42-9018-46ce-b2e4-368762e6a3dc\",\n    \"email\": \"rp01-admin-test@olee.ai\",\n    \"full_name\": \"RP01 Admin Tester (updated)\",\n    \"avatar_url\": null,\n    \"is_active\": true,\n    \"created_at\": \"2026-04-30T13:14:22.328913+00:00\",\n    \"updated_at\": \"2026-04-30T13:28:50.397206+00:00\"\n  }\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"full_name\": \"Updated Name\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Deactivate user (soft delete)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}"
+              ]
+            },
+            "description": "Set `is_active = false`. The account record remains in the database. Requires `users:delete` permission."
+          },
+          "response": [
+            {
+              "name": "Deactivate user – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User deactivated\",\n  \"data\": {\n    \"id\": \"db871d52-fa1f-4556-95c6-2ca62b37e51d\",\n    \"email\": \"throwaway-1777555731049@olee.ai\",\n    \"full_name\": null,\n    \"avatar_url\": null,\n    \"is_active\": false,\n    \"created_at\": \"2026-04-30T13:28:51.310431+00:00\",\n    \"updated_at\": \"2026-04-30T13:28:51.474878+00:00\"\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Hard delete user",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}/hard",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}",
+                "hard"
+              ]
+            },
+            "description": "Permanently remove a user from both the profiles table and Supabase Auth. **Irreversible.** Requires `users:delete` permission."
+          },
+          "response": [
+            {
+              "name": "Hard delete user – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"User deleted\",\n  \"data\": {\n    \"success\": true\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Assign role to user",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}/roles",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}",
+                "roles"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role_id\": \"b2819c27-0523-45c2-95c7-145c49ed5919\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Add a role to a user. `role_id` must be a valid UUID. Requires `roles:write` permission."
+          },
+          "response": [
+            {
+              "name": "Assign role – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Role assigned\",\n  \"data\": {\n    \"success\": true\n  }\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"role_id\": \"b2819c27-0523-45c2-95c7-145c49ed5919\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Remove role from user",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}/roles/b2819c27-0523-45c2-95c7-145c49ed5919",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "{{user_id}}",
+                "roles",
+                "b2819c27-0523-45c2-95c7-145c49ed5919"
+              ]
+            },
+            "description": "Revoke a role from a user. Requires `roles:write` permission."
+          },
+          "response": [
+            {
+              "name": "Remove role – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Role removed\",\n  \"data\": {\n    \"success\": true\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Roles",
+      "item": [
+        {
+          "name": "List roles",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/roles",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles"
+              ]
+            },
+            "description": "Return all roles with their attached permissions. Requires `roles:read` permission."
+          },
+          "response": [
+            {
+              "name": "List roles – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Roles fetched\",\n  \"data\": [\n    {\n      \"id\": \"c4962802-4218-4009-954c-44c76672a5dd\",\n      \"name\": \"admin\",\n      \"description\": \"Full system access\",\n      \"is_system\": true,\n      \"created_at\": \"2026-04-29T20:45:25.714753+00:00\"\n    },\n    {\n      \"id\": \"b2819c27-0523-45c2-95c7-145c49ed5919\",\n      \"name\": \"manager\",\n      \"description\": \"Read users and roles, no writes by default\",\n      \"is_system\": false,\n      \"created_at\": \"2026-04-29T20:45:25.714753+00:00\"\n    },\n    {\n      \"id\": \"ccda81e5-6f22-4b3e-aab6-36e9b0ed80bd\",\n      \"name\": \"user\",\n      \"description\": \"Default role for newly registered users\",\n      \"is_system\": true,\n      \"created_at\": \"2026-04-29T20:45:25.714753+00:00\"\n    }\n  ]\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const res = pm.response.json();",
+                  "pm.test('Returns array', () => pm.expect(res.data).to.be.an('array'));",
+                  "if (res.data.length > 0) pm.environment.set('role_id', res.data[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get role by id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/roles/{{role_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles",
+                "{{role_id}}"
+              ]
+            },
+            "description": "Fetch a single role by UUID. Requires `roles:read` permission."
+          },
+          "response": [
+            {
+              "name": "Get role – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Role fetched\",\n  \"data\": {\n    \"id\": \"5d6d92fb-0c97-4afd-80a1-d8b850128e13\",\n    \"name\": \"editor-1777555727969\",\n    \"description\": \"Can edit content\",\n    \"is_system\": false,\n    \"created_at\": \"2026-04-30T13:28:48.129874+00:00\",\n    \"permissions\": []\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Has id', () => pm.expect(pm.response.json().data.id).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create role",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/roles",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"editor\",\n  \"description\": \"Can edit content\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Create a new role. `name` must be unique (1-64 chars). Requires `roles:write` permission."
+          },
+          "response": [
+            {
+              "name": "Create role – 201 Created",
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Role created\",\n  \"data\": {\n    \"id\": \"5d6d92fb-0c97-4afd-80a1-d8b850128e13\",\n    \"name\": \"editor-1777555727969\",\n    \"description\": \"Can edit content\",\n    \"is_system\": false,\n    \"created_at\": \"2026-04-30T13:28:48.129874+00:00\"\n  }\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"editor\",\n  \"description\": \"Can edit content\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data?.id) pm.environment.set('role_id', res.data.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update role",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{base_url}}/roles/{{role_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles",
+                "{{role_id}}"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"editor-v2\",\n  \"description\": \"Updated description\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Partially update a role. All fields optional. Requires `roles:write` permission."
+          },
+          "response": [
+            {
+              "name": "Update role – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Role updated\",\n  \"data\": {\n    \"id\": \"5d6d92fb-0c97-4afd-80a1-d8b850128e13\",\n    \"name\": \"editor-1777555727969\",\n    \"description\": \"Updated description\",\n    \"is_system\": false,\n    \"created_at\": \"2026-04-30T13:28:48.129874+00:00\"\n  }\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Updated description\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete role",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/roles/{{role_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles",
+                "{{role_id}}"
+              ]
+            },
+            "description": "Delete a role. System roles (`is_system=true`) cannot be deleted. Requires `roles:delete` permission."
+          },
+          "response": [
+            {
+              "name": "Delete role – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Role deleted\",\n  \"data\": {\n    \"success\": true\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Attach permission to role",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/roles/{{role_id}}/permissions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles",
+                "{{role_id}}",
+                "permissions"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"permission_id\": \"724d3703-67b6-42bd-8afa-494101edcf14\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Add an existing permission to a role. `permission_id` must be a valid UUID. Requires `permissions:assign` permission."
+          },
+          "response": [
+            {
+              "name": "Attach permission – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Permission attached\",\n  \"data\": {\n    \"success\": true\n  }\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"permission_id\": \"724d3703-67b6-42bd-8afa-494101edcf14\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Detach permission from role",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/roles/{{role_id}}/permissions/724d3703-67b6-42bd-8afa-494101edcf14",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles",
+                "{{role_id}}",
+                "permissions",
+                "724d3703-67b6-42bd-8afa-494101edcf14"
+              ]
+            },
+            "description": "Remove a permission from a role. Requires `permissions:assign` permission."
+          },
+          "response": [
+            {
+              "name": "Detach permission – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Permission detached\",\n  \"data\": {\n    \"success\": true\n  }\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Permissions",
+      "item": [
+        {
+          "name": "List permissions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/permissions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "permissions"
+              ]
+            },
+            "description": "Return all permissions. Requires `permissions:read` permission. The test script auto-stores the first permission's id as `permission_id`."
+          },
+          "response": [
+            {
+              "name": "List permissions – 200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Permissions fetched\",\n  \"data\": [\n    {\n      \"id\": \"724d3703-67b6-42bd-8afa-494101edcf14\",\n      \"name\": \"permissions:assign\",\n      \"description\": \"Attach permissions to roles\",\n      \"resource\": \"permissions\",\n      \"action\": \"assign\",\n      \"created_at\": \"2026-04-29T20:45:25.714753+00:00\"\n    },\n    {\n      \"id\": \"277e78a7-f526-4a36-9afc-3e3fa50cbb9b\",\n      \"name\": \"permissions:read\",\n      \"description\": \"List permissions\",\n      \"resource\": \"permissions\",\n      \"action\": \"read\",\n      \"created_at\": \"2026-04-29T20:45:25.714753+00:00\"\n    },\n    {\n      \"id\": \"4c218b38-461a-4d61-8aa5-20a5cc233e9d\",\n      \"name\": \"posts:read-1777554910675\",\n      \"description\": \"View posts\",\n      \"resource\": \"posts\",\n      \"action\": \"read\",\n      \"created_at\": \"2026-04-30T13:15:11.012909+00:00\"\n    },\n    {\n      \"id\": \"3e81655a-e3ef-4f21-8200-13bd76296160\",\n      \"name\": \"posts:read-1777554972404\",\n      \"description\": \"View posts\",\n      \"resource\": \"posts\",\n      \"action\": \"read\",\n      \"created_at\": \"2026-04-30T13:16:13.072755+00:00\"\n    },\n    {\n      \"id\": \"c13904dc-f47c-4fff-8a32-db6b140443a7\",\n      \"name\": \"roles:delete\",\n      \"description\": \"Delete roles\",\n      \"resource\": \"roles\",\n      \"action\": \"delete\",\n      \"created_at\": \"2026-04-29T20:45:25.714753+00:00\"\n    },\n    {\n      \"id\": \"9563831d-d633-4be7-bc36-dc7961678deb\",\n      \"name\": \"roles:read\",\n      \"description\": \"List and view roles\",\n      \"resource\": \"roles\",\n      \"action\": \"read\",\n      \"created_at\": \"2026-04-29T20:45:25.714753+00:00\"\n    },\n    {\n      \"id\": \"7135503a-96f8-4fc2-a7cc-0666feaedef7\",\n      \"name\": \"roles:write\",\n      \"description\": \"Create or update roles\",\n      \"resource\": \"roles\",\n      \"action\": \"write\",\n      \"created_at\": \"2026-04-29T20:45:25.714753+00:00\"\n    },\n    {\n      \"id\": \"befc517d-5fbe-4238-9395-89d9cd9b7166\",\n      \"name\": \"users:delete\",\n      \"description\": \"Delete or deactivate users\",\n      \"resource\": \"users\",\n      \"action\": \"delete\",\n      \"created_at\": \"2026-04-29T20:45:25.714753+00:00\"\n    },\n    {\n      \"id\": \"3755eba4-1829-46b2-b5b0-3dd041a67736\",\n      \"name\": \"users:read\",\n      \"description\": \"List and view users\",\n      \"resource\": \"users\",\n      \"action\": \"read\",\n      \"created_at\": \"2026-04-29T20:45:25.714753+00:00\"\n    },\n    {\n      \"id\": \"8bff101f-03a6-4f37-a362-8a076da2cc16\",\n      \"name\": \"users:write\",\n      \"description\": \"Update users\",\n      \"resource\": \"users\",\n      \"action\": \"write\",\n      \"created_at\": \"2026-04-29T20:45:25.714753+00:00\"\n    }\n  ]\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const res = pm.response.json();",
+                  "pm.test('Returns array', () => pm.expect(res.data).to.be.an('array'));",
+                  "if (res.data.length > 0) pm.environment.set('permission_id', res.data[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create permission",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/permissions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "permissions"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"posts:read\",\n  \"description\": \"View posts\",\n  \"resource\": \"posts\",\n  \"action\": \"read\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Create a new permission. `name` must be unique; convention is `resource:action`. Requires `roles:write` permission."
+          },
+          "response": [
+            {
+              "name": "Create permission – 201 Created",
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Permission created\",\n  \"data\": {\n    \"id\": \"62131e43-70d5-4a55-a93d-a270aa80c604\",\n    \"name\": \"posts:read-1777555727680\",\n    \"description\": \"View posts\",\n    \"resource\": \"posts\",\n    \"action\": \"read\",\n    \"created_at\": \"2026-04-30T13:28:47.825139+00:00\"\n  }\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"posts:read\",\n  \"description\": \"View posts\",\n  \"resource\": \"posts\",\n  \"action\": \"read\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const res = pm.response.json();",
+                  "if (res.success && res.data?.id) pm.environment.set('permission_id', res.data.id);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Error scenarios",
+      "item": [
+        {
+          "name": "Login with wrong password (→ 401)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{test_email}}\",\n  \"password\": \"WrongPassword!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Demonstrates the 401 Unauthorized response for invalid credentials."
+          },
+          "response": [
+            {
+              "name": "Wrong password – 401",
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Invalid login credentials\",\n  \"stack\": \"AppError: Invalid login credentials\\n    at Object.login (/Users/dulina/Documents/OutSourse/Research Projects/RP01/Project files/backend/src/services/auth.service.ts:47:22)\\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\\n    at async login (/Users/dulina/Documents/OutSourse/Research Projects/RP01/Project files/backend/src/controllers/auth.controller.ts:15:20)\"\n}",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"{{test_email}}\",\n  \"password\": \"WrongPassword!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 401 or 400', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 401]);",
+                  "});",
+                  "pm.test('success=false', () => pm.expect(pm.response.json().success).to.be.false);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get me without token (→ 401)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Demonstrates the 401 response when no Bearer token is provided."
+          },
+          "response": [
+            {
+              "name": "No token – 401",
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"No token provided\"\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 401', () => pm.response.to.have.status(401));",
+                  "pm.test('success=false', () => pm.expect(pm.response.json().success).to.be.false);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get unknown user (→ 404)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/users/00000000-0000-0000-0000-000000000000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            },
+            "description": "Demonstrates the 404 response for a non-existent user UUID."
+          },
+          "response": [
+            {
+              "name": "Unknown user – 404",
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"message\": \"User not found\",\n  \"stack\": \"AppError: User not found\\n    at Object.findById (/Users/dulina/Documents/OutSourse/Research Projects/RP01/Project files/backend/src/services/user.service.ts:16:22)\\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\\n    at async Object.getById (/Users/dulina/Documents/OutSourse/Research Projects/RP01/Project files/backend/src/controllers/user.controller.ts:16:18)\"\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 404 or 400', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([400, 404]);",
+                  "});",
+                  "pm.test('success=false', () => pm.expect(pm.response.json().success).to.be.false);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

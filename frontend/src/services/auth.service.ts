@@ -7,12 +7,17 @@ interface LoginPayload {
 }
 
 interface RegisterPayload extends LoginPayload {
-  name: string;
+  full_name: string;
 }
 
 interface AuthResponse {
   user: User;
-  token: string;
+  session: {
+    access_token: string;
+    refresh_token: string;
+    expires_at?: number;
+    token_type: string;
+  } | null;
 }
 
 export const authService = {
