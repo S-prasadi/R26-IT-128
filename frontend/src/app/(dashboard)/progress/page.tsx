@@ -1,202 +1,180 @@
 "use client";
 
-import { useState } from "react";
-import { Icon } from "@/components/piq/icon";
-import { PiqBadge } from "@/components/piq/badge";
-import { PiqStatCard } from "@/components/piq/primitives";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import { PiqSpinner } from "@/components/piq/primitives";
+import { PageHeader } from "@/components/common/PageHeader";
+import { progressService } from "@/services/progress.service";
+import type { ProgressModule, Milestone } from "@/types";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { PiqChartContainer, PiqTooltip, PIQ_COLORS } from "@/components/piq/charts";
 
-const MODULES = [
-  { id: "skill",     label: "Skill Forecasting",   color: "var(--amber)",  icon: "trend",  progress: 100, sessions: 12, last: "Today"    },
-  { id: "career",    label: "Career Paths",         color: "var(--teal)",   icon: "career", progress: 80,  sessions: 4,  last: "2 days ago" },
-  { id: "cv",        label: "CV & Proficiency",     color: "var(--violet)", icon: "cv",     progress: 65,  sessions: 3,  last: "4 days ago" },
-  { id: "interview", label: "Interview Simulator",  color: "var(--rose)",   icon: "chat",   progress: 45,  sessions: 3,  last: "2 days ago" },
-];
-
-const MILESTONES = [
-  { title: "First CV uploaded & analysed",         module: "CV",        done: true,  date: "Jan 15" },
-  { title: "First career path explored",           module: "Career",    done: true,  date: "Jan 22" },
-  { title: "Skill forecast report reviewed",       module: "Skill",     done: true,  date: "Feb 03" },
-  { title: "First interview simulation completed", module: "Interview", done: true,  date: "Apr 15" },
-  { title: "CV score above 80",                    module: "CV",        done: false, date: null     },
-  { title: "Interview score above 80%",            module: "Interview", done: false, date: null     },
-  { title: "Career path roadmap completed",        module: "Career",    done: false, date: null     },
-  { title: "All skills verified via GitHub",       module: "Skill",     done: false, date: null     },
-];
-
-const SKILL_PROGRESS = [
-  { skill: "React",      current: 85, target: 90, weeks_ago: 70 },
-  { skill: "Python",     current: 78, target: 85, weeks_ago: 62 },
-  { skill: "TypeScript", current: 72, target: 80, weeks_ago: 55 },
-  { skill: "Docker",     current: 55, target: 70, weeks_ago: 40 },
-  { skill: "AWS",        current: 40, target: 65, weeks_ago: 28 },
-  { skill: "ML",         current: 60, target: 75, weeks_ago: 48 },
-];
-
-const WEEKLY_ACTIVITY = [10, 25, 15, 40, 30, 55, 45, 60, 35, 70, 50, 80];
-const WEEKLY_LABELS   = ["Jan W3","Jan W4","Feb W1","Feb W2","Feb W3","Feb W4","Mar W1","Mar W2","Mar W3","Mar W4","Apr W3","Apr W4"];
-
-const MODULE_COLOR: Record<string, string> = {
-  CV:        "var(--violet)",
-  Career:    "var(--teal)",
-  Skill:     "var(--amber)",
-  Interview: "var(--rose)",
+const MODULE_META: Record<string, { label: string; color: string; icon: string }> = {
+  skill:     { label: "Skill Forecasting",  color: "var(--amber)",  icon: "📊" },
+  career:    { label: "Career Pathway",      color: "var(--teal)",   icon: "🗺️" },
+  cv:        { label: "CV & Proficiency",    color: "var(--violet)", icon: "📄" },
+  interview: { label: "Interview Simulator", color: "var(--rose)",   icon: "🎙️" },
 };
 
-const W = 580, H = 80, PL = 4, PR = 4, PT = 4, PB = 20;
-const maxA = Math.max(...WEEKLY_ACTIVITY);
-const actPts = WEEKLY_ACTIVITY.map((v, i) => [
-  PL + (i / (WEEKLY_ACTIVITY.length - 1)) * (W - PL - PR),
-  PT + (H - PT - PB) - (v / maxA) * (H - PT - PB),
-]);
-const actLine = actPts.map((p) => p.join(",")).join(" ");
+const ACTIVITY_TIMELINE = [
+  { week: "W1", skill: 4, career: 2, cv: 1, interview: 0 },
+  { week: "W2", skill: 2, career: 3, cv: 5, interview: 1 },
+  { week: "W3", skill: 6, career: 1, cv: 2, interview: 3 },
+  { week: "W4", skill: 3, career: 4, cv: 3, interview: 2 },
+  { week: "W5", skill: 5, career: 2, cv: 7, interview: 4 },
+  { week: "W6", skill: 4, career: 5, cv: 4, interview: 2 },
+  { week: "W7", skill: 7, career: 3, cv: 2, interview: 5 },
+  { week: "W8", skill: 5, career: 4, cv: 6, interview: 3 },
+];
 
 export default function ProgressPage() {
-  const [activeModule, setActiveModule] = useState<string | null>(null);
+  const [modules, setModules]     = useState<ProgressModule[]>([]);
+  const [milestones, setMilestones] = useState<Milestone[]>([]);
+  const [loading, setLoading]     = useState(true);
 
-  const done = MILESTONES.filter((m) => m.done).length;
-  const total = MILESTONES.length;
-  const overallPct = Math.round((done / total) * 100);
+  useEffect(() => {
+    async function load() {
+      setLoading(true);
+      try {
+        const [modRes, milRes] = await Promise.all([
+          progressService.getModuleProgress(),
+          progressService.getMilestones(),
+        ]);
+        setModules(modRes.data.data ?? []);
+        setMilestones(milRes.data.data ?? []);
+      } catch {
+        toast.error("Failed to load progress");
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  async function handleAchieve(id: string) {
+    try {
+      const res = await progressService.achieveMilestone(id);
+      setMilestones((prev) => prev.map((m) => m.id === id ? { ...m, ...res.data.data } : m));
+      toast.success("Milestone achieved! 🎉");
+    } catch {
+      toast.error("Failed to update milestone");
+    }
+  }
+
+  const overall = modules.length > 0 ? Math.round(modules.reduce((s, m) => s + m.completion_pct, 0) / modules.length) : 0;
+  const achievedCount = milestones.filter((m) => !!m.achieved_at).length;
 
   return (
-    <div className="anim-up" style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+    <div style={{ maxWidth: 960, margin: "0 auto" }}>
+      <PageHeader title="Progress Tracker" description="Track your journey across all four PathwayIQ modules" />
 
-      {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12 }}>
-        <PiqStatCard label="Overall Progress" value={`${overallPct}%`} icon="trend"   color="var(--accent)" sub="Across all modules"    delta={{ up: true, label: "4 of 8 milestones" }} />
-        <PiqStatCard label="Modules Active"   value={MODULES.length}  icon="shield"  color="var(--teal)"   sub="All AI modules in use" />
-        <PiqStatCard label="Total Sessions"   value={MODULES.reduce((s, m) => s + m.sessions, 0)} icon="refresh" color="var(--violet)" sub="Platform interactions" />
-        <PiqStatCard label="Streak"           value="7 days"          icon="person"  color="var(--green)"  sub="Active learning streak" delta={{ up: true, label: "Personal best" }} />
-      </div>
-
-      {/* Module progress + Milestones */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 14 }}>
-
-        {/* Module cards */}
-        <div style={{ background: "var(--surf)", border: "1px solid var(--border)", borderRadius: "var(--radiusLg)", overflow: "hidden" }}>
-          <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--border)" }}>
-            <div style={{ fontSize: 15, fontWeight: 600 }}>Module Progress</div>
-            <div style={{ fontSize: 13, color: "var(--text3)", marginTop: 1 }}>Click to filter skill progress below</div>
+      {loading ? (
+        <div style={{ display: "flex", justifyContent: "center", padding: 48 }}><PiqSpinner /></div>
+      ) : (
+        <>
+          {/* Overall progress */}
+          <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 24, border: "1px solid var(--border)", marginBottom: 24, display: "flex", alignItems: "center", gap: 24 }}>
+            <div style={{ position: "relative", width: 80, height: 80, flexShrink: 0 }}>
+              <svg width="80" height="80" viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="34" fill="none" stroke="var(--surf3)" strokeWidth="8" />
+                <circle cx="40" cy="40" r="34" fill="none" stroke="var(--accent)" strokeWidth="8"
+                  strokeDasharray={`${2 * Math.PI * 34 * overall / 100} ${2 * Math.PI * 34}`}
+                  strokeLinecap="round" transform="rotate(-90 40 40)" />
+              </svg>
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 16 }}>{overall}%</div>
+            </div>
+            <div>
+              <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 4 }}>Overall Progress</div>
+              <div style={{ fontSize: 14, color: "var(--text2)" }}>{achievedCount} of {milestones.length} milestones achieved</div>
+            </div>
           </div>
-          <div style={{ padding: "14px 16px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-            {MODULES.map((m) => {
-              const active = activeModule === m.id;
+
+          {/* Module rings */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px,1fr))", gap: 12, marginBottom: 28 }}>
+            {modules.map((m) => {
+              const meta = MODULE_META[m.module_name] ?? { label: m.module_name, color: "var(--accent)", icon: "📦" };
+              const pct  = m.completion_pct;
+              const r    = 28;
+              const circ = 2 * Math.PI * r;
               return (
-                <button key={m.id} onClick={() => setActiveModule(active ? null : m.id)}
-                  style={{ padding: "16px", background: active ? `oklch(from ${m.color} l c h / 10%)` : "var(--surf2)", border: `1px solid ${active ? `oklch(from ${m.color} l c h / 30%)` : "var(--border)"}`, borderRadius: "var(--radius)", cursor: "pointer", textAlign: "left", fontFamily: "inherit", transition: "all .15s" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                    <div style={{ width: 30, height: 30, borderRadius: 8, background: `oklch(from ${m.color} l c h / 15%)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <Icon n={m.icon} s={14} c={m.color} />
-                    </div>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: active ? m.color : "var(--text)" }}>{m.label}</span>
+                <div key={m.id} style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 16, border: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 14 }}>
+                  <div style={{ position: "relative", width: 64, height: 64, flexShrink: 0 }}>
+                    <svg width="64" height="64" viewBox="0 0 64 64">
+                      <circle cx="32" cy="32" r={r} fill="none" stroke="var(--surf3)" strokeWidth="6" />
+                      <circle cx="32" cy="32" r={r} fill="none" stroke={meta.color} strokeWidth="6"
+                        strokeDasharray={`${circ * pct / 100} ${circ}`}
+                        strokeLinecap="round" transform="rotate(-90 32 32)" />
+                    </svg>
+                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700 }}>{pct}%</div>
                   </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                    <span style={{ fontSize: 13, color: "var(--text3)" }}>{m.sessions} sessions</span>
-                    <span style={{ fontSize: 15, fontWeight: 700, color: m.color }}>{m.progress}%</span>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600 }}>{meta.label}</div>
+                    {m.last_activity_at && <div style={{ fontSize: 11, color: "var(--text2)", marginTop: 2 }}>Last: {new Date(m.last_activity_at).toLocaleDateString()}</div>}
                   </div>
-                  <div style={{ height: 5, background: "var(--surf3)", borderRadius: 99, overflow: "hidden", marginBottom: 6 }}>
-                    <div style={{ height: "100%", width: `${m.progress}%`, background: m.color, borderRadius: 99, transition: "width .5s" }} />
-                  </div>
-                  <div style={{ fontSize: 12, color: "var(--text3)" }}>Last: {m.last}</div>
-                </button>
+                </div>
               );
             })}
           </div>
-        </div>
 
-        {/* Milestones */}
-        <div style={{ background: "var(--surf)", border: "1px solid var(--border)", borderRadius: "var(--radiusLg)", overflow: "hidden" }}>
-          <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div style={{ fontSize: 15, fontWeight: 600 }}>Milestones</div>
-            <span style={{ fontSize: 13, fontWeight: 600, color: "var(--green)" }}>{done}/{total} done</span>
-          </div>
-          <div style={{ padding: "8px 0" }}>
-            {MILESTONES.map((m, i) => (
-              <div key={i} style={{ display: "flex", gap: 12, padding: "10px 18px", borderBottom: i < MILESTONES.length - 1 ? "1px solid var(--border)" : "none", opacity: m.done ? 1 : 0.7 }}>
-                <span style={{ fontSize: 16, color: m.done ? "var(--green)" : "var(--border2)", flexShrink: 0, marginTop: 1 }}>{m.done ? "✓" : "○"}</span>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: m.done ? 500 : 400, color: m.done ? "var(--text)" : "var(--text2)", textDecoration: m.done ? "none" : "none", lineHeight: 1.4 }}>{m.title}</div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
-                    <span style={{ fontSize: 11, padding: "1px 6px", borderRadius: 99, background: `oklch(from ${MODULE_COLOR[m.module] || "var(--accent)"} l c h / 12%)`, color: MODULE_COLOR[m.module] || "var(--accent)", fontWeight: 600 }}>{m.module}</span>
-                    {m.date && <span style={{ fontSize: 12, color: "var(--text3)" }}>{m.date}</span>}
-                  </div>
+          {/* Milestones */}
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text2)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>Milestones</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {milestones.map((m) => (
+              <div key={m.id} style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 14, border: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 24, height: 24, borderRadius: "50%", background: m.achieved_at ? "var(--teal)" : "var(--surf3)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 13 }}>
+                  {m.achieved_at ? "✓" : "○"}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: m.achieved_at ? 400 : 500, textDecoration: m.achieved_at ? "line-through" : "none", color: m.achieved_at ? "var(--text2)" : "var(--text)" }}>{m.title}</div>
+                  {m.description && <div style={{ fontSize: 12, color: "var(--text3)", marginTop: 1 }}>{m.description}</div>}
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  {m.achieved_at ? (
+                    <span style={{ fontSize: 12, color: "var(--teal)" }}>{new Date(m.achieved_at).toLocaleDateString()}</span>
+                  ) : (
+                    <button onClick={() => handleAchieve(m.id)} style={{ fontSize: 12, color: "var(--accent)", background: "none", border: "1px solid var(--accent)", borderRadius: 10, padding: "2px 10px", cursor: "pointer" }}>
+                      Mark done
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      </div>
 
-      {/* Skill progress chart */}
-      <div style={{ background: "var(--surf)", border: "1px solid var(--border)", borderRadius: "var(--radiusLg)", overflow: "hidden" }}>
-        <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--border)" }}>
-          <div style={{ fontSize: 15, fontWeight: 600 }}>Skill Growth (4-week change)</div>
-          <div style={{ fontSize: 13, color: "var(--text3)", marginTop: 1 }}>Proficiency level progression based on CV + interview + GitHub analysis</div>
-        </div>
-        <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
-          {SKILL_PROGRESS.map((s) => {
-            const gain = s.current - s.weeks_ago;
-            const remaining = s.target - s.current;
-            return (
-              <div key={s.skill} style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                <span style={{ fontSize: 14, fontWeight: 500, width: 100, flexShrink: 0 }}>{s.skill}</span>
-                <div style={{ flex: 1, position: "relative", height: 8, background: "var(--surf2)", borderRadius: 99, overflow: "hidden" }}>
-                  <div style={{ position: "absolute", left: 0, top: 0, height: "100%", width: `${s.weeks_ago}%`, background: "var(--surf3)", borderRadius: 99 }} />
-                  <div style={{ position: "absolute", left: 0, top: 0, height: "100%", width: `${s.current}%`, background: "var(--accent)", borderRadius: 99, transition: "width .5s" }} />
-                  <div style={{ position: "absolute", left: 0, top: 0, height: "100%", width: `${s.target}%`, background: "transparent", borderRight: "2px dashed var(--text3)", borderRadius: 0 }} />
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, minWidth: 80 }}>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: "var(--accent)" }}>{s.current}%</span>
-                  <span style={{ fontSize: 13, color: "var(--green)", fontWeight: 600 }}>+{gain}</span>
-                  <span style={{ fontSize: 12, color: "var(--text3)" }}>→{s.target}</span>
-                </div>
-              </div>
-            );
-          })}
-          <div style={{ display: "flex", gap: 18, marginTop: 6 }}>
-            {[
-              { color: "var(--surf3)",  label: "4 weeks ago" },
-              { color: "var(--accent)", label: "Current"     },
-              { color: "transparent",   label: "Target",  dash: true },
-            ].map((l) => (
-              <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                {l.dash
-                  ? <svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="var(--text3)" strokeWidth="1.5" strokeDasharray="3,2" /></svg>
-                  : <div style={{ width: 14, height: 6, borderRadius: 99, background: l.color }} />
-                }
-                <span style={{ fontSize: 13, color: "var(--text3)" }}>{l.label}</span>
-              </div>
-            ))}
+          {/* Activity Timeline AreaChart */}
+          <div style={{ marginTop: 28 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text2)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>Weekly Activity</div>
+            <PiqChartContainer subtitle="Actions per module per week (last 8 weeks)" height={240}>
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={ACTIVITY_TIMELINE} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
+                  <defs>
+                    {([
+                      ["gradSkill",    PIQ_COLORS.amber],
+                      ["gradCareer",   PIQ_COLORS.teal],
+                      ["gradCV",       PIQ_COLORS.violet],
+                      ["gradInterview",PIQ_COLORS.rose],
+                    ] as const).map(([id, color]) => (
+                      <linearGradient key={id} id={id} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%"  stopColor={color} stopOpacity={0.3} />
+                        <stop offset="95%" stopColor={color} stopOpacity={0} />
+                      </linearGradient>
+                    ))}
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                  <XAxis dataKey="week" tick={{ fontSize: 12, fill: "var(--text3)" }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 12, fill: "var(--text3)" }} axisLine={false} tickLine={false} />
+                  <Tooltip content={<PiqTooltip />} />
+                  <Area type="monotone" dataKey="skill"     name="Skill"     stroke={PIQ_COLORS.amber}  fill="url(#gradSkill)"     strokeWidth={2} dot={false} stackId="1" />
+                  <Area type="monotone" dataKey="career"    name="Career"    stroke={PIQ_COLORS.teal}   fill="url(#gradCareer)"    strokeWidth={2} dot={false} stackId="1" />
+                  <Area type="monotone" dataKey="cv"        name="CV"        stroke={PIQ_COLORS.violet} fill="url(#gradCV)"        strokeWidth={2} dot={false} stackId="1" />
+                  <Area type="monotone" dataKey="interview" name="Interview" stroke={PIQ_COLORS.rose}   fill="url(#gradInterview)" strokeWidth={2} dot={false} stackId="1" />
+                  <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </PiqChartContainer>
           </div>
-        </div>
-      </div>
-
-      {/* Weekly activity chart */}
-      <div style={{ background: "var(--surf)", border: "1px solid var(--border)", borderRadius: "var(--radiusLg)", overflow: "hidden" }}>
-        <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--border)" }}>
-          <div style={{ fontSize: 15, fontWeight: 600 }}>Weekly Activity</div>
-          <div style={{ fontSize: 13, color: "var(--text3)", marginTop: 1 }}>Platform engagement score across all modules</div>
-        </div>
-        <div style={{ padding: "16px 20px 12px" }}>
-          <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", display: "block" }}>
-            <defs>
-              <linearGradient id="actGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.25" />
-                <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            <path d={`M ${actPts[0][0]},${H - PB} ` + actPts.map((p) => `L ${p[0]},${p[1]}`).join(" ") + ` L ${actPts[actPts.length - 1][0]},${H - PB} Z`} fill="url(#actGrad)" />
-            <polyline points={actLine} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
-            {actPts.map(([x, y], i) => (
-              <circle key={i} cx={x} cy={y} r="3" fill="var(--accent)" />
-            ))}
-            {WEEKLY_LABELS.map((label, i) => {
-              const x = PL + (i / (WEEKLY_LABELS.length - 1)) * (W - PL - PR);
-              return i % 3 === 0 ? <text key={label} x={x} y={H - 4} fontSize="10" fill="var(--text3)" textAnchor="middle">{label}</text> : null;
-            })}
-          </svg>
-        </div>
-      </div>
-
+        </>
+      )}
     </div>
   );
 }
