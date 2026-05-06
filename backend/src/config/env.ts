@@ -23,4 +23,11 @@ export const env = {
   },
 
   adminSetupKey: process.env["ADMIN_SETUP_KEY"] ?? "",
+
+  python: {
+    moduleAUrl: process.env["PYTHON_MODULE_A_URL"] ?? "http://localhost:8001",
+    moduleBUrl: process.env["PYTHON_MODULE_B_URL"] ?? "http://localhost:8002",
+    moduleCUrl: process.env["PYTHON_MODULE_C_URL"] ?? "http://localhost:8003",
+    moduleDUrl: process.env["PYTHON_MODULE_D_URL"] ?? "http://localhost:8004",
+  },
 } as const;

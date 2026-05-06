@@ -1,6 +1,8 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { env } from "./env";
 
+console.log("[Supabase] Initializing clients with URL:", env.supabase.url);
+
 /**
  * Service-role client. Bypasses RLS — only use server-side, never expose to clients.
  */
@@ -11,6 +13,8 @@ export const supabaseAdmin: SupabaseClient = createClient(
     auth: { autoRefreshToken: false, persistSession: false },
   }
 );
+
+console.log("[Supabase] Admin client initialized");
 
 /**
  * Anon client — used for unauthenticated auth flows (signUp, signInWithPassword, etc).
@@ -23,3 +27,5 @@ export const supabaseAnon: SupabaseClient = createClient(
     auth: { autoRefreshToken: false, persistSession: false },
   }
 );
+
+console.log("[Supabase] Anon client initialized");

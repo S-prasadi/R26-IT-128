@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { Sidebar, Header } from "@/components/layout";
 import { ROUTES } from "@/constants/routes";
 import { getStoredUser } from "@/hooks/useAuth";
+import { useNotifications } from "@/hooks/useNotifications";
 
 const ADMIN_ONLY = ["/dashboard", "/users", "/roles"];
 
@@ -12,6 +13,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router   = useRouter();
   const pathname = usePathname();
   const [ready, setReady] = useState(false);
+  useNotifications();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
