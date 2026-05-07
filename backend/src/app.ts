@@ -9,7 +9,8 @@ import { errorHandler, notFound } from "./middlewares/error.middleware";
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: env.corsOrigin, credentials: true }));
+const allowedOrigins = env.corsOrigin.split(",").map((o) => o.trim());
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
