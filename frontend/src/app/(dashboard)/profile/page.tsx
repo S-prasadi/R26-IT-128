@@ -1,11 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { PiqAvatar } from "@/components/piq/avatar";
 import { PiqBadge } from "@/components/piq/badge";
 import { PiqStatCard, PiqBtn, PiqInput, PiqSpinner } from "@/components/piq/primitives";
 import { Icon } from "@/components/piq/icon";
 import { userService } from "@/services/user.service";
+import { skillService } from "@/services/skill.service";
+import { progressService } from "@/services/progress.service";
+import type { UserSkill, ProgressModule } from "@/types";
 
 type ApiMe = {
   id: string;
@@ -22,26 +26,6 @@ type ApiMe = {
   created_at?: string;
 };
 
-const SKILLS = [
-  { name: "React",            level: 85, cat: "Frontend"  },
-  { name: "Python",           level: 78, cat: "Backend"   },
-  { name: "TypeScript",       level: 72, cat: "Frontend"  },
-  { name: "Node.js",          level: 70, cat: "Backend"   },
-  { name: "Docker",           level: 55, cat: "DevOps"    },
-  { name: "Machine Learning", level: 60, cat: "AI/ML"     },
-  { name: "SQL",              level: 68, cat: "Database"  },
-  { name: "AWS",              level: 40, cat: "Cloud"     },
-];
-
-const ACTIVITY = [
-  { date: "2026-04-28", action: "Completed interview session",     module: "Interview",  icon: "chat" },
-  { date: "2026-04-26", action: "Updated CV — version 3",          module: "CV",         icon: "cv" },
-  { date: "2026-04-24", action: "Viewed Career Path: Full-Stack",  module: "Career",     icon: "career" },
-  { date: "2026-04-22", action: "Reviewed Skill Forecast report",  module: "Skill",      icon: "trend" },
-  { date: "2026-04-20", action: "Interview session completed",      module: "Interview",  icon: "chat" },
-  { date: "2026-04-18", action: "Profile updated",                  module: "Profile",    icon: "person" },
-];
-
 const MODULE_COLOR: Record<string, string> = {
   Interview: "var(--rose)",
   CV:        "var(--violet)",
@@ -50,15 +34,41 @@ const MODULE_COLOR: Record<string, string> = {
   Profile:   "var(--accent)",
 };
 
+const MODULE_ICON: Record<string, string> = {
+  skill:     "trend",
+  career:    "career",
+  cv:        "cv",
+  interview: "chat",
+};
+
 const scoreColor = (s: number) => s >= 80 ? "var(--green)" : s >= 65 ? "var(--accent)" : s >= 50 ? "var(--amber)" : "var(--rose)";
 
+const proficiencyPct = (level: number) => Math.min(100, Math.round((level / 5) * 100));
+
+function ProgressRing({ pct, color, size = 56 }: { pct: number; color: string; size?: number }) {
+  const r = (size - 8) / 2;
+  const circ = 2 * Math.PI * r;
+  const dash = circ * (pct / 100);
+  return (
+    <svg width={size} height={size}>
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--surf3)" strokeWidth={5} />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={5}
+        strokeDasharray={`${dash} ${circ - dash}`} strokeLinecap="round"
+        transform={`rotate(-90 ${size / 2} ${size / 2})`} />
+      <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fontSize={11} fontWeight={700} fill={color}>{pct}%</text>
+    </svg>
+  );
+}
+
 export default function ProfilePage() {
-  const [loading, setLoading]   = useState(true);
-  const [saving, setSaving]     = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null);
-  const [toast, setToast]       = useState<string | null>(null);
-  const [userId, setUserId]     = useState<string>("");
-  const [editing, setEditing]   = useState(false);
+  const [loading, setLoading]         = useState(true);
+  const [saving, setSaving]           = useState(false);
+  const [apiError, setApiError]       = useState<string | null>(null);
+  const [toast, setToast]             = useState<string | null>(null);
+  const [userId, setUserId]           = useState<string>("");
+  const [editing, setEditing]         = useState(false);
+  const [skills, setSkills]           = useState<UserSkill[]>([]);
+  const [progress, setProgress]       = useState<ProgressModule[]>([]);
 
   const [info, setInfo] = useState({ email: "", role: "", joined: "", department: "", intake: "" });
   const [form, setForm] = useState({ full_name: "", bio: "", github: "", linkedin: "" });
@@ -68,25 +78,29 @@ export default function ProfilePage() {
 
   useEffect(() => {
     setLoading(true);
-    userService.getMe()
-      .then((res) => {
-        const me = res.data.data as ApiMe;
-        setUserId(me.id);
-        setInfo({
-          email:      me.email,
-          role:       me.role,
-          joined:     me.created_at ?? me.createdAt ?? "",
-          department: me.department ?? "Information Technology",
-          intake:     me.intake ?? "",
-        });
-        setForm({
-          full_name: me.full_name ?? me.name ?? "",
-          bio:       me.bio ?? "",
-          github:    me.github ?? "",
-          linkedin:  me.linkedin ?? "",
-        });
-      })
-      .catch(() => setApiError("Failed to load profile. Please refresh."))
+    Promise.all([
+      userService.getMe(),
+      skillService.getUserSkills(),
+      progressService.getModuleProgress(),
+    ]).then(([meRes, skillsRes, progressRes]) => {
+      const me = meRes.data.data as ApiMe;
+      setUserId(me.id);
+      setInfo({
+        email:      me.email,
+        role:       me.role,
+        joined:     me.created_at ?? me.createdAt ?? "",
+        department: me.department ?? "Information Technology",
+        intake:     me.intake ?? "",
+      });
+      setForm({
+        full_name: me.full_name ?? me.name ?? "",
+        bio:       me.bio ?? "",
+        github:    me.github ?? "",
+        linkedin:  me.linkedin ?? "",
+      });
+      setSkills((skillsRes.data.data as UserSkill[]) ?? []);
+      setProgress((progressRes.data.data as ProgressModule[]) ?? []);
+    }).catch(() => setApiError("Failed to load profile. Please refresh."))
       .finally(() => setLoading(false));
   }, []);
 
@@ -128,18 +142,29 @@ export default function ProfilePage() {
     );
   }
 
+  const overallPct = progress.length > 0
+    ? Math.round(progress.reduce((sum, m) => sum + m.completion_pct, 0) / progress.length)
+    : 0;
+
+  const moduleColors: Record<string, string> = {
+    skill:     "var(--amber)",
+    career:    "var(--teal)",
+    cv:        "var(--violet)",
+    interview: "var(--rose)",
+  };
+
   return (
     <div className="anim-up" style={{ display: "flex", flexDirection: "column", gap: 18 }}>
 
       {/* Stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12 }}>
-        <PiqStatCard label="CV Score"           value="79/100" icon="cv"     color="var(--accent)" sub="Last analysed Apr 26" />
-        <PiqStatCard label="Career Match"       value="91%"    icon="career" color="var(--green)"  sub="Full-Stack Developer" delta={{ up: true, label: "Top match" }} />
-        <PiqStatCard label="Interview Score"    value="78%"    icon="chat"   color="var(--rose)"   sub="Best session" />
-        <PiqStatCard label="Skills Tracked"     value={SKILLS.length} icon="trend" color="var(--teal)" sub="Across 6 categories" />
+        <PiqStatCard label="Overall Progress"  value={`${overallPct}%`}    icon="trend"  color="var(--accent)" sub="Across all modules" />
+        <PiqStatCard label="Skills Tracked"    value={skills.length}       icon="trend"  color="var(--teal)"   sub="In your skill profile" />
+        <PiqStatCard label="GitHub Verified"   value={skills.filter((s) => s.github_verified).length} icon="cv" color="var(--green)" sub="Skills verified" />
+        <PiqStatCard label="Advanced Skills"   value={skills.filter((s) => s.proficiency_level >= 4).length} icon="star" color="var(--amber)" sub="Level 4–5 proficiency" />
       </div>
 
-      {/* Profile header + Activity */}
+      {/* Profile header + Progress */}
       <div style={{ display: "grid", gridTemplateColumns: "340px 1fr", gap: 14 }}>
 
         {/* Profile card */}
@@ -195,28 +220,35 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Recent Activity */}
+        {/* Module Progress */}
         <div style={{ background: "var(--surf)", border: "1px solid var(--border)", borderRadius: "var(--radiusLg)", overflow: "hidden" }}>
-          <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--border)" }}>
-            <div style={{ fontSize: 15, fontWeight: 600 }}>Recent Activity</div>
-            <div style={{ fontSize: 13, color: "var(--text3)", marginTop: 1 }}>Your interactions across all PathwayIQ modules</div>
+          <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 600 }}>Module Progress</div>
+              <div style={{ fontSize: 13, color: "var(--text3)", marginTop: 1 }}>Your completion across all PathwayIQ modules</div>
+            </div>
+            <Link href="/progress" style={{ fontSize: 13, color: "var(--accent)", textDecoration: "none" }}>View details →</Link>
           </div>
-          <div style={{ padding: "8px 0" }}>
-            {ACTIVITY.map((a, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, padding: "12px 20px", borderBottom: i < ACTIVITY.length - 1 ? "1px solid var(--border)" : "none" }}>
-                <div style={{ width: 34, height: 34, borderRadius: 10, background: `oklch(from ${MODULE_COLOR[a.module] || "var(--accent)"} l c h / 12%)`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <span style={{ fontSize: 13, color: MODULE_COLOR[a.module] || "var(--accent)" }}>●</span>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 500 }}>{a.action}</div>
-                  <div style={{ fontSize: 13, color: "var(--text3)", marginTop: 2 }}>
-                    {new Date(a.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+          {progress.length === 0 ? (
+            <div style={{ padding: 32, textAlign: "center", color: "var(--text3)", fontSize: 14 }}>No progress data yet. Start using the modules!</div>
+          ) : (
+            <div style={{ padding: "16px 20px", display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14 }}>
+              {progress.map((m) => (
+                <div key={m.id} style={{ padding: "14px 16px", background: "var(--surf2)", borderRadius: "var(--radius)", border: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 14 }}>
+                  <ProgressRing pct={m.completion_pct} color={moduleColors[m.module_name] ?? "var(--accent)"} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, textTransform: "capitalize" }}>{m.module_name}</div>
+                    <div style={{ fontSize: 12, color: "var(--text3)", marginTop: 2 }}>
+                      {m.last_activity_at
+                        ? `Last active ${new Date(m.last_activity_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`
+                        : "Not started yet"}
+                    </div>
+                    <Link href={`/${m.module_name}`} style={{ fontSize: 11, color: moduleColors[m.module_name] ?? "var(--accent)", textDecoration: "none", marginTop: 4, display: "inline-block" }}>Open module →</Link>
                   </div>
                 </div>
-                <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 99, background: `oklch(from ${MODULE_COLOR[a.module] || "var(--accent)"} l c h / 12%)`, color: MODULE_COLOR[a.module] || "var(--accent)", fontWeight: 600 }}>{a.module}</span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -227,22 +259,46 @@ export default function ProfilePage() {
             <div style={{ fontSize: 15, fontWeight: 600 }}>Skill Profile</div>
             <div style={{ fontSize: 13, color: "var(--text3)", marginTop: 1 }}>CV-extracted + GitHub-verified proficiency levels</div>
           </div>
-          <PiqBtn variant="outline" size="sm" icon="cv">Update from CV</PiqBtn>
+          <Link href="/skill" style={{ fontSize: 13, color: "var(--accent)", textDecoration: "none" }}>Manage skills →</Link>
         </div>
-        <div style={{ padding: "16px 20px", display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 14 }}>
-          {SKILLS.map((s) => (
-            <div key={s.name} style={{ padding: "12px 14px", background: "var(--surf2)", borderRadius: "var(--radius)", border: "1px solid var(--border)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                <span style={{ fontSize: 14, fontWeight: 600 }}>{s.name}</span>
-                <span style={{ fontSize: 13, fontWeight: 700, color: scoreColor(s.level) }}>{s.level}%</span>
-              </div>
-              <div style={{ height: 4, background: "var(--surf3)", borderRadius: 99, overflow: "hidden", marginBottom: 6 }}>
-                <div style={{ height: "100%", width: `${s.level}%`, background: scoreColor(s.level), borderRadius: 99 }} />
-              </div>
-              <span style={{ fontSize: 12, color: "var(--text3)" }}>{s.cat}</span>
-            </div>
-          ))}
-        </div>
+        {skills.length === 0 ? (
+          <div style={{ padding: "32px 20px", textAlign: "center" }}>
+            <div style={{ fontSize: 14, color: "var(--text3)", marginBottom: 12 }}>No skills added yet.</div>
+            <Link href="/skill">
+              <PiqBtn variant="primary" size="sm" icon="trend">Add Your Skills</PiqBtn>
+            </Link>
+          </div>
+        ) : (
+          <div style={{ padding: "16px 20px", display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 14 }}>
+            {skills.slice(0, 8).map((s) => {
+              const pct = proficiencyPct(s.proficiency_level);
+              return (
+                <div key={s.id} style={{ padding: "12px 14px", background: "var(--surf2)", borderRadius: "var(--radius)", border: "1px solid var(--border)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                    <span style={{ fontSize: 14, fontWeight: 600 }}>{s.skills?.name ?? s.skill_id}</span>
+                    {s.github_verified && (
+                      <span style={{ fontSize: 10, background: "var(--greenD)", color: "var(--green)", padding: "1px 6px", borderRadius: 10, fontWeight: 600 }}>✓ GH</span>
+                    )}
+                  </div>
+                  <div style={{ height: 4, background: "var(--surf3)", borderRadius: 99, overflow: "hidden", marginBottom: 6 }}>
+                    <div style={{ height: "100%", width: `${pct}%`, background: scoreColor(pct), borderRadius: 99 }} />
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: 12, color: "var(--text3)" }}>{s.proficiency_label ?? `Level ${s.proficiency_level}`}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: scoreColor(pct) }}>{pct}%</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+        {skills.length > 8 && (
+          <div style={{ padding: "10px 20px", borderTop: "1px solid var(--border)", textAlign: "center" }}>
+            <Link href="/skill" style={{ fontSize: 13, color: "var(--accent)", textDecoration: "none" }}>
+              +{skills.length - 8} more skills — View all in Skill module →
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Toast */}
