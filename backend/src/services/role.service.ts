@@ -18,7 +18,7 @@ export const roleService = {
 
     return (data ?? []).map((r) => ({
       ...r,
-      permissions: (r.role_permissions as { permissions: { name: string } | null }[])
+      permissions: (((r.role_permissions as unknown) as { permissions?: { name?: string } | null }[]) ?? [])
         .map((rp) => rp.permissions?.name)
         .filter(Boolean) as string[],
       role_permissions: undefined,

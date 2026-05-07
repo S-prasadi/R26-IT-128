@@ -12,6 +12,9 @@ import type {
 
 export const authService = {
   async register(dto: RegisterDto) {
+    console.log(`[Auth] Register attempt for email: ${dto.email}`);
+    console.log(`[Auth] Connecting to Supabase at: ${env.supabase.url}`);
+
     // Use admin API so no confirmation email is sent (avoids Supabase free-tier
     // 2 emails/hr rate limit). User is immediately confirmed and can log in.
     const { data, error } = await supabaseAdmin.auth.admin.createUser({
@@ -21,18 +24,26 @@ export const authService = {
       user_metadata: dto.full_name ? { full_name: dto.full_name } : undefined,
     });
     if (error) {
+      console.error(`[Auth] Register failed for ${dto.email}:`, error);
       const status = error.message.toLowerCase().includes("already registered")
         ? HTTP_STATUS.CONFLICT
         : HTTP_STATUS.BAD_REQUEST;
       throw new AppError(error.message, status);
     }
 
+    console.log(`[Auth] User created successfully for ${dto.email}`);
+
     // Sign in immediately to return a session alongside the new user
     const { data: session, error: signInErr } = await supabaseAnon.auth.signInWithPassword({
       email: dto.email,
       password: dto.password,
     });
-    if (signInErr) throw new AppError(signInErr.message, HTTP_STATUS.BAD_REQUEST);
+    if (signInErr) {
+      console.error(`[Auth] Sign-in after register failed for ${dto.email}:`, signInErr);
+      throw new AppError(signInErr.message, HTTP_STATUS.BAD_REQUEST);
+    }
+
+    console.log(`[Auth] Register and sign-in successful for ${dto.email}`);
 
     const { data: rp2 } = await supabaseAdmin
       .from("v_user_permissions")
@@ -57,11 +68,20 @@ export const authService = {
   },
 
   async login(dto: LoginDto) {
+    console.log(`[Auth] Login attempt for email: ${dto.email}`);
+    console.log(`[Auth] Connecting to Supabase at: ${env.supabase.url}`);
+
     const { data, error } = await supabaseAnon.auth.signInWithPassword({
       email: dto.email,
       password: dto.password,
     });
-    if (error) throw new AppError(error.message, HTTP_STATUS.UNAUTHORIZED);
+
+    if (error) {
+      console.error(`[Auth] Login failed for ${dto.email}:`, error);
+      throw new AppError(error.message, HTTP_STATUS.UNAUTHORIZED);
+    }
+
+    console.log(`[Auth] Login successful for ${dto.email}`);
 
     const { data: profile } = await supabaseAdmin
       .from("profiles")
@@ -92,10 +112,15 @@ export const authService = {
   },
 
   async refresh(dto: RefreshDto) {
+    console.log("[Auth] Refresh token attempt");
     const { data, error } = await supabaseAnon.auth.refreshSession({
       refresh_token: dto.refresh_token,
     });
-    if (error) throw new AppError(error.message, HTTP_STATUS.UNAUTHORIZED);
+    if (error) {
+      console.error("[Auth] Refresh token failed:", error);
+      throw new AppError(error.message, HTTP_STATUS.UNAUTHORIZED);
+    }
+    console.log("[Auth] Refresh token successful");
     return {
       user: data.user,
       session: data.session,
