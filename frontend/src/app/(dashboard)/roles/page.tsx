@@ -5,20 +5,8 @@ import { Icon } from "@/components/piq/icon";
 import { PiqBadge } from "@/components/piq/badge";
 import { PiqBtn, PiqInput, PiqModal, PiqSpinner, ActionBtn } from "@/components/piq/primitives";
 import { roleService } from "@/services/role.service";
+import { permissionService, type Permission } from "@/services/permission.service";
 import type { Role } from "@/types";
-
-type Permission = { id: string; name: string; description: string; resource: string; action: string };
-
-const PERMISSIONS: Permission[] = [
-  { id:"1", name:"users:read",         description:"List and view users",         resource:"users",       action:"read"   },
-  { id:"2", name:"users:write",        description:"Update user records",         resource:"users",       action:"write"  },
-  { id:"3", name:"users:delete",       description:"Delete or deactivate users",  resource:"users",       action:"delete" },
-  { id:"4", name:"roles:read",         description:"List and view roles",         resource:"roles",       action:"read"   },
-  { id:"5", name:"roles:write",        description:"Create or update roles",      resource:"roles",       action:"write"  },
-  { id:"6", name:"roles:delete",       description:"Delete roles",                resource:"roles",       action:"delete" },
-  { id:"7", name:"permissions:read",   description:"List permissions",            resource:"permissions", action:"read"   },
-  { id:"8", name:"permissions:assign", description:"Attach permissions to roles", resource:"permissions", action:"assign" },
-];
 
 const PERM_GROUPS: Record<string, { label: string; color: string; icon: string }> = {
   users:       { label:"Users",       color:"var(--accent)",  icon:"users"  },
@@ -38,6 +26,7 @@ function ActionIconBtn({ icon, color, onClick }: { icon: string; color: string; 
 
 export default function RolesPage() {
   const [roles, setRoles]           = useState<Role[]>([]);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
   const [loading, setLoading]       = useState(true);
   const [apiError, setApiError]     = useState<string | null>(null);
   const [selected, setSelected]     = useState<string | null>(null);
@@ -48,23 +37,26 @@ export default function RolesPage() {
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 2800); };
 
-  function loadRoles() {
+  function loadData() {
     setLoading(true);
-    roleService.getAll()
-      .then((res) => setRoles(res.data.data.map((r) => ({ ...r, permissions: r.permissions ?? [] }))))
-      .catch(() => setApiError("Failed to load roles. Check your connection or API configuration."))
+    Promise.all([roleService.getAll(), permissionService.getAll()])
+      .then(([rolesRes, permsRes]) => {
+        setRoles(rolesRes.data.data.map((r) => ({ ...r, permissions: r.permissions ?? [] })));
+        setPermissions(permsRes.data.data);
+      })
+      .catch(() => setApiError("Failed to load roles and permissions. Check your connection or API configuration."))
       .finally(() => setLoading(false));
   }
 
-  useEffect(() => { loadRoles(); }, []);
+  useEffect(() => { loadData(); }, []);
 
   const displayRole = roles.find((r) => r.id === selected) || roles[0] || null;
 
   const grouped = useMemo(() => {
     const g: Record<string, Permission[]> = {};
-    for (const p of PERMISSIONS) { if (!g[p.resource]) g[p.resource] = []; g[p.resource].push(p); }
+    for (const p of permissions) { if (!g[p.resource]) g[p.resource] = []; g[p.resource].push(p); }
     return g;
-  }, []);
+  }, [permissions]);
 
   async function saveRole(updated: Role) {
     try {
@@ -147,15 +139,15 @@ export default function RolesPage() {
         </div>
       )}
 
-      {!loading && !apiError && (
+      {!loading && !apiError && permissions.length > 0 && (
         <>
           {/* Role cards */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: 12 }}>
             {roles.map((role) => {
               const active = displayRole?.id === role.id;
               return (
-                <button key={role.id} onClick={() => setSelected(role.id)}
-                  style={{ textAlign: "left", padding: "18px 20px", borderRadius: "var(--radiusLg)", cursor: "pointer", border: `1.5px solid ${active ? "var(--accent)" : "var(--border)"}`, background: active ? "var(--accentD)" : "var(--surf)", transition: "all .15s", fontFamily: "inherit" }}
+                <div key={role.id} onClick={() => setSelected(role.id)}
+                  style={{ textAlign: "left", padding: "18px 20px", borderRadius: "var(--radiusLg)", cursor: "pointer", border: `1.5px solid ${active ? "var(--accent)" : "var(--border)"}`, background: active ? "var(--accentD)" : "var(--surf)", transition: "all .15s" }}
                   onMouseEnter={(e) => { if (!active) { e.currentTarget.style.borderColor = "var(--border2)"; e.currentTarget.style.background = "var(--surf2)"; } }}
                   onMouseLeave={(e) => { if (!active) { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--surf)"; } }}
                 >
@@ -180,7 +172,7 @@ export default function RolesPage() {
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--text3)" }}>
                     <span>{role.permissions.length} permission{role.permissions.length !== 1 ? "s" : ""}</span>
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>
@@ -244,7 +236,7 @@ export default function RolesPage() {
           <div style={{ background: "var(--surf)", border: "1px solid var(--border)", borderRadius: "var(--radiusLg)", overflow: "hidden" }}>
             <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--border)" }}>
               <div style={{ fontSize: 15, fontWeight: 600 }}>Permissions Reference</div>
-              <div style={{ fontSize: 13, color: "var(--text3)", marginTop: 2 }}>All available permissions in the system</div>
+              <div style={{ fontSize: 13, color: "var(--text3)", marginTop: 2 }}>All {permissions.length} available permissions in the system</div>
             </div>
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 600 }}>
@@ -257,11 +249,11 @@ export default function RolesPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {PERMISSIONS.map((p, i) => {
+                  {permissions.map((p, i) => {
                     const grp = PERM_GROUPS[p.resource] || { color: "var(--text2)" };
                     return (
                       <tr key={p.id}
-                        style={{ borderBottom: i < PERMISSIONS.length - 1 ? "1px solid var(--border)" : "none", transition: "background .1s" }}
+                        style={{ borderBottom: i < permissions.length - 1 ? "1px solid var(--border)" : "none", transition: "background .1s" }}
                         onMouseEnter={(e) => (e.currentTarget.style.background = "var(--surf2)")}
                         onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                       >
@@ -288,10 +280,10 @@ export default function RolesPage() {
 
       {/* Modals */}
       {editOpen && displayRole && (
-        <RoleFormModal role={displayRole} permissions={PERMISSIONS} grouped={grouped} onSave={saveRole} onClose={() => setEditOpen(false)} title={`Edit role — ${displayRole.name}`} />
+        <RoleFormModal role={displayRole} permissions={permissions} grouped={grouped} onSave={saveRole} onClose={() => setEditOpen(false)} title={`Edit role — ${displayRole.name}`} />
       )}
       {createOpen && (
-        <RoleFormModal role={null} permissions={PERMISSIONS} grouped={grouped} onSave={(d) => createRole(d as Omit<Role, "id" | "is_system">)} onClose={() => setCreateOpen(false)} title="Create new role" />
+        <RoleFormModal role={null} permissions={permissions} grouped={grouped} onSave={(d) => createRole(d as Omit<Role, "id" | "is_system">)} onClose={() => setCreateOpen(false)} title="Create new role" />
       )}
       <PiqModal open={!!confirmDel} onClose={() => setConfirmDel(null)} title="Delete role?"
         footer={<><PiqBtn variant="secondary" onClick={() => setConfirmDel(null)}>Cancel</PiqBtn><PiqBtn variant="danger" icon="trash" onClick={() => confirmDel && deleteRole(confirmDel.id)}>Delete role</PiqBtn></>}>
