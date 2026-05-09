@@ -9,6 +9,7 @@ import careerRoutes from "./career.routes";
 import cvRoutes from "./cv.routes";
 import interviewRoutes from "./interview.routes";
 import notificationRoutes from "./notification.routes";
+import githubRoutes from "./github.routes";
 import { supabaseAdmin } from "../config/supabase";
 import { env } from "../config/env";
 
@@ -63,5 +64,6 @@ router.use("/career", careerRoutes);
 router.use("/cv", cvRoutes);
 router.use("/interviews", interviewRoutes);
 router.use("/notifications", notificationRoutes);
+router.use("/github", githubRoutes);
 
 export default router;
