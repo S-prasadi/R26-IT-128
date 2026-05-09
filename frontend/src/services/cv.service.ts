@@ -24,4 +24,14 @@ export const cvService = {
 
   analyzeCV: (id: string, data?: { file_url?: string; github_url?: string }) =>
     apiClient.post<ApiResponse<CVAnalysisResult>>(`/cv/${id}/analyze`, data ?? {}),
+
+  uploadCV: (id: string, file: File) => {
+    const form = new FormData();
+    form.append("file", file);
+    return apiClient.post<ApiResponse<{ file_url: string; extracted_text: string; sections: Record<string, string> }>>(
+      `/cv/${id}/upload`,
+      form,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+  },
 };

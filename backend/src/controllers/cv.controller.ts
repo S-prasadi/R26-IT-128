@@ -37,6 +37,15 @@ export const cvController = {
     sendSuccess(res, data, "Sections saved");
   },
 
+  async upload(req: AuthRequest, res: Response): Promise<void> {
+    if (!req.file) {
+      res.status(400).json({ success: false, message: "No file uploaded." });
+      return;
+    }
+    const data = await cvService.uploadCV(p(req.params["id"]), req.user!.id, req.file);
+    sendSuccess(res, data, "CV uploaded and text extracted");
+  },
+
   async analyze(req: AuthRequest, res: Response): Promise<void> {
     const data = await cvService.analyzeCV(p(req.params["id"]), req.user!.id, req.body);
     // Send in-app notification
