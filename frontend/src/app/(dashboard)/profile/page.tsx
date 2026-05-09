@@ -9,6 +9,7 @@ import { Icon } from "@/components/piq/icon";
 import { userService } from "@/services/user.service";
 import { skillService } from "@/services/skill.service";
 import { progressService } from "@/services/progress.service";
+import { githubService } from "@/services/github.service";
 import type { UserSkill, ProgressModule } from "@/types";
 
 type ApiMe = {
@@ -72,6 +73,7 @@ export default function ProfilePage() {
 
   const [info, setInfo] = useState({ email: "", role: "", joined: "", department: "", intake: "" });
   const [form, setForm] = useState({ full_name: "", bio: "", github: "", linkedin: "" });
+  const [githubStatus, setGithubStatus] = useState<{ connected: boolean; github_username?: string } | null>(null);
   const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 2800); };
@@ -82,7 +84,8 @@ export default function ProfilePage() {
       userService.getMe(),
       skillService.getUserSkills(),
       progressService.getModuleProgress(),
-    ]).then(([meRes, skillsRes, progressRes]) => {
+      githubService.getStatus(),
+    ]).then(([meRes, skillsRes, progressRes, ghRes]) => {
       const me = meRes.data.data as ApiMe;
       setUserId(me.id);
       setInfo({
@@ -100,9 +103,29 @@ export default function ProfilePage() {
       });
       setSkills((skillsRes.data.data as UserSkill[]) ?? []);
       setProgress((progressRes.data.data as ProgressModule[]) ?? []);
+      setGithubStatus(ghRes.data.data);
     }).catch(() => setApiError("Failed to load profile. Please refresh."))
       .finally(() => setLoading(false));
   }, []);
+
+  async function handleConnectGitHub() {
+    try {
+      const res = await githubService.getAuthUrl();
+      window.location.href = res.data.data.url;
+    } catch {
+      showToast("Failed to get GitHub auth URL");
+    }
+  }
+
+  async function handleDisconnectGitHub() {
+    try {
+      await githubService.disconnect();
+      setGithubStatus({ connected: false });
+      showToast("GitHub disconnected");
+    } catch {
+      showToast("Failed to disconnect GitHub");
+    }
+  }
 
   async function handleSave() {
     if (!userId) return;
@@ -299,6 +322,36 @@ export default function ProfilePage() {
             </Link>
           </div>
         )}
+      </div>
+
+      {/* Connected Accounts */}
+      <div style={{ background: "var(--surf)", border: "1px solid var(--border)", borderRadius: "var(--radiusLg)", overflow: "hidden" }}>
+        <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--border)" }}>
+          <div style={{ fontSize: 15, fontWeight: 600 }}>Connected Accounts</div>
+          <div style={{ fontSize: 13, color: "var(--text3)", marginTop: 1 }}>Link external accounts for skill verification</div>
+        </div>
+        <div style={{ padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ width: 36, height: 36, borderRadius: "var(--radius)", background: "var(--surf2)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
+              &#xe800;
+            </div>
+            <div>
+              <div style={{ fontWeight: 600, fontSize: 14 }}>GitHub</div>
+              <div style={{ fontSize: 12, color: "var(--text3)", marginTop: 1 }}>
+                {githubStatus?.connected
+                  ? `Connected as ${githubStatus.github_username}`
+                  : "Not connected — connect to verify skills from your repos"}
+              </div>
+            </div>
+          </div>
+          <div>
+            {githubStatus?.connected ? (
+              <PiqBtn size="sm" variant="outline" onClick={handleDisconnectGitHub}>Disconnect</PiqBtn>
+            ) : (
+              <PiqBtn size="sm" onClick={handleConnectGitHub}>Connect GitHub</PiqBtn>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Toast */}

@@ -4,6 +4,7 @@ import { cvController } from "../controllers/cv.controller";
 import { authenticate } from "../middlewares/auth.middleware";
 import { requirePermission } from "../middlewares/permissions.middleware";
 import { validate } from "../middlewares/validate.middleware";
+import { uploadSingle } from "../middlewares/upload.middleware";
 import {
   createCVSchema,
   updateCVSchema,
@@ -39,5 +40,9 @@ router.put("/:id/sections", requirePermission("cv:write"),
 router.post("/:id/analyze", requirePermission("cv:write"),
   validate(analyzeCVSchema),
   (req, res) => cvController.analyze(req as AuthRequest, res as Response));
+
+router.post("/:id/upload", requirePermission("cv:write"),
+  uploadSingle,
+  (req, res) => cvController.upload(req as AuthRequest, res as Response));
 
 export default router;

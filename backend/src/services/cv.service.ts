@@ -111,6 +111,41 @@ export const cvService = {
     return data ?? [];
   },
 
+  async uploadCV(cvId: string, userId: string, file: Express.Multer.File): Promise<{ file_url: string; extracted_text: string; sections: Record<string, string> }> {
+    const { data: cv } = await supabaseAdmin
+      .from("cvs").select("id").eq("id", cvId).eq("user_id", userId).single();
+    if (!cv) throw new AppError("CV not found", HTTP_STATUS.NOT_FOUND);
+
+    const ext = file.mimetype === "application/pdf" ? "pdf"
+               : file.mimetype === "image/png"      ? "png"
+               : file.mimetype === "image/jpeg"     ? "jpg"
+               : "txt";
+    const storagePath = `${userId}/${cvId}.${ext}`;
+
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from("cv-files")
+      .upload(storagePath, file.buffer, { contentType: file.mimetype, upsert: true });
+    if (uploadError) throw new AppError(`Storage upload failed: ${uploadError.message}`, HTTP_STATUS.INTERNAL_SERVER_ERROR);
+
+    const { data: signedData, error: signError } = await supabaseAdmin.storage
+      .from("cv-files")
+      .createSignedUrl(storagePath, 3600);
+    if (signError || !signedData) throw new AppError("Failed to create signed URL", HTTP_STATUS.INTERNAL_SERVER_ERROR);
+
+    const file_url = signedData.signedUrl;
+
+    const file_b64 = file.buffer.toString("base64");
+    const cvResult = await callPython(
+      `${pythonUrls.moduleD()}/extract-cv`,
+      { file_b64, mimetype: file.mimetype },
+      { raw_text: "", sections: { summary: "", experience: "", education: "", skills: "", projects: "" } }
+    ) as { raw_text: string; sections: Record<string, string> };
+
+    await supabaseAdmin.from("cvs").update({ file_url }).eq("id", cvId);
+
+    return { file_url, extracted_text: cvResult.raw_text ?? "", sections: cvResult.sections ?? {} };
+  },
+
   async analyzeCV(cvId: string, userId: string, dto: AnalyzeCVDto) {
     const { data: cv } = await supabaseAdmin
       .from("cvs").select("*").eq("id", cvId).eq("user_id", userId).single();
