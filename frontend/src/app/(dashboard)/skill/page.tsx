@@ -6,6 +6,7 @@ import { PiqBtn, PiqSpinner, PiqStatCard } from "@/components/piq/primitives";
 import { Icon } from "@/components/piq/icon";
 import { PageHeader } from "@/components/common/PageHeader";
 import { skillService } from "@/services/skill.service";
+import { githubService } from "@/services/github.service";
 import type { Skill, UserSkill, SkillForecast, SkillAssessment } from "@/types";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { PiqChartContainer, PiqTooltip, PIQ_COLORS } from "@/components/piq/charts";
@@ -33,19 +34,23 @@ export default function SkillPage() {
   const [showAddModal, setShowAddModal]       = useState(false);
   const [addSkillId, setAddSkillId]           = useState("");
   const [addProf, setAddProf]                 = useState<"Beginner" | "Intermediate" | "Advanced">("Beginner");
+  const [githubStatus, setGithubStatus]       = useState<{ connected: boolean; github_username?: string } | null>(null);
+  const [githubVerifying, setGithubVerifying] = useState(false);
 
   useEffect(() => {
     async function load() {
       setLoading(true);
       try {
-        const [userRes, masterRes, assessRes] = await Promise.all([
+        const [userRes, masterRes, assessRes, ghRes] = await Promise.all([
           skillService.getUserSkills(),
           skillService.listMaster(),
           skillService.getAssessments(),
+          githubService.getStatus(),
         ]);
         setUserSkills(userRes.data.data ?? []);
         setMasterSkills(masterRes.data.data ?? []);
         setAssessments(assessRes.data.data ?? []);
+        setGithubStatus(ghRes.data.data);
       } catch {
         toast.error("Failed to load skills");
       } finally {
@@ -54,6 +59,53 @@ export default function SkillPage() {
     }
     load();
   }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const gh = params.get("github");
+    if (gh === "connected") {
+      toast.success("GitHub connected successfully");
+      window.history.replaceState({}, "", window.location.pathname);
+      githubService.getStatus().then((r) => setGithubStatus(r.data.data)).catch(() => {});
+    } else if (gh === "error") {
+      toast.error("GitHub connection failed. Try again.");
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
+
+  async function handleConnectGitHub() {
+    try {
+      const res = await githubService.getAuthUrl();
+      window.location.href = res.data.data.url;
+    } catch {
+      toast.error("Failed to get GitHub auth URL");
+    }
+  }
+
+  async function handleDisconnectGitHub() {
+    try {
+      await githubService.disconnect();
+      setGithubStatus({ connected: false });
+      toast.success("GitHub disconnected");
+    } catch {
+      toast.error("Failed to disconnect GitHub");
+    }
+  }
+
+  async function handleVerifySkills() {
+    setGithubVerifying(true);
+    try {
+      const res = await githubService.verifySkills();
+      const { updated } = res.data.data;
+      toast.success(`${updated} skill(s) verified via GitHub`);
+      const skillsRes = await skillService.getUserSkills();
+      setUserSkills(skillsRes.data.data ?? []);
+    } catch {
+      toast.error("GitHub skill verification failed");
+    } finally {
+      setGithubVerifying(false);
+    }
+  }
 
   async function handleAddSkill() {
     if (!addSkillId) return;
@@ -127,6 +179,32 @@ export default function SkillPage() {
           {/* Tab 1: My Skills */}
           {tab === "My Skills" && (
             <div>
+              {/* GitHub connection panel */}
+              <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", border: "1px solid var(--border)", padding: "14px 16px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>
+                    {githubStatus?.connected ? `GitHub: ${githubStatus.github_username}` : "GitHub: Not Connected"}
+                  </div>
+                  <div style={{ fontSize: 12, color: "var(--text2)", marginTop: 2 }}>
+                    {githubStatus?.connected
+                      ? "Click 'Verify Skills' to update proficiency from your repositories"
+                      : "Connect GitHub to auto-verify skills from your public repositories"}
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  {githubStatus?.connected ? (
+                    <>
+                      <PiqBtn size="sm" variant="secondary" onClick={handleVerifySkills} disabled={githubVerifying}>
+                        {githubVerifying ? "Verifying…" : "Verify Skills"}
+                      </PiqBtn>
+                      <PiqBtn size="sm" variant="outline" onClick={handleDisconnectGitHub}>Disconnect</PiqBtn>
+                    </>
+                  ) : (
+                    <PiqBtn size="sm" onClick={handleConnectGitHub}>Connect GitHub</PiqBtn>
+                  )}
+                </div>
+              </div>
+
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                 <span style={{ color: "var(--text2)", fontSize: 14 }}>{userSkills.length} skill{userSkills.length !== 1 ? "s" : ""} in your profile</span>
                 <PiqBtn icon="plus" onClick={() => setShowAddModal(true)}>Add Skill</PiqBtn>
