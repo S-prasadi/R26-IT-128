@@ -51,7 +51,7 @@ export const careerService = {
   async getGoal(userId: string) {
     const { data } = await supabaseAdmin
       .from("career_goals")
-      .select("id, target_role, target_industry, target_date, notes, created_at, updated_at")
+      .select("id, target_role, target_industry, target_date, notes, skills_snapshot, cv_id, created_at, updated_at")
       .eq("user_id", userId)
       .maybeSingle();
     return data;
@@ -61,7 +61,7 @@ export const careerService = {
     const { data, error } = await supabaseAdmin
       .from("career_goals")
       .upsert({ user_id: userId, ...dto }, { onConflict: "user_id" })
-      .select("id, target_role, target_industry, target_date, notes, updated_at")
+      .select("id, target_role, target_industry, target_date, notes, skills_snapshot, cv_id, updated_at")
       .single();
     if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
     return data;
