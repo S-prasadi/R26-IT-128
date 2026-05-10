@@ -1,5 +1,5 @@
 import apiClient from "@/lib/axios";
-import type { ApiResponse, CV, CVSection, CVJobMatch, CVSuggestion, CVAnalysisResult } from "@/types";
+import type { ApiResponse, CV, CVSection, CVJobMatch, CVSuggestion, CVAnalysisResult, CVSectionContent } from "@/types";
 
 type CVWithDetails = CV & { sections: CVSection[]; job_matches: CVJobMatch[]; suggestions: CVSuggestion[] };
 
@@ -28,7 +28,7 @@ export const cvService = {
   uploadCV: (id: string, file: File) => {
     const form = new FormData();
     form.append("file", file);
-    return apiClient.post<ApiResponse<{ file_url: string; extracted_text: string; sections: Record<string, string> }>>(
+    return apiClient.post<ApiResponse<{ file_url: string; extracted_text: string; sections: Partial<CVSectionContent>; links: { github?: string; linkedin?: string; portfolio?: string; email?: string; phone?: string } }>>(
       `/cv/${id}/upload`,
       form,
       { headers: { "Content-Type": "multipart/form-data" } }
