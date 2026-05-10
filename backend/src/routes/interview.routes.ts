@@ -4,6 +4,7 @@ import { interviewController } from "../controllers/interview.controller";
 import { authenticate } from "../middlewares/auth.middleware";
 import { requirePermission } from "../middlewares/permissions.middleware";
 import { validate } from "../middlewares/validate.middleware";
+import { uploadSingle } from "../middlewares/upload.middleware";
 import {
   createSessionSchema,
   endSessionSchema,
@@ -19,6 +20,10 @@ router.get("/", requirePermission("interviews:read"),
 
 router.get("/:id", requirePermission("interviews:read"),
   (req, res) => interviewController.get(req as AuthRequest, res as Response));
+
+router.post("/extract-document", requirePermission("interviews:write"),
+  uploadSingle,
+  (req, res) => interviewController.extractDocument(req as AuthRequest, res as Response));
 
 router.post("/", requirePermission("interviews:write"),
   validate(createSessionSchema),

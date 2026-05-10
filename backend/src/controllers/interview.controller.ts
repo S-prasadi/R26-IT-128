@@ -40,4 +40,13 @@ export const interviewController = {
     const data = await interviewService.submitResponse(p(req.params["id"]), req.user!.id, req.body);
     sendSuccess(res, data, "Response submitted");
   },
+
+  async extractDocument(req: AuthRequest, res: Response): Promise<void> {
+    if (!req.file) {
+      res.status(400).json({ success: false, message: "No file uploaded." });
+      return;
+    }
+    const data = await interviewService.extractDocumentText(req.file.buffer, req.file.mimetype);
+    sendSuccess(res, data, "Document text extracted");
+  },
 };
