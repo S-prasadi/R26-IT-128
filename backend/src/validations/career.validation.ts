@@ -1,10 +1,12 @@
 import { z } from "zod";
 
 export const upsertGoalSchema = z.object({
-  target_role:     z.string().trim().min(1),
-  target_industry: z.string().trim().optional(),
-  target_date:     z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  notes:           z.string().trim().optional(),
+  target_role:      z.string().trim().min(1),
+  target_industry:  z.string().trim().optional(),
+  target_date:      z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  notes:            z.string().trim().optional(),
+  skills_snapshot:  z.array(z.object({ skill_id: z.string(), name: z.string(), proficiency_label: z.string() })).optional(),
+  cv_id:            z.string().uuid().optional().nullable(),
 });
 
 export const addRoadmapItemSchema = z.object({

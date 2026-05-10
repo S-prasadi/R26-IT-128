@@ -99,12 +99,20 @@ export interface Milestone {
 }
 
 // --- Career ---
+export interface GoalSkillSnapshot {
+  skill_id: string;
+  name: string;
+  proficiency_label: string;
+}
+
 export interface CareerGoal {
   id: string;
   target_role: string;
   target_industry?: string;
   target_date?: string;
   notes?: string;
+  skills_snapshot?: GoalSkillSnapshot[];
+  cv_id?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -153,6 +161,49 @@ export interface CareerPrediction {
   paths: CareerPath[];
   graph_nodes: CareerGraphNode[];
   graph_edges: CareerGraphEdge[];
+}
+
+// --- CV structured section content ---
+export interface CVExperienceEntry {
+  company: string;
+  role: string;
+  start_date: string;
+  end_date: string;
+  location?: string;
+  bullets: string[];
+}
+
+export interface CVEducationEntry {
+  institution: string;
+  degree: string;
+  field?: string;
+  start_date: string;
+  end_date: string;
+  grade?: string;
+}
+
+export interface CVSkillsContent {
+  languages: string[];
+  frameworks: string[];
+  tools: string[];
+  other: string[];
+}
+
+export interface CVProjectEntry {
+  name: string;
+  description: string;
+  tech_stack: string[];
+  url?: string;
+  start_date?: string;
+  end_date?: string;
+}
+
+export interface CVSectionContent {
+  summary: string;
+  experience: CVExperienceEntry[];
+  education: CVEducationEntry[];
+  skills: CVSkillsContent;
+  projects: CVProjectEntry[];
 }
 
 // --- CV ---
