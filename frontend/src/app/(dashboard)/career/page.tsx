@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { PiqBtn, PiqSpinner, PiqStatCard } from "@/components/piq/primitives";
 import { PageHeader } from "@/components/common/PageHeader";
 import { careerService } from "@/services/career.service";
 import { skillService } from "@/services/skill.service";
-import type { CareerGoal, RoadmapItem, CareerPrediction, UserSkill } from "@/types";
+import { cvService } from "@/services/cv.service";
+import type { CareerGoal, GoalSkillSnapshot, RoadmapItem, CareerPrediction, UserSkill, CV } from "@/types";
 import { BarChart, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { PiqChartContainer, PiqTooltip, PIQ_COLORS } from "@/components/piq/charts";
 
@@ -30,24 +31,45 @@ export default function CareerPage() {
   const [predicting, setPredicting] = useState(false);
   const [editGoal, setEditGoal]   = useState(false);
 
+  const [cvs, setCvs] = useState<CV[]>([]);
+  const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
+  const [selectedCvId, setSelectedCvId] = useState<string | null>(null);
+
   const [form, setForm] = useState({ target_role: "", target_industry: "", target_date: "", notes: "" });
   const [newItem, setNewItem] = useState({ title: "", description: "", due_date: "" });
   const [showAddItem, setShowAddItem] = useState(false);
+
+  // Inline editing
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState("");
+  const editInputRef = useRef<HTMLInputElement>(null);
+
+  // Drag-to-reorder
+  const dragIndex = useRef<number | null>(null);
+
+  // Completion celebration
+  const [recentlyDone, setRecentlyDone] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     async function load() {
       setLoading(true);
       try {
-        const [goalRes, roadmapRes, skillsRes] = await Promise.all([
+        const [goalRes, roadmapRes, skillsRes, cvsRes] = await Promise.all([
           careerService.getGoal(),
           careerService.getRoadmap(),
           skillService.getUserSkills(),
+          cvService.listCVs(),
         ]);
         const g = goalRes.data.data;
         setGoal(g);
-        if (g) setForm({ target_role: g.target_role, target_industry: g.target_industry ?? "", target_date: g.target_date ?? "", notes: g.notes ?? "" });
+        if (g) {
+          setForm({ target_role: g.target_role, target_industry: g.target_industry ?? "", target_date: g.target_date ?? "", notes: g.notes ?? "" });
+          setSelectedSkills(new Set((g.skills_snapshot ?? []).map((s) => s.skill_id)));
+          setSelectedCvId(g.cv_id ?? null);
+        }
         setRoadmap(roadmapRes.data.data ?? []);
         setUserSkills(skillsRes.data.data ?? []);
+        setCvs(cvsRes.data.data ?? []);
       } catch {
         toast.error("Failed to load career data");
       } finally {
@@ -61,7 +83,17 @@ export default function CareerPage() {
     if (!form.target_role.trim()) { toast.error("Target role is required"); return; }
     setSaving(true);
     try {
-      const res = await careerService.upsertGoal({ target_role: form.target_role, target_industry: form.target_industry || undefined, target_date: form.target_date || undefined, notes: form.notes || undefined });
+      const skills_snapshot: GoalSkillSnapshot[] = userSkills
+        .filter((us) => selectedSkills.has(us.skill_id))
+        .map((us) => ({ skill_id: us.skill_id, name: us.skills?.name ?? us.skill_id, proficiency_label: us.proficiency_label }));
+      const res = await careerService.upsertGoal({
+        target_role:     form.target_role,
+        target_industry: form.target_industry || undefined,
+        target_date:     form.target_date     || undefined,
+        notes:           form.notes           || undefined,
+        skills_snapshot: skills_snapshot.length ? skills_snapshot : undefined,
+        cv_id:           selectedCvId,
+      });
       setGoal(res.data.data);
       setEditGoal(false);
       toast.success("Career goal saved");
@@ -102,6 +134,10 @@ export default function CareerPage() {
     try {
       const res = await careerService.updateRoadmapItem(id, { status });
       setRoadmap((prev) => prev.map((r) => r.id === id ? { ...r, ...res.data.data } : r));
+      if (status === "done") {
+        setRecentlyDone((prev) => new Set(prev).add(id));
+        setTimeout(() => setRecentlyDone((prev) => { const s = new Set(prev); s.delete(id); return s; }), 1200);
+      }
     } catch {
       toast.error("Failed to update status");
     }
@@ -117,10 +153,80 @@ export default function CareerPage() {
     }
   }
 
+  function startEditing(item: RoadmapItem) {
+    setEditingId(item.id);
+    setEditingTitle(item.title);
+    setTimeout(() => editInputRef.current?.focus(), 0);
+  }
+
+  async function commitEdit(id: string) {
+    const title = editingTitle.trim();
+    if (!title) { setEditingId(null); return; }
+    setEditingId(null);
+    try {
+      const res = await careerService.updateRoadmapItem(id, { title });
+      setRoadmap((prev) => prev.map((r) => r.id === id ? { ...r, ...res.data.data } : r));
+    } catch {
+      toast.error("Failed to save title");
+    }
+  }
+
+  function handleDragStart(index: number) {
+    dragIndex.current = index;
+  }
+
+  function handleDragOver(e: React.DragEvent, index: number) {
+    e.preventDefault();
+    if (dragIndex.current === null || dragIndex.current === index) return;
+    setRoadmap((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(dragIndex.current!, 1);
+      next.splice(index, 0, moved);
+      dragIndex.current = index;
+      return next;
+    });
+  }
+
+  async function handleDragEnd() {
+    dragIndex.current = null;
+    // Persist new order_index for all items
+    const updates = roadmap.map((item, i) =>
+      item.order_index !== i ? careerService.updateRoadmapItem(item.id, { order_index: i }) : null
+    ).filter(Boolean);
+    if (updates.length) {
+      try {
+        await Promise.all(updates);
+        setRoadmap((prev) => prev.map((item, i) => ({ ...item, order_index: i })));
+      } catch {
+        toast.error("Failed to save order");
+      }
+    }
+  }
+
   const done = roadmap.filter((r) => r.status === "done").length;
 
   return (
     <div style={{ maxWidth: 960, margin: "0 auto" }}>
+      <style>{`
+        @keyframes piq-done-pop {
+          0%   { opacity: 0; transform: scale(0.5); }
+          60%  { opacity: 1; transform: scale(1.15); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        .piq-done-badge {
+          animation: piq-done-pop 0.35s ease forwards;
+        }
+        @keyframes piq-done-fade {
+          0%   { opacity: 1; }
+          100% { opacity: 0; }
+        }
+        .piq-done-badge-fade {
+          animation: piq-done-fade 0.4s ease 0.8s forwards;
+        }
+        [draggable=true] { cursor: grab; }
+        [draggable=true]:active { cursor: grabbing; }
+        .piq-roadmap-item-edit { outline: none; }
+      `}</style>
       <PageHeader title="Career Pathway" description="Set goals, predict your career path, track your roadmap" />
 
       {!loading && (
@@ -155,23 +261,54 @@ export default function CareerPage() {
         <>
           {/* Step 1: Career Goal */}
           {step === "Career Goal" && (
-            <div style={{ maxWidth: 560 }}>
+            <div style={{ maxWidth: 640 }}>
               {goal && !editGoal ? (
-                <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 24, border: "1px solid var(--border)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
-                    <div style={{ fontWeight: 600, fontSize: 18 }}>{goal.target_role}</div>
-                    <PiqBtn variant="secondary" size="sm" onClick={() => setEditGoal(true)}>Edit</PiqBtn>
-                  </div>
-                  {goal.target_industry && <Field label="Industry" value={goal.target_industry} />}
-                  {goal.target_date && <Field label="Target Date" value={new Date(goal.target_date).toLocaleDateString()} />}
-                  {goal.notes && <Field label="Notes" value={goal.notes} />}
-                  <div style={{ marginTop: 20 }}>
-                    <PiqBtn onClick={() => setStep("Career Path")}>Generate Career Path →</PiqBtn>
+                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  {/* Summary card */}
+                  <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 24, border: "1px solid var(--border)" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: 20 }}>{goal.target_role}</div>
+                        {goal.target_industry && <div style={{ fontSize: 13, color: "var(--text2)", marginTop: 2 }}>{goal.target_industry}</div>}
+                      </div>
+                      <PiqBtn variant="secondary" size="sm" onClick={() => setEditGoal(true)}>Edit</PiqBtn>
+                    </div>
+                    <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
+                      {goal.target_date && <Field label="Target Date" value={new Date(goal.target_date).toLocaleDateString()} />}
+                      {goal.notes && <Field label="Notes" value={goal.notes} />}
+                    </div>
+                    {/* Attached CV */}
+                    {goal.cv_id && (() => { const cv = cvs.find((c) => c.id === goal.cv_id); return cv ? (
+                      <div style={{ marginTop: 14, padding: "8px 12px", background: "var(--surf3)", borderRadius: "var(--radius)", border: "1px solid var(--border2)", display: "flex", alignItems: "center", gap: 8 }}>
+                        <span style={{ fontSize: 16 }}>📄</span>
+                        <span style={{ fontSize: 13, color: "var(--text2)" }}>Attached CV:</span>
+                        <span style={{ fontSize: 13, fontWeight: 600 }}>{cv.title}</span>
+                        {cv.ats_score != null && <span style={{ fontSize: 11, marginLeft: "auto", color: "var(--teal)" }}>ATS {cv.ats_score}%</span>}
+                      </div>
+                    ) : null; })()}
+                    {/* Skills snapshot */}
+                    {goal.skills_snapshot && goal.skills_snapshot.length > 0 && (
+                      <div style={{ marginTop: 14 }}>
+                        <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 6 }}>Skills attached to this goal</div>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                          {goal.skills_snapshot.map((s) => (
+                            <span key={s.skill_id} style={{ fontSize: 12, padding: "3px 10px", borderRadius: 12, background: "var(--accentD)", color: "var(--accent)", fontWeight: 500 }}>
+                              {s.name} · {s.proficiency_label}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <div style={{ marginTop: 20 }}>
+                      <PiqBtn onClick={() => setStep("Career Path")}>Generate Career Path →</PiqBtn>
+                    </div>
                   </div>
                 </div>
               ) : (
                 <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 24, border: "1px solid var(--border)" }}>
-                  <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 16 }}>{goal ? "Edit Goal" : "Set Your Career Goal"}</div>
+                  <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 20 }}>{goal ? "Edit Goal" : "Set Your Career Goal"}</div>
+
+                  {/* Basic fields */}
                   <FormRow label="Target Role *">
                     <input value={form.target_role} onChange={(e) => setForm({ ...form, target_role: e.target.value })} placeholder="e.g. Senior Software Engineer" style={inputStyle} />
                   </FormRow>
@@ -182,8 +319,66 @@ export default function CareerPage() {
                     <input type="date" value={form.target_date} onChange={(e) => setForm({ ...form, target_date: e.target.value })} style={inputStyle} />
                   </FormRow>
                   <FormRow label="Notes">
-                    <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={3} style={{ ...inputStyle, resize: "vertical" }} placeholder="Any notes or aspirations…" />
+                    <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={2} style={{ ...inputStyle, resize: "vertical" }} placeholder="Any notes or aspirations…" />
                   </FormRow>
+
+                  {/* CV selector */}
+                  <FormRow label="Attach a CV">
+                    {cvs.length === 0 ? (
+                      <p style={{ fontSize: 13, color: "var(--text3)", margin: 0 }}>No CVs found — upload one in the CV section first.</p>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--text2)", cursor: "pointer" }}>
+                          <input type="radio" name="cv_select" checked={selectedCvId === null} onChange={() => setSelectedCvId(null)} />
+                          None
+                        </label>
+                        {cvs.map((cv) => (
+                          <label key={cv.id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, cursor: "pointer", padding: "6px 10px", borderRadius: "var(--radius)", background: selectedCvId === cv.id ? "var(--accentD)" : "transparent", border: `1px solid ${selectedCvId === cv.id ? "var(--accent)" : "var(--border2)"}` }}>
+                            <input type="radio" name="cv_select" checked={selectedCvId === cv.id} onChange={() => setSelectedCvId(cv.id)} style={{ accentColor: "var(--accent)" }} />
+                            <span style={{ flex: 1, fontWeight: selectedCvId === cv.id ? 600 : 400 }}>{cv.title}</span>
+                            {cv.ats_score != null && <span style={{ fontSize: 11, color: "var(--teal)" }}>ATS {cv.ats_score}%</span>}
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </FormRow>
+
+                  {/* Skills picker */}
+                  <FormRow label={`Select Skills from Your Profile${selectedSkills.size ? ` (${selectedSkills.size} selected)` : ""}`}>
+                    {userSkills.length === 0 ? (
+                      <p style={{ fontSize: 13, color: "var(--text3)", margin: 0 }}>No skills found — add skills in the Skills section first.</p>
+                    ) : (
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 6, maxHeight: 180, overflowY: "auto", padding: 4 }}>
+                        {userSkills.map((us) => {
+                          const selected = selectedSkills.has(us.skill_id);
+                          return (
+                            <button
+                              key={us.skill_id}
+                              type="button"
+                              onClick={() => setSelectedSkills((prev) => {
+                                const next = new Set(prev);
+                                selected ? next.delete(us.skill_id) : next.add(us.skill_id);
+                                return next;
+                              })}
+                              style={{
+                                padding: "4px 12px", borderRadius: 12, fontSize: 12, cursor: "pointer", border: "1px solid",
+                                borderColor: selected ? "var(--accent)" : "var(--border2)",
+                                background:  selected ? "var(--accentD)" : "var(--surf3)",
+                                color:       selected ? "var(--accent)"  : "var(--text2)",
+                                fontWeight:  selected ? 600 : 400,
+                                display: "flex", alignItems: "center", gap: 4,
+                              }}
+                            >
+                              {us.skills?.name ?? us.skill_id}
+                              {us.github_verified && <span title="GitHub verified" style={{ fontSize: 10 }}>✓</span>}
+                              <span style={{ opacity: 0.6 }}>· {us.proficiency_label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </FormRow>
+
                   <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                     {goal && <PiqBtn variant="secondary" onClick={() => setEditGoal(false)}>Cancel</PiqBtn>}
                     <PiqBtn onClick={handleSaveGoal} disabled={saving}>{saving ? "Saving…" : "Save Goal"}</PiqBtn>
@@ -320,20 +515,54 @@ export default function CareerPage() {
                 </div>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {roadmap.map((item) => (
-                    <div key={item.id} style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 16, border: "1px solid var(--border)", display: "flex", gap: 12, alignItems: "flex-start" }}>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: item.status === "done" ? 400 : 600, textDecoration: item.status === "done" ? "line-through" : "none", color: item.status === "done" ? "var(--text2)" : "var(--text)" }}>{item.title}</div>
+                  {roadmap.map((item, index) => (
+                    <div
+                      key={item.id}
+                      draggable
+                      onDragStart={() => handleDragStart(index)}
+                      onDragOver={(e) => handleDragOver(e, index)}
+                      onDragEnd={handleDragEnd}
+                      style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 16, border: "1px solid var(--border)", display: "flex", gap: 12, alignItems: "flex-start", userSelect: "none" }}
+                    >
+                      {/* Drag handle */}
+                      <div style={{ color: "var(--text3)", fontSize: 16, paddingTop: 2, cursor: "grab", flexShrink: 0 }} title="Drag to reorder">⠿</div>
+
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        {editingId === item.id ? (
+                          <input
+                            ref={editInputRef}
+                            className="piq-roadmap-item-edit"
+                            value={editingTitle}
+                            onChange={(e) => setEditingTitle(e.target.value)}
+                            onBlur={() => commitEdit(item.id)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") commitEdit(item.id);
+                              if (e.key === "Escape") setEditingId(null);
+                            }}
+                            style={{ ...inputStyle, fontWeight: 600, padding: "2px 6px", width: "100%" }}
+                          />
+                        ) : (
+                          <div
+                            onClick={() => startEditing(item)}
+                            title="Click to edit"
+                            style={{ fontWeight: item.status === "done" ? 400 : 600, textDecoration: item.status === "done" ? "line-through" : "none", color: item.status === "done" ? "var(--text2)" : "var(--text)", cursor: "text", display: "flex", alignItems: "center", gap: 6 }}
+                          >
+                            {item.title}
+                            {recentlyDone.has(item.id) && (
+                              <span className="piq-done-badge piq-done-badge-fade" style={{ fontSize: 11, background: "var(--teal)", color: "#fff", borderRadius: 10, padding: "1px 7px", fontWeight: 600, flexShrink: 0 }}>✓ Done!</span>
+                            )}
+                          </div>
+                        )}
                         {item.description && <div style={{ fontSize: 13, color: "var(--text2)", marginTop: 2 }}>{item.description}</div>}
                         {item.due_date && <div style={{ fontSize: 12, color: "var(--text3)", marginTop: 4 }}>Due: {new Date(item.due_date).toLocaleDateString()}</div>}
                       </div>
                       <select value={item.status} onChange={(e) => handleStatusChange(item.id, e.target.value as any)}
-                        style={{ fontSize: 12, padding: "4px 8px", borderRadius: "var(--radius)", border: `1px solid ${STATUS_COLORS[item.status]}`, background: "var(--surf)", color: STATUS_COLORS[item.status], cursor: "pointer" }}>
+                        style={{ fontSize: 12, padding: "4px 8px", borderRadius: "var(--radius)", border: `1px solid ${STATUS_COLORS[item.status]}`, background: "var(--surf)", color: STATUS_COLORS[item.status], cursor: "pointer", flexShrink: 0 }}>
                         <option value="pending">Pending</option>
                         <option value="in_progress">In Progress</option>
                         <option value="done">Done</option>
                       </select>
-                      <button onClick={() => handleDeleteItem(item.id)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 18 }}>×</button>
+                      <button onClick={() => handleDeleteItem(item.id)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 18, flexShrink: 0 }}>×</button>
                     </div>
                   ))}
                 </div>

@@ -24,6 +24,14 @@ export const env = {
 
   adminSetupKey: process.env["ADMIN_SETUP_KEY"] ?? "",
 
+  frontendUrl: process.env["FRONTEND_URL"] ?? "http://localhost:3000",
+
+  github: {
+    clientId:     process.env["GITHUB_CLIENT_ID"] ?? "",
+    clientSecret: process.env["GITHUB_CLIENT_SECRET"] ?? "",
+    redirectUri:  process.env["GITHUB_OAUTH_REDIRECT_URI"] ?? "http://localhost:8081/api/github/callback",
+  },
+
   python: {
     moduleAUrl: process.env["PYTHON_MODULE_A_URL"] ?? "http://localhost:8001",
     moduleBUrl: process.env["PYTHON_MODULE_B_URL"] ?? "http://localhost:8002",

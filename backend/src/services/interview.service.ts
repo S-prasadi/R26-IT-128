@@ -84,7 +84,7 @@ export const interviewService = {
 
     const generated = await callPython(
       `${pythonUrls.moduleD()}/generate-questions`,
-      { session_id: session.id, topic: dto.topic, difficulty: dto.difficulty, skills: dto.skills ?? [] },
+      { session_id: session.id, topic: dto.topic, difficulty: dto.difficulty, skills: dto.skills ?? [], document_text: dto.document_text ?? "" },
       mockQuestions(dto.topic, dto.difficulty)
     ) as { questions: Array<{ id: string; text: string; type: string; difficulty: number }> };
 
@@ -123,15 +123,26 @@ export const interviewService = {
     return data;
   },
 
+  async extractDocumentText(fileBuffer: Buffer, mimetype: string): Promise<{ extracted_text: string }> {
+    const file_b64 = fileBuffer.toString("base64");
+    const result = await callPython(
+      `${pythonUrls.moduleD()}/extract-ocr`,
+      { file_b64, mimetype },
+      { text: "" }
+    ) as { text: string };
+    return { extracted_text: result.text ?? "" };
+  },
+
   async submitResponse(sessionId: string, userId: string, dto: SubmitResponseDto) {
-    // verify session ownership
-    const { data: session } = await supabaseAdmin
+    // Verify session ownership and that the question belongs to this session.
+    const { data: question } = await supabaseAdmin
       .from("interview_sessions")
-      .select("id")
+      .select("id, interview_questions!inner(id)")
       .eq("id", sessionId)
       .eq("user_id", userId)
+      .eq("interview_questions.id", dto.question_id)
       .single();
-    if (!session) throw new AppError("Session not found", HTTP_STATUS.NOT_FOUND);
+    if (!question) throw new AppError("Question not found for this session", HTTP_STATUS.NOT_FOUND);
 
     const analysis = await callPython(
       `${pythonUrls.moduleD()}/analyze-response`,
@@ -139,19 +150,31 @@ export const interviewService = {
       MOCK_RESPONSE_ANALYSIS
     ) as typeof MOCK_RESPONSE_ANALYSIS;
 
-    const { data, error } = await supabaseAdmin
+    const responsePayload = {
+      question_id:       dto.question_id,
+      response_text:     dto.response_text,
+      score:             analysis.score,
+      feedback:          analysis.feedback,
+      engagement_score:  analysis.engagement_score,
+      emotion_data:      { ...dto.emotion_data, summary: analysis.emotion_summary },
+    };
+
+    const { data: existing } = await supabaseAdmin
       .from("interview_responses")
-      .upsert(
-        {
-          question_id:     dto.question_id,
-          response_text:   dto.response_text,
-          score:           analysis.score,
-          feedback:        analysis.feedback,
-          engagement_score: analysis.engagement_score,
-          emotion_data:    { ...dto.emotion_data, summary: analysis.emotion_summary },
-        },
-        { onConflict: "question_id" }
-      )
+      .select("id")
+      .eq("question_id", dto.question_id)
+      .maybeSingle();
+
+    const query = existing
+      ? supabaseAdmin
+          .from("interview_responses")
+          .update(responsePayload)
+          .eq("id", existing.id)
+      : supabaseAdmin
+          .from("interview_responses")
+          .insert(responsePayload);
+
+    const { data, error } = await query
       .select("id, question_id, score, feedback, engagement_score, emotion_data, created_at")
       .single();
     if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
