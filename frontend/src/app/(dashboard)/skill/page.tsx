@@ -7,11 +7,11 @@ import { Icon } from "@/components/piq/icon";
 import { PageHeader } from "@/components/common/PageHeader";
 import { skillService } from "@/services/skill.service";
 import { githubService } from "@/services/github.service";
-import type { Skill, UserSkill, SkillForecast, SkillAssessment } from "@/types";
+import type { Skill, UserSkill, SkillForecast } from "@/types";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { PiqChartContainer, PiqTooltip, PIQ_COLORS } from "@/components/piq/charts";
 
-const TABS = ["My Skills", "Forecast", "Assessments", "Skill Catalog"] as const;
+const TABS = ["My Skills", "Forecast", "Skill Catalog"] as const;
 type Tab = (typeof TABS)[number];
 
 const PROF_LABELS = ["Beginner", "Intermediate", "Advanced"] as const;
@@ -28,7 +28,6 @@ export default function SkillPage() {
   const [userSkills, setUserSkills]           = useState<UserSkill[]>([]);
   const [masterSkills, setMasterSkills]       = useState<Skill[]>([]);
   const [forecast, setForecast]               = useState<SkillForecast | null>(null);
-  const [assessments, setAssessments]         = useState<SkillAssessment[]>([]);
   const [loading, setLoading]                 = useState(true);
   const [forecastLoading, setForecastLoading] = useState(false);
   const [showAddModal, setShowAddModal]       = useState(false);
@@ -41,15 +40,13 @@ export default function SkillPage() {
     async function load() {
       setLoading(true);
       try {
-        const [userRes, masterRes, assessRes, ghRes] = await Promise.all([
+        const [userRes, masterRes, ghRes] = await Promise.all([
           skillService.getUserSkills(),
           skillService.listMaster(),
-          skillService.getAssessments(),
           githubService.getStatus(),
         ]);
         setUserSkills(userRes.data.data ?? []);
         setMasterSkills(masterRes.data.data ?? []);
-        setAssessments(assessRes.data.data ?? []);
         setGithubStatus(ghRes.data.data);
       } catch {
         toast.error("Failed to load skills");
@@ -151,13 +148,12 @@ export default function SkillPage() {
 
   return (
     <div style={{ maxWidth: 960, margin: "0 auto" }}>
-      <PageHeader title="Skill Intelligence" description="Track skills, forecast demand, log assessments" />
+      <PageHeader title="Skill Intelligence" description="Track skills and forecast demand" />
 
       {!loading && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 14, marginBottom: 24 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 24 }}>
           <PiqStatCard label="Skills in Profile" value={userSkills.length} icon="skill" color="var(--accent)" sub="Tracked skills" />
           <PiqStatCard label="Verified via GitHub" value={userSkills.filter((s) => s.github_verified).length} icon="github" color="var(--teal)" sub="Confirmed skills" />
-          <PiqStatCard label="Assessments Logged" value={assessments.length} icon="chart" color="var(--amber)" sub="Test scores" />
           <PiqStatCard label="Master Catalog" value={masterSkills.length} icon="list" color="var(--violet)" sub="Available skills" />
         </div>
       )}
@@ -387,40 +383,6 @@ export default function SkillPage() {
             </div>
           )}
 
-          {/* Tab 3: Assessments */}
-          {tab === "Assessments" && (
-            <div>
-              {assessments.length === 0 ? (
-                <EmptyState text="No assessments yet. These are logged automatically after CV analysis or skill tests." />
-              ) : (
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
-                  <thead>
-                    <tr style={{ borderBottom: "1px solid var(--border)", color: "var(--text2)" }}>
-                      {["Skill", "Category", "Score", "Date", "Notes"].map((h) => (
-                        <th key={h} style={{ padding: "8px 12px", textAlign: "left", fontWeight: 500 }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {assessments.map((a) => (
-                      <tr key={a.id} style={{ borderBottom: "1px solid var(--border2)" }}>
-                        <td style={{ padding: "10px 12px", fontWeight: 500 }}>{a.skills?.name ?? "—"}</td>
-                        <td style={{ padding: "10px 12px", color: "var(--text2)" }}>{a.skills?.category}</td>
-                        <td style={{ padding: "10px 12px" }}>
-                          <span style={{ fontWeight: 700, color: a.score >= 80 ? "var(--teal)" : a.score >= 60 ? "var(--amber)" : "var(--rose)" }}>{a.score}</span>
-                          <span style={{ color: "var(--text3)", fontSize: 12 }}>/100</span>
-                        </td>
-                        <td style={{ padding: "10px 12px", color: "var(--text2)" }}>{new Date(a.assessed_at).toLocaleDateString()}</td>
-                        <td style={{ padding: "10px 12px", color: "var(--text2)" }}>{a.notes ?? "—"}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          )}
-
-          {/* Tab 4: Skill Catalog */}
           {tab === "Skill Catalog" && (
             <div>
               {categories.map((cat) => (
