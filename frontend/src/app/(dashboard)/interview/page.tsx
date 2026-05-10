@@ -12,6 +12,7 @@ import { PiqChartContainer, PiqTooltip, PIQ_COLORS } from "@/components/piq/char
 const STEPS = ["Setup", "Live Interview", "Summary"] as const;
 type Step = (typeof STEPS)[number];
 
+const DOCUMENT_CONTEXT_LIMIT = 10000;
 const TOPICS = ["Frontend Development", "Backend Development", "DevOps", "Data Science", "System Design", "Full-Stack Development"];
 const EMOTIONS = ["Confident", "Neutral", "Nervous", "Engaged", "Confused"];
 const EMOTION_COLORS: Record<string, string> = {
@@ -40,6 +41,9 @@ export default function InterviewPage() {
 
   const [form, setForm] = useState({ topic: "Frontend Development", difficulty: 3 });
   const [currentEmotion, setCurrentEmotion] = useState("Neutral");
+  const [docFile, setDocFile] = useState<File | null>(null);
+  const [extractedText, setExtractedText] = useState("");
+  const [extracting, setExtracting] = useState(false);
 
   useEffect(() => {
     loadSessions();
@@ -64,10 +68,32 @@ export default function InterviewPage() {
     }
   }
 
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setDocFile(file);
+    setExtracting(true);
+    setExtractedText("");
+    try {
+      const result = await interviewService.extractDocument(file);
+      setExtractedText(result.extracted_text);
+      if (!result.extracted_text) toast.warning("No text could be extracted from the document.");
+    } catch {
+      toast.error("Failed to extract document text");
+      setDocFile(null);
+    } finally {
+      setExtracting(false);
+    }
+  }
+
   async function handleStart() {
     setStarting(true);
     try {
-      const res = await interviewService.createSession({ topic: form.topic, difficulty: form.difficulty });
+      const res = await interviewService.createSession({
+        topic: form.topic,
+        difficulty: form.difficulty,
+        ...(extractedText ? { document_text: extractedText.slice(0, DOCUMENT_CONTEXT_LIMIT) } : {}),
+      });
       setCurrent(res.data.data);
       setQIndex(0);
       setLastFeedback(null);
@@ -200,7 +226,34 @@ export default function InterviewPage() {
                     style={{ width: "100%" }} />
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--text3)" }}><span>Easy</span><span>Hard</span></div>
                 </div>
-                <PiqBtn onClick={handleStart} disabled={starting}>{starting ? "Starting…" : "Start Interview"}</PiqBtn>
+
+                {/* Document upload for context-aware question generation */}
+                <div style={{ marginBottom: 20, border: "1px dashed var(--border2)", borderRadius: "var(--radius)", padding: 16, background: "var(--surf3)" }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>Upload Document <span style={{ fontWeight: 400, color: "var(--text3)" }}>(optional)</span></div>
+                  <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 12 }}>Upload a job description, resume, or notes — questions will be tailored to it using AI.</div>
+                  <label style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "7px 14px", borderRadius: "var(--radius)", border: "1px solid var(--border2)", background: "var(--surf2)", fontSize: 13, color: "var(--text)", cursor: "pointer" }}>
+                    📎 {docFile ? docFile.name : "Choose file"}
+                    <input type="file" accept=".pdf,.png,.jpg,.jpeg,.txt" onChange={handleFileChange} style={{ display: "none" }} />
+                  </label>
+                  {extracting && (
+                    <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--text2)" }}>
+                      <PiqSpinner /> Extracting text…
+                    </div>
+                  )}
+                  {extractedText && !extracting && (
+                    <div style={{ marginTop: 10 }}>
+                      <div style={{ fontSize: 12, color: "var(--teal)", fontWeight: 600, marginBottom: 4 }}>✓ Document ready — questions will be tailored to this content</div>
+                      <div style={{ fontSize: 12, color: "var(--text3)", background: "var(--surf2)", borderRadius: "var(--radius)", padding: "8px 10px", maxHeight: 72, overflow: "hidden", lineHeight: 1.5 }}>
+                        {extractedText.slice(0, 300)}{extractedText.length > 300 ? "…" : ""}
+                      </div>
+                      <button onClick={() => { setDocFile(null); setExtractedText(""); }} style={{ marginTop: 6, fontSize: 12, color: "var(--rose)", background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+                        Remove document
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <PiqBtn onClick={handleStart} disabled={starting || extracting}>{starting ? "Starting…" : "Start Interview"}</PiqBtn>
               </div>
               {sessions.length > 0 && (
                 <div style={{ marginTop: 16 }}>
