@@ -16,7 +16,8 @@ export const updateCVSchema = z.object({
   match_score:              z.number().int().min(0).max(100).optional(),
   bert_skills:              z.array(z.any()).optional(),
   github_verified_skills:   z.array(z.any()).optional(),
-  file_url:                 z.string().url().optional(),
+  file_url:                 z.string().url().optional().nullable(),
+  file_path:                z.string().optional().nullable(),
 });
 
 const cvSectionSchema = z.object({
