@@ -61,23 +61,26 @@ export interface SkillAssessment {
 
 export interface SkillForecastItem {
   skill: string;
-  current_rank: number;
-  forecast_3m: number;
+  rank: number;
+  predicted_weekly_demand: number;
+  current_weekly_demand: number;
   velocity: "rising" | "stable" | "falling";
   change_pct: number;
 }
 
 export interface EarlyWarning {
   skill: string;
-  global_trend_date: string;
-  expected_local_date: string;
   weeks_ahead: number;
+  correlation: number;
+  interpretation: string;
 }
 
 export interface SkillForecast {
   trending: SkillForecastItem[];
   early_warnings: EarlyWarning[];
   forecast_chart: Record<string, string | number>[];
+  matched: boolean;
+  matched_skills: string[];
 }
 
 // --- Progress ---
@@ -217,6 +220,7 @@ export interface CV {
   match_score?: number;
   bert_skills?: object[];
   github_verified_skills?: object[];
+  project_verification?: CVProjectVerification | null;
   file_url?: string;
   created_at: string;
   updated_at: string;
@@ -254,6 +258,46 @@ export interface CVAnalysisResult {
   suggestions: Array<{ section: string; issue: string; fix_example: string }>;
 }
 
+export interface CVProjectVerification {
+  github_username: string;
+  checked_at: string;
+  summary: { total: number; verified: number; flagged: number };
+  results: Array<{
+    name: string;
+    claimed_url: string | null;
+    found: boolean;
+    repo_url: string | null;
+    owned_by_user: boolean;
+    is_fork: boolean;
+    last_pushed: string | null;
+    languages_matched: string[];
+    languages_unverified: string[];
+    confidence: number;
+  }>;
+}
+
+export interface CVJobPost {
+  id: string;
+  title?: string | null;
+  comparison: {
+    match_pct: number;
+    matched_skills: string[];
+    missing_skills: string[];
+    missing_with_demand?: Array<{ skill: string; predicted_weekly_demand?: number; velocity?: string }>;
+    closest_role: string | null;
+    predicted_score: number | null;
+    predicted_level: string | null;
+    recommendations: string[];
+    unavailable?: boolean;
+  };
+  tailoring: {
+    tailored_summary: string;
+    suggestions: Array<{ section: string; issue: string; fix_example: string }>;
+    keywords_to_add: string[];
+  };
+  created_at: string;
+}
+
 // --- Interview ---
 export interface InterviewSession {
   id: string;
@@ -286,7 +330,24 @@ export interface InterviewResponse {
   feedback?: string;
   emotion_data?: Record<string, unknown>;
   engagement_score?: number;
+  analysis?: InterviewAnalysis | null;
   created_at: string;
+}
+
+export interface InterviewAnalysis {
+  criteria: Record<string, number>;
+  strengths: string[];
+  improvements: string[];
+  model_answer: string;
+}
+
+export interface EmotionPrediction {
+  face: boolean;
+  emotion?: string;
+  confidence?: number;
+  interview_state?: string;
+  state_color?: string;
+  probs?: Record<string, number>;
 }
 
 // --- Notifications ---

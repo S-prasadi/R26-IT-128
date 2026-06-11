@@ -1,0 +1,164 @@
+ * Serving Flask app 'app'
+ * Debug mode: on
+Address already in use
+Port 8003 is in use by another program. Either identify and stop that program, or start the server with a different port.
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8003
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:324: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-4773-se8r0kek'}
+  warnings.warn(
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8003
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+Exception ignored on threading shutdown:
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/threading.py", line 1518, in _shutdown
+    def _shutdown():
+  File "/Users/dulina/Documents/OutSourse/Research Projects/RP01/R26-IT-128/python-module-c/backend/venv/lib/python3.13/site-packages/werkzeug/_reloader.py", line 446, in <lambda>
+    signal.signal(signal.SIGTERM, lambda *args: sys.exit(0))
+SystemExit: 0
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8003
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+127.0.0.1 - - [10/Jun/2026 10:27:47] "GET / HTTP/1.1" 200 -
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:324: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-6517-qyodb58i'}
+  warnings.warn(
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8003
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+127.0.0.1 - - [10/Jun/2026 10:40:28] "[31m[1mPOST /analyze HTTP/1.1[0m" 400 -
+127.0.0.1 - - [10/Jun/2026 10:40:34] "[31m[1mPOST /analyze HTTP/1.1[0m" 400 -
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:324: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-6782-npeh9alo'}
+  warnings.warn(
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8003
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:324: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-8191-z434mom6'}
+  warnings.warn(
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8003
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:324: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-12375-4khbsnl1'}
+  warnings.warn(
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8003
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:324: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-16861-o3o_swke'}
+  warnings.warn(
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8003
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:324: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-17659-uk5mg_5c'}
+  warnings.warn(
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8003
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:324: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-18343-3luvyvbs'}
+  warnings.warn(
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8003
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+ * Detected change in '/Users/dulina/Documents/OutSourse/Research Projects/RP01/R26-IT-128/python-module-c/backend/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+ * Detected change in '/Users/dulina/Documents/OutSourse/Research Projects/RP01/R26-IT-128/python-module-c/backend/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+ * Detected change in '/Users/dulina/Documents/OutSourse/Research Projects/RP01/R26-IT-128/python-module-c/backend/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+ * Detected change in '/Users/dulina/Documents/OutSourse/Research Projects/RP01/R26-IT-128/python-module-c/backend/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+ * Detected change in '/Users/dulina/Documents/OutSourse/Research Projects/RP01/R26-IT-128/python-module-c/backend/app.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:324: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-24921-t63qvr1j'}
+  warnings.warn(
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8003
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+127.0.0.1 - - [11/Jun/2026 00:32:34] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Jun/2026 00:32:55] "POST /analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Jun/2026 00:32:55] "POST /compare-job HTTP/1.1" 200 -
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:324: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-26858-2ijgbt0q'}
+  warnings.warn(
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8003
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 106-777-039
+127.0.0.1 - - [11/Jun/2026 00:35:38] "POST /analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Jun/2026 00:36:15] "POST /analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Jun/2026 00:37:05] "POST /compare-job HTTP/1.1" 200 -
+127.0.0.1 - - [11/Jun/2026 00:41:18] "POST /compare-job HTTP/1.1" 200 -
+127.0.0.1 - - [11/Jun/2026 00:44:27] "POST /analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Jun/2026 00:45:58] "POST /analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Jun/2026 01:00:34] "POST /compare-job HTTP/1.1" 200 -
+127.0.0.1 - - [11/Jun/2026 01:01:18] "POST /analyze HTTP/1.1" 200 -
+127.0.0.1 - - [11/Jun/2026 01:07:50] "POST /compare-job HTTP/1.1" 200 -
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:324: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-27372-89gc10_n'}
+  warnings.warn(
