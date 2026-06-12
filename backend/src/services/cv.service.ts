@@ -456,11 +456,21 @@ export const cvService = {
     }
 
     // 1. Module C: skill match + readiness against the job post
-    const comparison = await callPython(
-      `${pythonUrls.moduleC()}/compare-job`,
-      { cv_text: cvText, job_text: dto.job_text },
-      MOCK_JOB_COMPARISON
-    ) as typeof MOCK_JOB_COMPARISON;
+    let comparison: typeof MOCK_JOB_COMPARISON;
+    try {
+      comparison = await callPython(
+        `${pythonUrls.moduleC()}/compare-job`,
+        { cv_text: cvText, job_text: dto.job_text },
+        MOCK_JOB_COMPARISON
+      ) as typeof MOCK_JOB_COMPARISON;
+    } catch (err: any) {
+      // Surface Module C validation errors (e.g. no skills found) as 422 to the client
+      if (err.message?.includes("(422)")) {
+        const msg = err.message.replace(/^Python service error \(\d+\):\s*/, "");
+        throw new AppError(msg || "No recognisable skills found in the job post text.", 422);
+      }
+      throw err;
+    }
 
     // 2. Module A: annotate gap skills with market demand (best effort)
     let missingWithDemand = (comparison.missing_skills ?? []).map((skill) => ({ skill } as {

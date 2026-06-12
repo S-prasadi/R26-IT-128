@@ -31,7 +31,39 @@ esac
 PIDS=()
 NAMES=()
 
-# ---- colors ---------------------------------------------------------------
+# ---- OS detection ------------------------------------------------------------
+IS_WIN=false
+case "$OSTYPE" in
+  msys*|cygwin*|win32*) IS_WIN=true ;;
+esac
+
+# ---- Python executable -------------------------------------------------------
+PYTHON3=""
+if $IS_WIN; then
+  # Convert LOCALAPPDATA to a POSIX path Git Bash can use
+  if command -v cygpath &>/dev/null; then
+    _lad="$(cygpath -u "$LOCALAPPDATA")"
+  else
+    _lad="$LOCALAPPDATA"
+  fi
+  for _p in \
+    "$_lad/Programs/Python/Python313/python.exe" \
+    "$_lad/Programs/Python/Python312/python.exe" \
+    "$_lad/Programs/Python/Python311/python.exe" \
+    "$(command -v python 2>/dev/null)"; do
+    [ -f "$_p" ] && { PYTHON3="$_p"; break; }
+  done
+else
+  PYTHON3="$(command -v python3 2>/dev/null || command -v python)"
+fi
+
+[ -z "$PYTHON3" ] && { echo "ERROR: Python 3 not found. Install from https://python.org"; exit 1; }
+
+# ---- venv bin dir (bin on Unix, Scripts on Windows) --------------------------
+BIN="bin"
+$IS_WIN && BIN="Scripts"
+
+# ---- colors ------------------------------------------------------------------
 if [ -t 1 ]; then
   G=$'\033[32m'; Y=$'\033[33m'; C=$'\033[36m'; R=$'\033[31m'; B=$'\033[1m'; N=$'\033[0m'
 else
@@ -41,46 +73,61 @@ log()  { printf "%s[run-all]%s %s\n" "$C" "$N" "$*"; }
 ok()   { printf "%s[run-all]%s %s\n" "$G" "$N" "$*"; }
 warn() { printf "%s[run-all]%s %s\n" "$Y" "$N" "$*"; }
 
-# ---- cleanup --------------------------------------------------------------
+# ---- cleanup -----------------------------------------------------------------
 cleanup() {
   echo
   warn "Shutting down all services..."
   for pid in "${PIDS[@]}"; do
-    if kill -0 "$pid" 2>/dev/null; then
-      # kill the whole process group so child node/python procs die too
-      kill -TERM -"$pid" 2>/dev/null || kill -TERM "$pid" 2>/dev/null
+    if $IS_WIN; then
+      taskkill //F //PID "$pid" 2>/dev/null || true
+    else
+      if kill -0 "$pid" 2>/dev/null; then
+        kill -TERM -"$pid" 2>/dev/null || kill -TERM "$pid" 2>/dev/null
+      fi
     fi
   done
-  sleep 1
-  for pid in "${PIDS[@]}"; do
-    kill -KILL -"$pid" 2>/dev/null || kill -KILL "$pid" 2>/dev/null
-  done
+  if ! $IS_WIN; then
+    sleep 1
+    for pid in "${PIDS[@]}"; do
+      kill -KILL -"$pid" 2>/dev/null || kill -KILL "$pid" 2>/dev/null
+    done
+  fi
   ok "All services stopped."
   exit 0
 }
 trap cleanup INT TERM
 
-# ---- free a TCP port -------------------------------------------------------
-# free_port <port> <name>  — kill anything already listening on <port>
+# ---- free a TCP port ---------------------------------------------------------
 free_port() {
-  local port="$1" name="$2" pids
-  pids=$(lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null | sort -u)
-  if [ -n "$pids" ]; then
-    warn "port $port ($name) busy — stopping stale process(es): $pids"
-    # shellcheck disable=SC2086
-    kill -TERM $pids 2>/dev/null
-    sleep 1
+  local port="$1" name="$2"
+  if $IS_WIN; then
+    local pids
+    pids=$(netstat -ano 2>/dev/null \
+      | awk '/TCP.*:'"$port"'[[:space:]].*LISTENING/{print $NF}' \
+      | sort -u)
+    if [ -n "$pids" ]; then
+      warn "port $port ($name) busy — stopping stale process(es): $pids"
+      for pid in $pids; do
+        taskkill //F //PID "$pid" 2>/dev/null || true
+      done
+      sleep 1
+    fi
+  else
+    local pids
     pids=$(lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null | sort -u)
-    # shellcheck disable=SC2086
-    [ -n "$pids" ] && kill -KILL $pids 2>/dev/null
+    if [ -n "$pids" ]; then
+      warn "port $port ($name) busy — stopping stale process(es): $pids"
+      # shellcheck disable=SC2086
+      kill -TERM $pids 2>/dev/null
+      sleep 1
+      pids=$(lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null | sort -u)
+      # shellcheck disable=SC2086
+      [ -n "$pids" ] && kill -KILL $pids 2>/dev/null
+    fi
   fi
 }
 
-# ---- node service helper --------------------------------------------------
-# start_node <name> <dir> <port> <log> [run-cmd]
-# run-cmd defaults to "npm run dev". Pass an explicit command to bypass the
-# node_modules/.bin wrappers (needed when a tree carries macOS quarantine
-# attributes that block executing the wrapper scripts).
+# ---- node service helper -----------------------------------------------------
 start_node() {
   local name="$1" dir="$2" port="$3" logf="$4" cmd="${5:-npm run dev}"
   if [ ! -d "$ROOT/$dir" ]; then warn "skip $name — $dir not found"; return; fi
@@ -90,7 +137,6 @@ start_node() {
     ( cd "$ROOT/$dir" && npm install ) >>"$logf" 2>&1
   fi
 
-  # some checkouts land .bin wrappers without the execute bit — fix it
   [ -d "$ROOT/$dir/node_modules/.bin" ] && chmod +x "$ROOT/$dir"/node_modules/.bin/* 2>/dev/null
 
   free_port "$port" "$name"
@@ -99,8 +145,7 @@ start_node() {
   PIDS+=($!); NAMES+=("$name")
 }
 
-# ---- python service helper ------------------------------------------------
-# start_py <name> <dir> <venv-rel-dir> <run-cmd> <port> <log>
+# ---- python service helper ---------------------------------------------------
 start_py() {
   local name="$1" dir="$2" venv="$3" cmd="$4" port="$5" logf="$6"
   if [ ! -d "$ROOT/$dir" ]; then warn "skip $name — $dir not found"; return; fi
@@ -108,22 +153,22 @@ start_py() {
   local vpath="$ROOT/$dir/$venv"
   if [ ! -d "$vpath" ]; then
     log "$name: creating virtualenv..."
-    python3 -m venv "$vpath" >>"$logf" 2>&1
+    "$PYTHON3" -m venv "$vpath" >>"$logf" 2>&1
     INSTALL=force
   fi
 
   if [ "$INSTALL" = "force" ] || { [ "$INSTALL" = "auto" ] && [ ! -f "$vpath/.deps_installed" ]; }; then
     if [ -f "$ROOT/$dir/requirements.txt" ]; then
       log "$name: installing pip requirements (first run can be slow)..."
-      ( "$vpath/bin/pip" install -q --upgrade pip \
-        && "$vpath/bin/pip" install -r "$ROOT/$dir/requirements.txt" ) >>"$logf" 2>&1 \
+      ( "$vpath/$BIN/pip" install -q --upgrade pip \
+        && "$vpath/$BIN/pip" install -r "$ROOT/$dir/requirements.txt" ) >>"$logf" 2>&1 \
         && touch "$vpath/.deps_installed"
     fi
   fi
 
   free_port "$port" "$name"
   log "starting $B$name$N -> $logf"
-  ( cd "$ROOT/$dir" && exec "$vpath/bin/python" $cmd ) >>"$logf" 2>&1 &
+  ( cd "$ROOT/$dir" && exec "$vpath/$BIN/python" $cmd ) >>"$logf" 2>&1 &
   PIDS+=($!); NAMES+=("$name")
 }
 
@@ -140,12 +185,12 @@ if [ -z "${GITHUB_TOKEN:-}" ] && [ -f "$ROOT/backend/.env" ]; then
   [ -n "$GITHUB_TOKEN" ] && export GITHUB_TOKEN
 fi
 
-# --- Python modules (start first so heavy ML imports warm up) --------------
+# --- Python modules (start first so heavy ML imports warm up) -----------------
 start_py "module-a"         "python-module-a"         "venv" "api/app.py" 8001 "$LOG_DIR/module-a.log"
 start_py "module-c-backend" "python-module-c/backend" "venv" "app.py"     8003 "$LOG_DIR/module-c-backend.log"
 start_py "module-d"         "python-module-d"         "venv" "main.py"    8004 "$LOG_DIR/module-d.log"
 
-# --- Node services ---------------------------------------------------------
+# --- Node services ------------------------------------------------------------
 start_node "backend"           "backend"                  8081 "$LOG_DIR/backend.log"
 start_node "frontend"          "frontend"                 3000 "$LOG_DIR/frontend.log"
 start_node "module-c-frontend" "python-module-c/frontend" 5173 "$LOG_DIR/module-c-frontend.log" "node node_modules/vite/bin/vite.js"

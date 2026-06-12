@@ -17,6 +17,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
     "@types/multer": "^2.1.0",
+    "@types/ws": "^8.18.1",
     "axios": "^1.16.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -25,6 +26,7 @@
     "jose": "^5.9.6",
     "morgan": "^1.10.1",
     "multer": "^2.1.1",
+    "ws": "^8.21.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

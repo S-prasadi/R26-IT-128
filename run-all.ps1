@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Windows launcher — start every project service.
+  Windows launcher - start every project service.
 
   Backend  (Node/Express)      http://localhost:8081
   Frontend (Next.js)           http://localhost:3000
@@ -23,7 +23,7 @@ $ROOT   = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $LOGDIR = Join-Path $ROOT "logs"
 New-Item -ItemType Directory -Force -Path $LOGDIR | Out-Null
 
-# ── Locate Python ─────────────────────────────────────────────────────────────
+# --- Locate Python ---
 function Find-Python {
     $candidates = @(
         "$env:LOCALAPPDATA\Programs\Python\Python313\python.exe",
@@ -31,8 +31,8 @@ function Find-Python {
         "$env:LOCALAPPDATA\Programs\Python\Python311\python.exe"
     )
     foreach ($c in $candidates) { if (Test-Path $c) { return $c } }
-    foreach ($name in "py", "python") {
-        $cmd = Get-Command $name -ErrorAction SilentlyContinue
+    foreach ($n in "py", "python") {
+        $cmd = Get-Command $n -ErrorAction SilentlyContinue
         if ($cmd) { return $cmd.Source }
     }
     throw "Python 3 not found. Install from https://python.org and retry."
@@ -40,10 +40,10 @@ function Find-Python {
 $PYTHON = Find-Python
 Write-Host "[run-all] Python: $PYTHON" -ForegroundColor Green
 
-# ── Install mode ──────────────────────────────────────────────────────────────
+# --- Install mode ---
 $MODE = if ($Install) { "force" } elseif ($NoInstall) { "skip" } else { "auto" }
 
-# ── GITHUB_TOKEN from backend/.env ────────────────────────────────────────────
+# --- GITHUB_TOKEN from backend/.env ---
 if (-not $env:GITHUB_TOKEN) {
     $envFile = Join-Path $ROOT "backend\.env"
     if (Test-Path $envFile) {
@@ -52,20 +52,20 @@ if (-not $env:GITHUB_TOKEN) {
     }
 }
 
-# ── Job tracking ──────────────────────────────────────────────────────────────
+# --- Job tracking ---
 $JOBS = [System.Collections.Generic.List[System.Management.Automation.Job]]::new()
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+# --- Helpers ---
 function clog($msg, $col = "Cyan") { Write-Host "[run-all] $msg" -ForegroundColor $col }
 
 function Free-Port([int]$port, [string]$name) {
     netstat -ano 2>$null |
         Select-String "TCP\s+[^:]+:$port\s+.*LISTENING" |
         ForEach-Object {
-            $pid = ($_.ToString().Trim() -split '\s+')[-1]
-            if ($pid -match '^\d+$' -and [int]$pid -ne 0) {
-                clog "port $port ($name) busy — stopping PID $pid" "Yellow"
-                try { Stop-Process -Id ([int]$pid) -Force -ErrorAction SilentlyContinue } catch {}
+            $id = ($_.ToString().Trim() -split '\s+')[-1]
+            if ($id -match '^\d+$' -and [int]$id -ne 0) {
+                clog "port $port ($name) busy - stopping PID $id" "Yellow"
+                try { Stop-Process -Id ([int]$id) -Force -ErrorAction SilentlyContinue } catch {}
                 Start-Sleep -Milliseconds 800
             }
         }
@@ -73,7 +73,7 @@ function Free-Port([int]$port, [string]$name) {
 
 function Start-Py([string]$name, [string]$relDir, [string]$venvRel, [string]$script, [int]$port) {
     $dir   = Join-Path $ROOT $relDir
-    if (-not (Test-Path $dir)) { clog "skip $name — $relDir not found" "Yellow"; return }
+    if (-not (Test-Path $dir)) { clog "skip $name - $relDir not found" "Yellow"; return }
 
     $venv  = Join-Path $dir $venvRel
     $pip   = Join-Path $venv "Scripts\pip.exe"
@@ -104,6 +104,9 @@ function Start-Py([string]$name, [string]$relDir, [string]$venvRel, [string]$scr
     $j = Start-Job -Name $name -ScriptBlock {
         param($exe, $wd, $sc, $lf, $tok)
         if ($tok) { $env:GITHUB_TOKEN = $tok }
+        # Force UTF-8 so any Unicode output (e.g. EasyOCR progress bar) doesn't crash on cp1252
+        $env:PYTHONUTF8 = "1"
+        $env:PYTHONIOENCODING = "utf-8"
         Set-Location $wd
         & $exe $sc *>> $lf
     } -ArgumentList $pyExe, $dir, $script, $log, $tok
@@ -113,7 +116,7 @@ function Start-Py([string]$name, [string]$relDir, [string]$venvRel, [string]$scr
 
 function Start-Node([string]$name, [string]$relDir, [int]$port, [string]$cmdStr = "npm run dev") {
     $dir = Join-Path $ROOT $relDir
-    if (-not (Test-Path $dir)) { clog "skip $name — $relDir not found" "Yellow"; return }
+    if (-not (Test-Path $dir)) { clog "skip $name - $relDir not found" "Yellow"; return }
 
     if ($MODE -eq "force" -or ($MODE -eq "auto" -and -not (Test-Path (Join-Path $dir "node_modules")))) {
         clog "${name}: npm install..."
@@ -133,12 +136,12 @@ function Start-Node([string]$name, [string]$relDir, [int]$port, [string]$cmdStr 
     $JOBS.Add($j)
 }
 
-# ── Launch services ───────────────────────────────────────────────────────────
+# --- Launch services ---
 Write-Host ""
 clog "Launching all services...  (logs -> $LOGDIR\)" "Green"
 Write-Host ""
 
-# Python modules first — heavy ML imports need time to warm up
+# Python modules first - heavy ML imports need time to warm up
 Start-Py  "module-a"          "python-module-a"         "venv" "api\app.py" 8001
 Start-Py  "module-c-backend"  "python-module-c\backend" "venv" "app.py"     8003
 Start-Py  "module-d"          "python-module-d"         "venv" "main.py"    8004
@@ -146,34 +149,31 @@ Start-Py  "module-d"          "python-module-d"         "venv" "main.py"    8004
 # Node services
 Start-Node "backend"           "backend"                  8081
 Start-Node "frontend"          "frontend"                 3000
-Start-Node "module-c-frontend" "python-module-c\frontend" 5173 `
-           "node node_modules\vite\bin\vite.js"
+Start-Node "module-c-frontend" "python-module-c\frontend" 5173 "node node_modules\vite\bin\vite.js"
 
 Write-Host ""
 clog "All start commands issued. Services booting up..." "Green"
-Write-Host @"
+Write-Host ""
+Write-Host "  Service URLs"
+Write-Host "  ----------------------------------------"
+Write-Host "  Frontend (Next.js)        http://localhost:3000"
+Write-Host "  Backend  (Express API)    http://localhost:8081"
+Write-Host "  Module A (FastAPI)        http://localhost:8001"
+Write-Host "  Module C backend (Flask)  http://localhost:8003"
+Write-Host "  Module C frontend (Vite)  http://localhost:5173"
+Write-Host "  Module D (FastAPI)        http://localhost:8004"
+Write-Host ""
+Write-Host "  Live logs:  Get-Content '$LOGDIR\*.log' -Wait"
+Write-Host "  Stop all:   press Ctrl+C"
+Write-Host ""
 
-  Service URLs
-  ----------------------------------------
-  Frontend (Next.js)        http://localhost:3000
-  Backend  (Express API)    http://localhost:8081
-  Module A (FastAPI)        http://localhost:8001
-  Module C backend (Flask)  http://localhost:8003
-  Module C frontend (Vite)  http://localhost:5173
-  Module D (FastAPI)        http://localhost:8004
-
-  Live logs:  Get-Content "$LOGDIR\*.log" -Wait
-  Stop all:   press Ctrl+C in this window
-
-"@
-
-# ── Keep alive + monitor jobs ─────────────────────────────────────────────────
+# --- Keep alive + monitor jobs ---
 try {
     while ($true) {
         Start-Sleep -Seconds 3
         foreach ($j in @($JOBS)) {
             if ($j.State -eq "Failed") {
-                clog "job '$($j.Name)' crashed — check $LOGDIR\$($j.Name).log" "Red"
+                clog "job '$($j.Name)' crashed - check $LOGDIR\$($j.Name).log" "Red"
             }
         }
     }

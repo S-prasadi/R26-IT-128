@@ -71,8 +71,13 @@ export const cvController = {
     // (PDF/PNG/JPG/TXT) which is OCR'd via Module D.
     let jobText: string = typeof req.body?.job_text === "string" ? req.body.job_text.trim() : "";
     if (!jobText && req.file) {
-      const { extracted_text } = await interviewService.extractDocumentText(req.file.buffer, req.file.mimetype);
-      jobText = extracted_text.trim();
+      try {
+        const { extracted_text } = await interviewService.extractDocumentText(req.file.buffer, req.file.mimetype);
+        jobText = extracted_text.trim();
+      } catch {
+        res.status(422).json({ success: false, message: "Could not extract text from the uploaded file. Please paste the job description as text instead." });
+        return;
+      }
     }
     if (jobText.length < 30) {
       res.status(400).json({ success: false, message: "Provide the job post text (paste it or upload a readable file)." });
