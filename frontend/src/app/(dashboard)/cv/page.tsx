@@ -8,6 +8,7 @@ import { cvService } from "@/services/cv.service";
 import type {
   CV, CVSection, CVJobMatch, CVSuggestion, CVAnalysisResult,
   CVSectionContent, CVExperienceEntry, CVEducationEntry, CVSkillsContent, CVProjectEntry,
+  CVProjectVerification, CVJobPost,
 } from "@/types";
 import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { PiqChartContainer, PIQ_COLORS } from "@/components/piq/charts";
@@ -18,7 +19,7 @@ type Step = (typeof STEPS)[number];
 const SECTION_TYPES = ["experience", "education", "skills", "projects", "summary"] as const;
 type SectionType = (typeof SECTION_TYPES)[number];
 
-type CVWithDetails = CV & { sections: CVSection[]; job_matches: CVJobMatch[]; suggestions: CVSuggestion[] };
+type CVWithDetails = CV & { sections: CVSection[]; job_matches: CVJobMatch[]; suggestions: CVSuggestion[]; job_posts?: CVJobPost[] };
 
 const EMPTY_SKILLS: CVSkillsContent = { languages: [], frameworks: [], tools: [], other: [] };
 const EMPTY_STRUCTURED: CVSectionContent = {
@@ -44,6 +45,13 @@ export default function CVPage() {
     show: boolean; warning: boolean;
     stats: { experience: number; education: number; skills: number; projects: number; hasSummary: boolean; github: string; linkedin: string; email: string; phone: string; portfolio: string };
   } | null>(null);
+
+  const [projVerification, setProjVerification] = useState<CVProjectVerification | null>(null);
+  const [verifying, setVerifying] = useState(false);
+  const [jobPosts, setJobPosts] = useState<CVJobPost[]>([]);
+  const [jobTitle, setJobTitle] = useState("");
+  const [jobText, setJobText] = useState("");
+  const [comparing, setComparing] = useState(false);
 
   useEffect(() => { loadCVList(); }, []);
 
@@ -79,6 +87,32 @@ export default function CVPage() {
       setStructuredSections(structured);
       setEditorMode(cv.file_url ? "view" : "edit");
       setExtractionPreview(null);
+      setProjVerification(cv.project_verification ?? null);
+      setJobPosts(cv.job_posts ?? []);
+
+      // Restore the stored analysis so revisiting a CV shows results
+      // immediately without re-running Module C.
+      if (cv.ats_score != null) {
+        setAnalysis({
+          ats_score:        cv.ats_score,
+          extracted_skills: (cv.bert_skills as CVAnalysisResult["extracted_skills"]) ?? [],
+          github_verified:  (cv.github_verified_skills as CVAnalysisResult["github_verified"]) ?? [],
+          job_matches: (cv.job_matches ?? []).map((m) => ({
+            title:      m.job_title,
+            company:    m.company ?? "",
+            match_pct:  m.match_pct,
+            skill_gaps: m.skill_gaps ?? [],
+          })),
+          suggestions: (cv.suggestions ?? []).map((s) => ({
+            section:     s.section_type ?? "summary",
+            issue:       s.issue,
+            fix_example: s.fix_example ?? "",
+          })),
+        });
+      } else {
+        setAnalysis(null);
+      }
+
       setStep("CV Editor");
     } catch {
       toast.error("Failed to load CV");
@@ -215,6 +249,54 @@ export default function CVPage() {
       toast.success("CV deleted");
     } catch {
       toast.error("Failed to delete CV");
+    }
+  }
+
+  async function handleVerifyProjects() {
+    if (!selected) return;
+    setVerifying(true);
+    try {
+      const res = await cvService.verifyProjects(selected.id);
+      setProjVerification(res.data.data);
+      toast.success("Projects checked against your GitHub");
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message ?? "Project verification failed");
+    } finally {
+      setVerifying(false);
+    }
+  }
+
+  async function handleAttachJobPost(file?: File) {
+    if (!selected) return;
+    if (!file && jobText.trim().length < 30) {
+      toast.error("Paste the job post text first (at least a few lines).");
+      return;
+    }
+    setComparing(true);
+    try {
+      const res = await cvService.attachJobPost(
+        selected.id,
+        file ? { title: jobTitle || undefined, file } : { title: jobTitle || undefined, job_text: jobText }
+      );
+      setJobPosts((prev) => [res.data.data, ...prev]);
+      setJobText("");
+      setJobTitle("");
+      toast.success("Job post compared against your CV");
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message ?? "Job post comparison failed");
+    } finally {
+      setComparing(false);
+    }
+  }
+
+  async function handleDeleteJobPost(jobPostId: string) {
+    if (!selected) return;
+    try {
+      await cvService.deleteJobPost(selected.id, jobPostId);
+      setJobPosts((prev) => prev.filter((p) => p.id !== jobPostId));
+      toast.success("Job post removed");
+    } catch {
+      toast.error("Failed to remove job post");
     }
   }
 
@@ -471,7 +553,7 @@ export default function CVPage() {
               )}
 
               {!analysing && !analysis && (
-                <div style={{ textAlign: "center", padding: "48px 24px", color: "var(--text2)" }}>
+                <div style={{ textAlign: "center", padding: "24px", color: "var(--text2)", marginBottom: 16 }}>
                   <p style={{ fontSize: 14, margin: 0 }}>Go to CV Editor and click "Analyse CV" to run Module C analysis.</p>
                   <div style={{ marginTop: 16 }}><PiqBtn variant="secondary" onClick={() => setStep("CV Editor")}>← Back to Editor</PiqBtn></div>
                 </div>
@@ -479,6 +561,14 @@ export default function CVPage() {
 
               {analysis && !analysing && (
                 <div>
+                  {/* Saved results header + re-analyse */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 13, color: "var(--text2)" }}>
+                      Saved analysis{selected?.updated_at ? ` — last updated ${new Date(selected.updated_at).toLocaleString()}` : ""}. Re-analyse after editing to refresh the stored results.
+                    </span>
+                    <PiqBtn size="sm" variant="secondary" onClick={handleAnalyse} disabled={analysing}>↻ Re-analyse CV</PiqBtn>
+                  </div>
+
                   {/* Score gauges */}
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px,1fr))", gap: 16, marginBottom: 24 }}>
                     <PiqChartContainer title="ATS Score" height={200}>
@@ -582,6 +672,96 @@ export default function CVPage() {
                   </div>
                 </div>
               )}
+
+              {selected && !analysing && (
+                <>
+                  {/* GitHub project validation */}
+                  <SectionLabel>GitHub Project Validation</SectionLabel>
+                  <div style={{ ...cardStyle, marginBottom: 24 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                      <div style={{ fontSize: 13, color: "var(--text2)" }}>
+                        Cross-checks the projects on this CV against your connected GitHub account — repo exists, belongs to you, and actually uses the claimed tech.
+                      </div>
+                      <PiqBtn size="sm" onClick={handleVerifyProjects} disabled={verifying}>
+                        {verifying ? "Checking…" : projVerification ? "Re-check Projects" : "Verify GitHub Projects"}
+                      </PiqBtn>
+                    </div>
+                    {projVerification && (
+                      <div style={{ marginTop: 14 }}>
+                        <div style={{ fontSize: 12, color: "var(--text3)", marginBottom: 10 }}>
+                          @{projVerification.github_username} · {projVerification.summary.verified}/{projVerification.summary.total} verified · checked {new Date(projVerification.checked_at).toLocaleDateString()}
+                        </div>
+                        {projVerification.results.map((r, i) => (
+                          <div key={i} style={{ borderTop: "1px solid var(--border2)", padding: "10px 0", display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                            <div style={{ flex: 1, minWidth: 220 }}>
+                              <div style={{ fontWeight: 600, fontSize: 14 }}>
+                                {r.found && r.owned_by_user ? "✓" : "✗"} {r.name}
+                                {r.is_fork && <span style={{ fontSize: 11, color: "var(--amber)", marginLeft: 6 }}>(fork)</span>}
+                              </div>
+                              <div style={{ fontSize: 12, color: r.found && r.owned_by_user ? "var(--teal)" : "var(--rose)", marginTop: 2 }}>
+                                {!r.found ? "No matching repo found on your GitHub"
+                                  : !r.owned_by_user ? "Linked repo is not owned by your connected account"
+                                  : <>Verified — <a href={r.repo_url ?? "#"} target="_blank" rel="noreferrer" style={{ color: "var(--teal)" }}>{r.repo_url?.replace("https://github.com/", "")}</a>{r.last_pushed ? ` · last active ${new Date(r.last_pushed).toLocaleDateString()}` : ""}</>}
+                              </div>
+                              {(r.languages_matched.length > 0 || r.languages_unverified.length > 0) && (
+                                <div style={{ marginTop: 6, display: "flex", gap: 5, flexWrap: "wrap" }}>
+                                  {r.languages_matched.map((t) => (
+                                    <span key={t} style={{ fontSize: 11, padding: "2px 8px", borderRadius: 20, background: "var(--tealD)", color: "var(--teal)" }}>✓ {t}</span>
+                                  ))}
+                                  {r.languages_unverified.map((t) => (
+                                    <span key={t} style={{ fontSize: 11, padding: "2px 8px", borderRadius: 20, background: "var(--surf3)", color: "var(--text3)" }} title="Not found in the repo's languages or topics">? {t}</span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            {r.found && (
+                              <div style={{ textAlign: "right", flexShrink: 0 }}>
+                                <div style={{ fontSize: 18, fontWeight: 700, color: r.confidence >= 0.7 ? "var(--teal)" : "var(--amber)" }}>{Math.round(r.confidence * 100)}%</div>
+                                <div style={{ fontSize: 11, color: "var(--text3)" }}>confidence</div>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Job post comparison */}
+                  <SectionLabel>Compare With a Real Job Post</SectionLabel>
+                  <div style={{ ...cardStyle, marginBottom: 16 }}>
+                    <div style={{ fontSize: 13, color: "var(--text2)", marginBottom: 10 }}>
+                      Paste a job advertisement (or upload it as a PDF/image) to see how this CV matches it — skill gaps with market demand, readiness score, and AI tailoring tips.
+                    </div>
+                    <input
+                      value={jobTitle}
+                      onChange={(e) => setJobTitle(e.target.value)}
+                      placeholder="Job title (optional) — e.g. Associate Software Engineer at WSO2"
+                      style={{ ...inputStyle, marginBottom: 8 }}
+                    />
+                    <textarea
+                      value={jobText}
+                      onChange={(e) => setJobText(e.target.value)}
+                      rows={5}
+                      placeholder="Paste the full job post text here…"
+                      style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5, marginBottom: 10 }}
+                    />
+                    <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                      <PiqBtn size="sm" onClick={() => handleAttachJobPost()} disabled={comparing}>
+                        {comparing ? "Comparing…" : "Compare With CV"}
+                      </PiqBtn>
+                      <label style={{ fontSize: 13, color: "var(--accent)", cursor: "pointer" }}>
+                        📎 or upload job post file
+                        <input type="file" accept=".pdf,.png,.jpg,.jpeg,.txt" style={{ display: "none" }}
+                          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleAttachJobPost(f); e.target.value = ""; }} />
+                      </label>
+                    </div>
+                  </div>
+
+                  {jobPosts.map((post) => (
+                    <JobPostResult key={post.id} post={post} onApply={handleApplySuggestion} onDelete={() => handleDeleteJobPost(post.id)} />
+                  ))}
+                </>
+              )}
             </div>
           )}
         </>
@@ -604,6 +784,110 @@ const cardStyle: React.CSSProperties = {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text2)", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.06em" }}>{children}</div>;
+}
+
+const VELOCITY_BADGE: Record<string, { icon: string; color: string }> = {
+  rising:  { icon: "▲", color: "var(--teal)" },
+  stable:  { icon: "→", color: "var(--text2)" },
+  falling: { icon: "▼", color: "var(--rose)" },
+};
+
+function JobPostResult({ post, onApply, onDelete }: {
+  post: CVJobPost;
+  onApply: (s: { section: string; fix_example: string }) => void;
+  onDelete: () => void;
+}) {
+  const c = post.comparison ?? ({} as CVJobPost["comparison"]);
+  const t = post.tailoring ?? ({} as CVJobPost["tailoring"]);
+  const matchColor = c.match_pct >= 80 ? "var(--teal)" : c.match_pct >= 60 ? "var(--amber)" : "var(--rose)";
+  const gaps: Array<{ skill: string; predicted_weekly_demand?: number; velocity?: string }> =
+    c.missing_with_demand ?? (c.missing_skills ?? []).map((skill) => ({ skill }));
+
+  return (
+    <div style={{ ...cardStyle, marginBottom: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+        <div>
+          <div style={{ fontWeight: 600, fontSize: 15 }}>{post.title || c.closest_role || "Job post"}</div>
+          <div style={{ fontSize: 12, color: "var(--text3)", marginTop: 2 }}>
+            Compared {new Date(post.created_at).toLocaleString()}
+            {c.closest_role && <> · closest role blueprint: {c.closest_role}</>}
+            {c.predicted_level && <> · readiness: {c.predicted_level}{c.predicted_score != null ? ` (${Math.round(c.predicted_score)})` : ""}</>}
+          </div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
+          <div style={{ textAlign: "right" }}>
+            <div style={{ fontSize: 26, fontWeight: 700, color: matchColor }}>{c.match_pct ?? 0}%</div>
+            <div style={{ fontSize: 11, color: "var(--text3)" }}>skill match</div>
+          </div>
+          <button onClick={onDelete} title="Remove this job post" style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 18 }}>×</button>
+        </div>
+      </div>
+
+      {c.unavailable && (
+        <div style={{ marginTop: 10, fontSize: 13, color: "var(--amber)" }}>Module C was unavailable for this comparison — re-attach the job post once it is running.</div>
+      )}
+
+      {(c.matched_skills?.length > 0 || gaps.length > 0) && (
+        <div style={{ marginTop: 12 }}>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            {(c.matched_skills ?? []).map((s) => (
+              <span key={s} style={{ fontSize: 12, padding: "3px 10px", borderRadius: 20, background: "var(--tealD)", color: "var(--teal)" }}>✓ {s}</span>
+            ))}
+            {gaps.map((g) => {
+              const v = g.velocity ? VELOCITY_BADGE[g.velocity] : null;
+              return (
+                <span key={g.skill} style={{ fontSize: 12, padding: "3px 10px", borderRadius: 20, background: "var(--surf3)", color: "var(--rose)", border: "1px solid var(--rose)40" }}
+                  title={g.predicted_weekly_demand != null ? `Market demand: ~${g.predicted_weekly_demand} job ads/week (${g.velocity})` : "Missing from your CV"}>
+                  ✗ {g.skill}
+                  {v && <span style={{ color: v.color, marginLeft: 5 }}>{v.icon} {g.velocity}</span>}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {(c.recommendations ?? []).length > 0 && (
+        <ul style={{ margin: "12px 0 0", paddingLeft: 18, fontSize: 13, color: "var(--text2)", lineHeight: 1.7 }}>
+          {c.recommendations.map((r, i) => <li key={i}>{r}</li>)}
+        </ul>
+      )}
+
+      {t.tailored_summary && (
+        <div style={{ marginTop: 14, background: "var(--surf3)", borderRadius: "var(--radius)", padding: 12 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--accent)", marginBottom: 4 }}>AI-tailored summary for this job</div>
+          <div style={{ fontSize: 13, color: "var(--text2)", lineHeight: 1.6 }}>{t.tailored_summary}</div>
+          <div style={{ marginTop: 8 }}>
+            <PiqBtn size="sm" variant="outline" onClick={() => onApply({ section: "summary", fix_example: t.tailored_summary })}>Apply to Summary →</PiqBtn>
+          </div>
+        </div>
+      )}
+
+      {(t.suggestions ?? []).length > 0 && (
+        <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+          {t.suggestions.map((s, i) => (
+            <div key={i} style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "flex-start", borderTop: "1px solid var(--border2)", paddingTop: 10 }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 12, color: "var(--accent)", textTransform: "capitalize" }}>{s.section}</div>
+                <div style={{ fontSize: 13, fontWeight: 500, margin: "2px 0" }}>{s.issue}</div>
+                {s.fix_example && <div style={{ fontSize: 13, color: "var(--text2)" }}>Fix: {s.fix_example}</div>}
+              </div>
+              {s.fix_example && <PiqBtn size="sm" variant="outline" onClick={() => onApply(s)}>Apply →</PiqBtn>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {(t.keywords_to_add ?? []).length > 0 && (
+        <div style={{ marginTop: 12 }}>
+          <span style={{ fontSize: 12, color: "var(--text3)", marginRight: 8 }}>ATS keywords to add:</span>
+          {t.keywords_to_add.map((k) => (
+            <span key={k} style={{ fontSize: 12, padding: "2px 8px", borderRadius: 20, background: "var(--surf3)", color: "var(--text2)", marginRight: 5 }}>{k}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ── Structured section editors ─────────────────────────────────────────────────

@@ -1,7 +1,7 @@
 import apiClient from "@/lib/axios";
-import type { ApiResponse, CV, CVSection, CVJobMatch, CVSuggestion, CVAnalysisResult, CVSectionContent } from "@/types";
+import type { ApiResponse, CV, CVSection, CVJobMatch, CVSuggestion, CVAnalysisResult, CVSectionContent, CVProjectVerification, CVJobPost } from "@/types";
 
-type CVWithDetails = CV & { sections: CVSection[]; job_matches: CVJobMatch[]; suggestions: CVSuggestion[] };
+type CVWithDetails = CV & { sections: CVSection[]; job_matches: CVJobMatch[]; suggestions: CVSuggestion[]; job_posts: CVJobPost[] };
 
 export const cvService = {
   listCVs: () =>
@@ -34,4 +34,22 @@ export const cvService = {
       { headers: { "Content-Type": "multipart/form-data" } }
     );
   },
+
+  verifyProjects: (id: string) =>
+    apiClient.post<ApiResponse<CVProjectVerification>>(`/cv/${id}/verify-projects`),
+
+  attachJobPost: (id: string, data: { title?: string; job_text?: string; file?: File }) => {
+    if (data.file) {
+      const form = new FormData();
+      form.append("file", data.file);
+      if (data.title) form.append("title", data.title);
+      return apiClient.post<ApiResponse<CVJobPost>>(`/cv/${id}/job-post`, form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    }
+    return apiClient.post<ApiResponse<CVJobPost>>(`/cv/${id}/job-post`, { title: data.title, job_text: data.job_text });
+  },
+
+  deleteJobPost: (id: string, jobPostId: string) =>
+    apiClient.delete<ApiResponse<{ success: boolean }>>(`/cv/${id}/job-post/${jobPostId}`),
 };

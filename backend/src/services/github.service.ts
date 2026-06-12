@@ -26,6 +26,12 @@ const LANG_TO_SKILL: Record<string, string> = {
 
 export const githubService = {
   getAuthUrl(state: string): string {
+    if (!env.github.clientId || !env.github.clientSecret) {
+      throw new AppError(
+        "GitHub OAuth is not configured — set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET in backend/.env",
+        HTTP_STATUS.SERVICE_UNAVAILABLE
+      );
+    }
     const params = new URLSearchParams({
       client_id:    env.github.clientId,
       redirect_uri: env.github.redirectUri,
@@ -79,6 +85,55 @@ export const githubService = {
 
   async disconnect(userId: string): Promise<void> {
     await supabaseAdmin.from("user_github_tokens").delete().eq("user_id", userId);
+  },
+
+  /** Repos with language breakdown for CV project verification. */
+  async listRepoData(userId: string): Promise<{
+    github_username: string;
+    repos: Array<{
+      name: string; full_name: string; html_url: string; description: string | null;
+      languages: string[]; topics: string[]; pushed_at: string; fork: boolean;
+    }>;
+  }> {
+    const { data: tokenRow } = await supabaseAdmin
+      .from("user_github_tokens")
+      .select("access_token, github_username")
+      .eq("user_id", userId)
+      .single();
+    if (!tokenRow) throw new AppError("GitHub not connected. Connect GitHub on the Skills page first.", HTTP_STATUS.BAD_REQUEST);
+
+    const { access_token, github_username } = tokenRow as { access_token: string; github_username: string };
+    const headers = { Authorization: `Bearer ${access_token}`, "User-Agent": "PathwayIQ" };
+
+    const reposResp = await axios.get("https://api.github.com/user/repos", {
+      headers,
+      params: { per_page: 100, sort: "updated", visibility: "public" },
+    });
+
+    const repos = await Promise.all(
+      (reposResp.data as Array<Record<string, any>>).map(async (repo, i) => {
+        let languages: string[] = repo.language ? [repo.language] : [];
+        // Full language breakdown only for the 30 most recent repos (rate limits)
+        if (i < 30) {
+          try {
+            const langResp = await axios.get(`https://api.github.com/repos/${repo.full_name}/languages`, { headers });
+            languages = Object.keys(langResp.data as Record<string, number>);
+          } catch { /* empty repos */ }
+        }
+        return {
+          name:        repo.name as string,
+          full_name:   repo.full_name as string,
+          html_url:    repo.html_url as string,
+          description: (repo.description ?? null) as string | null,
+          languages,
+          topics:      (repo.topics ?? []) as string[],
+          pushed_at:   repo.pushed_at as string,
+          fork:        Boolean(repo.fork),
+        };
+      })
+    );
+
+    return { github_username, repos };
   },
 
   async verifySkills(userId: string): Promise<{ updated: number; github_username: string }> {

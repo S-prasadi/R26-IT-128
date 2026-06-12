@@ -45,4 +45,14 @@ router.post("/:id/upload", requirePermission("cv:write"),
   uploadSingle,
   (req, res) => cvController.upload(req as AuthRequest, res as Response));
 
+router.post("/:id/verify-projects", requirePermission("cv:write"),
+  (req, res) => cvController.verifyProjects(req as AuthRequest, res as Response));
+
+router.post("/:id/job-post", requirePermission("cv:write"),
+  uploadSingle,
+  (req, res) => cvController.attachJobPost(req as AuthRequest, res as Response));
+
+router.delete("/:id/job-post/:jobPostId", requirePermission("cv:write"),
+  (req, res) => cvController.deleteJobPost(req as AuthRequest, res as Response));
+
 export default router;

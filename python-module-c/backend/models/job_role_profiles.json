@@ -1,0 +1,792 @@
+{
+    "AI Engineer": {
+        "role": "AI Engineer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Python",
+            "Aws",
+            "Docker",
+            "NLP",
+            "Git",
+            "Kubernetes",
+            "FastAPI",
+            "React",
+            "Typescript",
+            "Java"
+        ],
+        "preferred_skills": [
+            "JavaScript",
+            "Azure",
+            "Github",
+            "Gcp",
+            "Node.js",
+            "Agile",
+            "Machine Learning",
+            "Sql",
+            "Product Management",
+            "Linux",
+            "Css",
+            "Html",
+            "Express",
+            "MySQL",
+            "Excel"
+        ],
+        "common_tools": [
+            "Aws",
+            "Docker",
+            "Git",
+            "Kubernetes",
+            "Azure",
+            "Github",
+            "Gcp",
+            "Excel",
+            "Jira"
+        ]
+    },
+    "AI ML": {
+        "role": "AI ML",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Python",
+            "NLP",
+            "Deep Learning",
+            "Computer Vision",
+            "Machine Learning",
+            "Scikit-learn",
+            "Pandas",
+            "PyTorch",
+            "Numpy",
+            "TensorFlow"
+        ],
+        "preferred_skills": [
+            "Kubernetes",
+            "Docker",
+            "Git",
+            "Data Engineering",
+            "Github",
+            "Jira",
+            "Java",
+            "React",
+            "Agile",
+            "Angular",
+            "Sql",
+            "FastAPI"
+        ],
+        "common_tools": [
+            "Kubernetes",
+            "Docker",
+            "Git",
+            "Github",
+            "Jira"
+        ]
+    },
+    "Backend Developer": {
+        "role": "Backend Developer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "PostgreSQL",
+            "MongoDB",
+            "Python",
+            "Problem Solving",
+            "Java",
+            "Node.js",
+            "REST API",
+            "Docker",
+            "Git",
+            "Sql"
+        ],
+        "preferred_skills": [
+            "Database Design",
+            "Communication",
+            "Teamwork",
+            "Postman",
+            "Attention To Detail",
+            "Github",
+            "FastAPI",
+            "Spring Boot",
+            "Django"
+        ],
+        "common_tools": [
+            "Docker",
+            "Git",
+            "Postman",
+            "Github"
+        ]
+    },
+    "Business Analyst": {
+        "role": "Business Analyst",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Power BI",
+            "Sql",
+            "Excel",
+            "Tableau",
+            "Jira",
+            "Python",
+            "Agile",
+            "Git",
+            "Java",
+            "Product Management"
+        ],
+        "preferred_skills": [
+            "Spring Boot",
+            "Business Analysis",
+            "MongoDB",
+            "Aws",
+            "Data Engineering",
+            "Scrum"
+        ],
+        "common_tools": [
+            "Power BI",
+            "Excel",
+            "Tableau",
+            "Jira",
+            "Git",
+            "Aws"
+        ]
+    },
+    "Cloud Engineer": {
+        "role": "Cloud Engineer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Aws",
+            "Azure",
+            "Gcp",
+            "Docker",
+            "Terraform",
+            "Reliability",
+            "Linux",
+            "Security Groups",
+            "Communication",
+            "Monitoring"
+        ],
+        "preferred_skills": [
+            "Networking",
+            "Problem Solving",
+            "Cloud Infrastructure",
+            "Attention To Detail",
+            "Cloudwatch",
+            "Kubernetes",
+            "Serverless"
+        ],
+        "common_tools": [
+            "Aws",
+            "Azure",
+            "Gcp",
+            "Docker",
+            "Kubernetes"
+        ]
+    },
+    "Data Analyst": {
+        "role": "Data Analyst",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Tableau",
+            "Excel",
+            "Power BI",
+            "Data Analysis",
+            "Attention To Detail",
+            "Jupyter Notebook",
+            "Analytical Thinking",
+            "Communication",
+            "Problem Solving",
+            "Data Visualization"
+        ],
+        "preferred_skills": [
+            "Reporting",
+            "Sql",
+            "Statistics",
+            "Python",
+            "Google Sheets",
+            "Pandas",
+            "Dashboard Development"
+        ],
+        "common_tools": [
+            "Tableau",
+            "Excel",
+            "Power BI"
+        ]
+    },
+    "Data Engineer": {
+        "role": "Data Engineer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Etl",
+            "Python",
+            "Sql",
+            "Aws",
+            "PostgreSQL",
+            "Docker",
+            "Data Engineering",
+            "Data Pipeline",
+            "React",
+            "Gcp"
+        ],
+        "preferred_skills": [
+            "Kubernetes",
+            "Node.js",
+            "Typescript",
+            "Java",
+            "Github",
+            "Machine Learning",
+            "Agile",
+            "Django",
+            "JavaScript",
+            "Linux",
+            "Azure",
+            "MongoDB",
+            "Git",
+            "Express",
+            "Product Management"
+        ],
+        "common_tools": [
+            "Aws",
+            "Docker",
+            "Gcp",
+            "Kubernetes",
+            "Github",
+            "Azure",
+            "Git",
+            "Jira"
+        ]
+    },
+    "Data Scientist": {
+        "role": "Data Scientist",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Scikit-learn",
+            "Data Preprocessing",
+            "Numpy",
+            "Pandas",
+            "Model Evaluation",
+            "Python",
+            "Sql",
+            "Statistics",
+            "Communication",
+            "Curiosity"
+        ],
+        "preferred_skills": [
+            "Machine Learning",
+            "Data Science",
+            "Jupyter Notebook",
+            "Analytical Thinking",
+            "Problem Solving",
+            "Matplotlib",
+            "PyTorch",
+            "TensorFlow",
+            "Data Visualization"
+        ],
+        "common_tools": []
+    },
+    "DevOps Engineer": {
+        "role": "DevOps Engineer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Docker",
+            "Github Actions",
+            "Jenkins",
+            "Kubernetes",
+            "Communication",
+            "Problem Solving",
+            "Terraform",
+            "Deployment Pipelines",
+            "Reliability",
+            "Linux"
+        ],
+        "preferred_skills": [
+            "Ci/Cd",
+            "Scripting",
+            "Git",
+            "Teamwork",
+            "Monitoring",
+            "Azure",
+            "Aws"
+        ],
+        "common_tools": [
+            "Docker",
+            "Kubernetes",
+            "Git",
+            "Azure",
+            "Aws"
+        ]
+    },
+    "Frontend Developer": {
+        "role": "Frontend Developer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "React",
+            "Figma",
+            "Html",
+            "Responsive Design",
+            "Teamwork",
+            "JavaScript",
+            "Communication",
+            "Creativity",
+            "Css",
+            "Chrome Devtools"
+        ],
+        "preferred_skills": [
+            "VS Code",
+            "Git",
+            "Attention To Detail",
+            "Api Integration",
+            "Angular",
+            "Github",
+            "Next.js",
+            "Vue",
+            "Typescript",
+            "Tailwind Css"
+        ],
+        "common_tools": [
+            "Figma",
+            "VS Code",
+            "Git",
+            "Github"
+        ]
+    },
+    "Full Stack Developer": {
+        "role": "Full Stack Developer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "React",
+            "Docker",
+            "Node.js",
+            "MongoDB",
+            "Teamwork",
+            "Git",
+            "REST API",
+            "Sql",
+            "JavaScript",
+            "Adaptability"
+        ],
+        "preferred_skills": [
+            "Postman",
+            "Github",
+            "Communication",
+            "Problem Solving",
+            "Spring Boot",
+            "Aws",
+            "Express",
+            "Authentication",
+            "Typescript"
+        ],
+        "common_tools": [
+            "Docker",
+            "Git",
+            "Postman",
+            "Github",
+            "Aws"
+        ]
+    },
+    "Machine Learning Engineer": {
+        "role": "Machine Learning Engineer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Machine Learning",
+            "Python",
+            "TensorFlow",
+            "Docker",
+            "Github",
+            "Kubernetes",
+            "PyTorch",
+            "Scikit-learn",
+            "FastAPI",
+            "Product Management"
+        ],
+        "preferred_skills": [
+            "Data Engineering"
+        ],
+        "common_tools": [
+            "Docker",
+            "Github",
+            "Kubernetes"
+        ]
+    },
+    "Mobile App Developer": {
+        "role": "Mobile App Developer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Firebase",
+            "Dart",
+            "REST API",
+            "Flutter",
+            "Mobile App Development",
+            "Creativity",
+            "Communication",
+            "Android",
+            "Github",
+            "Android Studio"
+        ],
+        "preferred_skills": [
+            "Git",
+            "Ios",
+            "VS Code",
+            "Time Management",
+            "Problem Solving",
+            "SQLite",
+            "React Native",
+            "Kotlin",
+            "Push Notifications"
+        ],
+        "common_tools": [
+            "Github",
+            "Git",
+            "VS Code"
+        ]
+    },
+    "Mobile Application Developer": {
+        "role": "Mobile Application Developer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Firebase",
+            "Figma",
+            "REST API",
+            "Git",
+            "Android Studio",
+            "Flutter",
+            "Communication",
+            "Teamwork",
+            "Mobile Application Development",
+            "Dart"
+        ],
+        "preferred_skills": [
+            "Attention To Detail",
+            "Github",
+            "React Native",
+            "Android",
+            "Kotlin",
+            "Ios",
+            "SQLite",
+            "Problem Solving"
+        ],
+        "common_tools": [
+            "Figma",
+            "Git",
+            "Github"
+        ]
+    },
+    "Mobile Developer": {
+        "role": "Mobile Developer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Android",
+            "Ios",
+            "React",
+            "React Native",
+            "Flutter",
+            "Git",
+            "Firebase",
+            "Typescript",
+            "Node.js",
+            "Aws"
+        ],
+        "preferred_skills": [
+            "JavaScript",
+            "Linux",
+            "Java",
+            "Python",
+            "Figma",
+            "Product Management",
+            "Data Engineering",
+            "Kubernetes",
+            "Spring Boot",
+            "Express",
+            "Playwright",
+            "Agile",
+            "PostgreSQL",
+            "Flask",
+            "Css"
+        ],
+        "common_tools": [
+            "Git",
+            "Aws",
+            "Figma",
+            "Kubernetes",
+            "Docker"
+        ]
+    },
+    "Product Manager": {
+        "role": "Product Manager",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Agile",
+            "Figma",
+            "Excel",
+            "Jira",
+            "Aws",
+            "Angular",
+            "Java",
+            "MongoDB"
+        ],
+        "preferred_skills": [],
+        "common_tools": [
+            "Figma",
+            "Excel",
+            "Jira",
+            "Aws"
+        ]
+    },
+    "QA Engineer": {
+        "role": "QA Engineer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Postman",
+            "Jira",
+            "Api Testing",
+            "Bug Reporting",
+            "Test Case Design",
+            "Selenium",
+            "Manual Testing",
+            "Patience",
+            "Regression Testing",
+            "Automation Testing"
+        ],
+        "preferred_skills": [
+            "Testrail",
+            "Problem Solving",
+            "Git",
+            "Attention To Detail",
+            "Communication",
+            "Playwright",
+            "Sql",
+            "Cypress"
+        ],
+        "common_tools": [
+            "Postman",
+            "Jira",
+            "Git"
+        ]
+    },
+    "Quality Engineer": {
+        "role": "Quality Engineer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Playwright",
+            "Jira",
+            "Git",
+            "Selenium",
+            "Jenkins",
+            "Cypress",
+            "Postman",
+            "Java",
+            "React",
+            "Gcp"
+        ],
+        "preferred_skills": [
+            "Node.js",
+            "PostgreSQL",
+            "Typescript",
+            "Kubernetes",
+            "Agile",
+            "Docker",
+            "Scrum",
+            "Css",
+            "JavaScript"
+        ],
+        "common_tools": [
+            "Jira",
+            "Git",
+            "Postman",
+            "Gcp",
+            "Kubernetes",
+            "Docker"
+        ]
+    },
+    "Security Engineer": {
+        "role": "Security Engineer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Network Security",
+            "Siem",
+            "Linux",
+            "Splunk",
+            "Cybersecurity",
+            "Aws",
+            "Kubernetes",
+            "Python",
+            "Azure",
+            "Agile"
+        ],
+        "preferred_skills": [
+            "PostgreSQL",
+            "Typescript",
+            "Gcp",
+            "MongoDB",
+            "Sql",
+            "Github",
+            "React",
+            "Git",
+            "JavaScript",
+            "Docker",
+            "Excel",
+            "Jenkins",
+            "Java"
+        ],
+        "common_tools": [
+            "Aws",
+            "Kubernetes",
+            "Azure",
+            "Gcp",
+            "Github",
+            "Git",
+            "Docker",
+            "Excel"
+        ]
+    },
+    "Software Developer": {
+        "role": "Software Developer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Python",
+            "React",
+            "Typescript",
+            "JavaScript",
+            "Kubernetes",
+            "Sql",
+            "Angular",
+            "Docker",
+            "Java",
+            "Aws"
+        ],
+        "preferred_skills": [
+            "Git",
+            "Css",
+            "MySQL",
+            "PostgreSQL",
+            "Agile",
+            "Azure",
+            "Html",
+            "Linux",
+            "Vue",
+            "Jira",
+            "Figma",
+            "Node.js",
+            "Product Management",
+            "Flask",
+            "Data Engineering"
+        ],
+        "common_tools": [
+            "Kubernetes",
+            "Docker",
+            "Aws",
+            "Git",
+            "Azure",
+            "Jira",
+            "Figma",
+            "Gcp",
+            "Github",
+            "Excel"
+        ]
+    },
+    "Software Engineer": {
+        "role": "Software Engineer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Docker",
+            "Java",
+            "Jira",
+            "Sql",
+            "Teamwork",
+            "REST API",
+            "JavaScript",
+            "Python",
+            "Time Management",
+            "Oop"
+        ],
+        "preferred_skills": [
+            "Git",
+            "Communication",
+            "VS Code",
+            "Postman",
+            "Github",
+            "Problem Solving",
+            "Unit Testing",
+            "Agile",
+            "Spring Boot",
+            "React",
+            "Ci/Cd"
+        ],
+        "common_tools": [
+            "Docker",
+            "Jira",
+            "Git",
+            "VS Code",
+            "Postman",
+            "Github"
+        ]
+    },
+    "System Administrator": {
+        "role": "System Administrator",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Linux",
+            "Aws"
+        ],
+        "preferred_skills": [],
+        "common_tools": [
+            "Aws"
+        ]
+    },
+    "UI/UX Designer": {
+        "role": "UI/UX Designer",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Figma",
+            "Interface Design",
+            "Adobe Xd",
+            "Prototyping",
+            "Miro",
+            "User Research",
+            "Empathy",
+            "Wireframing",
+            "Canva",
+            "Usability Testing"
+        ],
+        "preferred_skills": [
+            "Creativity",
+            "Attention To Detail",
+            "Communication",
+            "Figjam",
+            "User Flows",
+            "Accessibility",
+            "Design Systems"
+        ],
+        "common_tools": [
+            "Figma"
+        ]
+    },
+    "Web Developer / Software Quality Assurance": {
+        "role": "Web Developer / Software Quality Assurance",
+        "total_job_posts": 100,
+        "required_skills": [
+            "Selenium",
+            "Api Testing",
+            "Postman",
+            "Jira",
+            "Html",
+            "JavaScript",
+            "Css",
+            "Manual Testing",
+            "Sql",
+            "Bug Reporting"
+        ],
+        "preferred_skills": [
+            "Problem Solving",
+            "Github",
+            "Attention To Detail",
+            "Communication",
+            "Teamwork",
+            "Git",
+            "VS Code",
+            "Responsive Design",
+            "React"
+        ],
+        "common_tools": [
+            "Postman",
+            "Jira",
+            "Github",
+            "Git",
+            "VS Code"
+        ]
+    }
+}
