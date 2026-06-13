@@ -121,6 +121,17 @@ export default function SkillPage() {
     }
   }
 
+  async function handleUpdateProficiency(userSkillId: string, label: (typeof PROF_LABELS)[number]) {
+    try {
+      const level = PROF_LABELS.indexOf(label) + 1;
+      await skillService.updateUserSkill(userSkillId, { proficiency_level: level, proficiency_label: label });
+      setUserSkills((prev) => prev.map((s) => (s.id === userSkillId ? { ...s, proficiency_level: level, proficiency_label: label } : s)));
+      toast.success("Proficiency updated");
+    } catch {
+      toast.error("Failed to update proficiency");
+    }
+  }
+
   async function handleRemoveSkill(id: string) {
     try {
       await skillService.deleteUserSkill(id);
@@ -222,10 +233,19 @@ export default function SkillPage() {
                         </div>
                         <button onClick={() => handleRemoveSkill(us.id)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 18 }}>×</button>
                       </div>
-                      <div style={{ marginTop: 10, display: "flex", gap: 6, flexWrap: "wrap" }}>
-                        <span style={{ fontSize: 12, fontWeight: 600, color: PROF_COLORS[us.proficiency_label], background: `${PROF_COLORS[us.proficiency_label]}20`, padding: "2px 8px", borderRadius: 20 }}>
-                          {us.proficiency_label}
-                        </span>
+                      <div style={{ marginTop: 10, display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                        <select
+                          value={us.proficiency_label}
+                          onChange={(e) => handleUpdateProficiency(us.id, e.target.value as (typeof PROF_LABELS)[number])}
+                          title="Change proficiency"
+                          style={{
+                            fontSize: 12, fontWeight: 600, cursor: "pointer", appearance: "none",
+                            color: PROF_COLORS[us.proficiency_label], background: `${PROF_COLORS[us.proficiency_label]}20`,
+                            padding: "2px 8px", borderRadius: 20, border: "none",
+                          }}
+                        >
+                          {PROF_LABELS.map((p) => <option key={p} value={p}>{p}</option>)}
+                        </select>
                         {us.github_verified && (
                           <span style={{ fontSize: 11, color: "var(--teal)", background: "var(--tealD)", padding: "2px 8px", borderRadius: 20 }}>✓ GitHub</span>
                         )}
@@ -276,7 +296,7 @@ export default function SkillPage() {
           {tab === "Forecast" && (
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-                <p style={{ color: "var(--text2)", fontSize: 14, margin: 0 }}>Module A generates 3-month skill demand forecasts for the Sri Lankan IT market.</p>
+                <p style={{ color: "var(--text2)", fontSize: 14, margin: 0 }}>Module A forecasts weekly job-ad demand for the Sri Lankan IT market (12 weeks ahead).</p>
                 <PiqBtn icon="trend" onClick={handleRunForecast} disabled={forecastLoading}>
                   {forecastLoading ? "Running…" : "Run Forecast"}
                 </PiqBtn>
@@ -284,46 +304,59 @@ export default function SkillPage() {
               {forecastLoading && <div style={{ display: "flex", justifyContent: "center", padding: 48 }}><PiqSpinner /></div>}
               {forecast && !forecastLoading && (
                 <div>
-                  <SectionLabel>Trending Skills — 3-Month Forecast</SectionLabel>
+                  {!forecast.matched && (
+                    <div style={{ background: "var(--amberD)", border: "1px solid oklch(85% 0.15 75 / 30%)", borderRadius: "var(--radius)", padding: "10px 14px", marginBottom: 16, fontSize: 13, color: "var(--amber)" }}>
+                      None of your tracked skills have forecast data yet — showing the overall market top skills instead.
+                    </div>
+                  )}
+                  {forecast.matched && forecast.matched_skills.length > 0 && (
+                    <div style={{ fontSize: 13, color: "var(--text2)", marginBottom: 16 }}>
+                      Forecast for {forecast.matched_skills.length} of your skills: {forecast.matched_skills.join(", ")}
+                    </div>
+                  )}
+                  <SectionLabel>Trending Skills — Predicted Weekly Job-Ad Demand (next 4 weeks)</SectionLabel>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(190px,1fr))", gap: 10, marginBottom: 28 }}>
                     {forecast.trending.map((item) => (
                       <div key={item.skill} style={{ background: "var(--surf2)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: 14 }}>
                         <div style={{ fontWeight: 600 }}>{item.skill}</div>
-                        <div style={{ fontSize: 12, color: "var(--text2)", marginTop: 2 }}>Rank #{item.current_rank}</div>
+                        <div style={{ fontSize: 12, color: "var(--text2)", marginTop: 2 }}>#{item.rank} {forecast.matched ? "of your skills" : "in market"}</div>
                         <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontSize: 22, fontWeight: 700, color: "var(--accent)" }}>{item.forecast_3m}</span>
+                          <span style={{ fontSize: 22, fontWeight: 700, color: "var(--accent)" }}>{item.predicted_weekly_demand}</span>
                           <span style={{ fontSize: 13, color: VELOCITY_COLOR[item.velocity], fontWeight: 600 }}>
                             {VELOCITY_ICON[item.velocity]} {Math.abs(item.change_pct)}%
                           </span>
                         </div>
+                        <div style={{ fontSize: 11, color: "var(--text3)", marginTop: 2 }}>job ads / week · now {item.current_weekly_demand}</div>
                       </div>
                     ))}
                   </div>
-                  <SectionLabel>Early Warnings — Global Trends</SectionLabel>
+                  <SectionLabel>Early Warnings — Global Trends Reach Sri Lanka Later</SectionLabel>
                   <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                     {forecast.early_warnings.map((w) => (
                       <div key={w.skill} style={{ background: "var(--amberD)", border: "1px solid oklch(85% 0.15 75 / 30%)", borderRadius: "var(--radius)", padding: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <div>
                           <span style={{ fontWeight: 600, color: "var(--amber)" }}>⚠ {w.skill}</span>
-                          <span style={{ fontSize: 13, color: "var(--text2)", marginLeft: 12 }}>Trending globally since {w.global_trend_date}</span>
+                          <span style={{ fontSize: 13, color: "var(--text2)", marginLeft: 12 }}>
+                            Global demand leads the local market by ~{w.weeks_ahead} week{w.weeks_ahead !== 1 ? "s" : ""} (correlation {w.correlation})
+                          </span>
                         </div>
                         <span style={{ fontSize: 13, color: "var(--amber)", padding: "2px 10px", borderRadius: 20, border: "1px solid oklch(85% 0.15 75 / 30%)", whiteSpace: "nowrap" }}>
-                          ~{w.weeks_ahead} weeks ahead
+                          ~{w.weeks_ahead} weeks lead
                         </span>
                       </div>
                     ))}
                   </div>
 
-                  {/* Chart: Current rank vs 3-month forecast */}
+                  {/* Chart: current vs predicted weekly demand */}
                   <div style={{ marginTop: 28 }}>
-                    <SectionLabel>Current vs 3-Month Demand Forecast</SectionLabel>
+                    <SectionLabel>Current vs Predicted Weekly Demand (job ads / week)</SectionLabel>
                     <PiqChartContainer height={240}>
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart
                           data={forecast.trending.map((item) => ({
                             skill:    item.skill.length > 12 ? item.skill.slice(0, 12) + "…" : item.skill,
-                            current:  item.current_rank,
-                            forecast: item.forecast_3m,
+                            current:  item.current_weekly_demand,
+                            forecast: item.predicted_weekly_demand,
                           }))}
                           margin={{ top: 4, right: 8, left: -20, bottom: 0 }}
                           barGap={4}
@@ -334,8 +367,8 @@ export default function SkillPage() {
                           <YAxis tick={{ fontSize: 11, fill: "var(--text3)" }} axisLine={false} tickLine={false} />
                           <Tooltip content={<PiqTooltip />} cursor={{ fill: "var(--surf2)" }} />
                           <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-                          <Bar dataKey="current"  name="Current Rank"    fill={PIQ_COLORS.text3}  radius={[3, 3, 0, 0]} />
-                          <Bar dataKey="forecast" name="3-Month Forecast" fill={PIQ_COLORS.accent} radius={[3, 3, 0, 0]} />
+                          <Bar dataKey="current"  name="Current Demand"   fill={PIQ_COLORS.text3}  radius={[3, 3, 0, 0]} />
+                          <Bar dataKey="forecast" name="Predicted (4 wk)" fill={PIQ_COLORS.accent} radius={[3, 3, 0, 0]} />
                         </BarChart>
                       </ResponsiveContainer>
                     </PiqChartContainer>
@@ -382,7 +415,7 @@ export default function SkillPage() {
                 </div>
               )}
               {!forecast && !forecastLoading && (
-                <EmptyState text="Click 'Run Forecast' to generate your personalised 3-month skill demand forecast." />
+                <EmptyState text="Click 'Run Forecast' to see predicted demand for your skills over the next 12 weeks." />
               )}
             </div>
           )}
