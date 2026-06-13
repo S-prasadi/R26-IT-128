@@ -90,7 +90,7 @@ function Start-Py([string]$name, [string]$relDir, [string]$venvRel, [string]$scr
 
     if ($script:MODE -eq "force" -or ($script:MODE -eq "auto" -and -not (Test-Path $flag))) {
         if (Test-Path $req) {
-            clog "${name}: installing requirements (first run may be slow)..."
+            clog "${name}: installing c (first run may be slow)..."
             & $pip install -q --upgrade pip
             & $pip install -r $req
             if ($LASTEXITCODE -eq 0) { New-Item -ItemType File -Force -Path $flag | Out-Null }

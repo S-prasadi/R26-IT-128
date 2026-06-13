@@ -11,17 +11,17 @@ import type {
 
 const MOCK_FORECAST = {
   trending: [
-    { skill: "React",      current_rank: 1, forecast_3m: 92, velocity: "rising",  change_pct: 8  },
-    { skill: "TypeScript", current_rank: 2, forecast_3m: 89, velocity: "rising",  change_pct: 12 },
-    { skill: "Node.js",    current_rank: 3, forecast_3m: 85, velocity: "stable",  change_pct: 2  },
-    { skill: "Python",     current_rank: 4, forecast_3m: 88, velocity: "rising",  change_pct: 6  },
-    { skill: "Docker",     current_rank: 5, forecast_3m: 80, velocity: "stable",  change_pct: 3  },
-    { skill: "AWS",        current_rank: 6, forecast_3m: 78, velocity: "falling", change_pct: -4 },
+    { skill: "React",      rank: 1, predicted_weekly_demand: 92, current_weekly_demand: 85, velocity: "rising",  change_pct: 8  },
+    { skill: "TypeScript", rank: 2, predicted_weekly_demand: 89, current_weekly_demand: 79, velocity: "rising",  change_pct: 12 },
+    { skill: "Node.js",    rank: 3, predicted_weekly_demand: 85, current_weekly_demand: 83, velocity: "stable",  change_pct: 2  },
+    { skill: "Python",     rank: 4, predicted_weekly_demand: 88, current_weekly_demand: 83, velocity: "rising",  change_pct: 6  },
+    { skill: "Docker",     rank: 5, predicted_weekly_demand: 80, current_weekly_demand: 78, velocity: "stable",  change_pct: 3  },
+    { skill: "AWS",        rank: 6, predicted_weekly_demand: 78, current_weekly_demand: 81, velocity: "falling", change_pct: -4 },
   ],
   early_warnings: [
-    { skill: "Bun.js",     global_trend_date: "2026-02-01", expected_local_date: "2026-06-01", weeks_ahead: 17 },
-    { skill: "LangChain",  global_trend_date: "2026-01-15", expected_local_date: "2026-05-15", weeks_ahead: 17 },
-    { skill: "Rust",       global_trend_date: "2025-11-01", expected_local_date: "2026-04-01", weeks_ahead: 22 },
+    { skill: "Bun.js",    weeks_ahead: 17, correlation: 0.84, interpretation: "Global leads local by 17w" },
+    { skill: "LangChain", weeks_ahead: 17, correlation: 0.89, interpretation: "Global leads local by 17w" },
+    { skill: "Rust",      weeks_ahead: 22, correlation: 0.78, interpretation: "Global leads local by 22w" },
   ],
   forecast_chart: Array.from({ length: 12 }, (_, i) => ({
     week: `W${i + 1}`,
@@ -29,6 +29,8 @@ const MOCK_FORECAST = {
     TypeScript: 70 + Math.round(Math.random() * 18),
     Python:     68 + Math.round(Math.random() * 15),
   })),
+  matched: false,
+  matched_skills: [] as string[],
 };
 
 export const skillService = {
@@ -117,14 +119,28 @@ export const skillService = {
       MOCK_FORECAST
     ) as typeof MOCK_FORECAST;
 
-    const warnings = (result as any).early_warnings ?? [];
-    for (const w of warnings) {
-      notificationService.sendNotification(
-        userId,
-        `Skill Alert: ${w.skill} trending globally`,
-        `${w.skill} is trending globally and expected to reach the Sri Lankan market in ~${w.weeks_ahead} weeks.`,
-        "warning"
-      ).catch(() => {});
+    const warnings = result.early_warnings ?? [];
+    if (warnings.length) {
+      // Record alerts per user+skill; the unique constraint means the upsert
+      // returns only the rows that are new, so re-running the forecast never
+      // re-sends the same notification.
+      const { data: fresh, error } = await supabaseAdmin
+        .from("skill_alert_history")
+        .upsert(
+          warnings.map((w) => ({ user_id: userId, skill: w.skill, weeks_ahead: w.weeks_ahead })),
+          { onConflict: "user_id,skill", ignoreDuplicates: true }
+        )
+        .select("skill, weeks_ahead");
+      if (error) console.error(`[skills] alert dedupe failed: ${error.message}`);
+
+      for (const w of fresh ?? []) {
+        notificationService.sendNotification(
+          userId,
+          `Skill Alert: ${w.skill} trending globally`,
+          `${w.skill} is trending globally and typically reaches the Sri Lankan market ~${w.weeks_ahead} weeks later.`,
+          "warning"
+        ).catch(() => {});
+      }
     }
 
     return result;

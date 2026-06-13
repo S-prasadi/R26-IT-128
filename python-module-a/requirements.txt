@@ -1,0 +1,13 @@
+requests
+beautifulsoup4
+pandas
+lxml
+python-dateutil
+numpy
+statsmodels
+scikit-learn
+bertopic
+joblib
+fastapi
+uvicorn[standard]
+apscheduler
