@@ -13,7 +13,9 @@ export async function callPython(
     const axiosErr = err as AxiosError;
     // Service returned an HTTP error (4xx/5xx) — propagate it so the caller sees the real reason
     if (axiosErr.response) {
-      const detail = (axiosErr.response.data as any)?.detail ?? axiosErr.message;
+      // Flask returns { error: "..." }, FastAPI returns { detail: "..." }
+      const data = axiosErr.response.data as any;
+      const detail = data?.detail ?? data?.error ?? axiosErr.message;
       console.error(`[Python] ${url} responded ${axiosErr.response.status}: ${detail}`);
       throw new Error(`Python service error (${axiosErr.response.status}): ${detail}`);
     }

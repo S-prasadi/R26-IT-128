@@ -1,0 +1,58 @@
+skill,best_lag_weeks,ccf_correlation,granger_pval,granger_sig,interpretation,global_weeks_active,local_weeks_active
+llm,1,0.9307,0.0,True,Global leads local by 1w,130,130
+langchain,1,0.8922,0.0,True,Global leads local by 1w,130,130
+python,1,0.7747,0.0,True,Global leads local by 1w,130,130
+typescript,1,0.7155,0.0,True,Global leads local by 1w,130,130
+machine learning,2,0.704,0.0,True,Global leads local by 2w,130,130
+blockchain,3,0.6875,0.0,True,Global leads local by 3w,130,130
+next.js,1,0.6506,0.0,True,Global leads local by 1w,130,130
+fastapi,1,0.6501,0.0,True,Global leads local by 1w,130,130
+pytorch,5,0.6439,0.0,True,Global leads local by 5w,130,130
+tailwind,2,0.6396,0.0,True,Global leads local by 2w,130,130
+deep learning,1,0.6069,0.0,True,Global leads local by 1w,130,130
+php,2,0.5895,0.0011,True,Global leads local by 2w,130,130
+cybersecurity,3,0.51,0.0,True,Global leads local by 3w,130,130
+data engineering,3,0.4839,0.0002,True,Global leads local by 3w,130,130
+data science,1,0.4767,0.0,True,Global leads local by 1w,130,130
+go,5,0.4528,0.0,True,Global leads local by 5w,130,130
+azure,3,0.4293,0.0011,True,Global leads local by 3w,130,130
+devops,1,0.4025,0.0088,True,Global leads local by 1w,130,130
+flutter,2,0.3348,0.0107,True,Global leads local by 2w,130,130
+postgresql,3,0.3205,0.0192,True,Global leads local by 3w,130,130
+aws,7,0.3166,0.1366,False,No clear lead-lag pattern,130,130
+mongodb,7,0.3124,0.0016,True,Global leads local by 7w,130,130
+react native,1,0.2791,0.0668,False,No clear lead-lag pattern,130,130
+csharp,5,0.2725,0.0092,True,No clear lead-lag pattern,130,130
+graphql,3,0.267,0.0001,True,No clear lead-lag pattern,130,130
+kubernetes,4,0.2661,0.0056,True,No clear lead-lag pattern,130,130
+redis,4,0.2649,0.0877,False,No clear lead-lag pattern,130,130
+terraform,1,0.2562,0.0146,True,No clear lead-lag pattern,130,130
+django,4,0.2538,0.8363,False,No clear lead-lag pattern,130,130
+angular,1,0.2534,0.1822,False,No clear lead-lag pattern,130,130
+docker,6,0.2511,0.2356,False,No clear lead-lag pattern,130,130
+scikit-learn,2,0.239,0.2598,False,No clear lead-lag pattern,130,130
+spring,2,0.2326,0.0263,True,No clear lead-lag pattern,130,130
+microservices,6,0.2278,0.1056,False,No clear lead-lag pattern,130,130
+ruby,5,0.2255,0.7445,False,No clear lead-lag pattern,130,130
+nodejs,2,0.2207,0.2668,False,No clear lead-lag pattern,130,130
+svelte,4,0.207,0.1835,False,No clear lead-lag pattern,130,130
+kotlin,2,0.2042,0.1114,False,No clear lead-lag pattern,130,130
+mysql,1,0.1985,0.0011,True,No clear lead-lag pattern,130,130
+javascript,5,0.1917,0.0394,True,No clear lead-lag pattern,130,130
+google cloud,5,0.1804,0.037,True,No clear lead-lag pattern,130,130
+java,6,0.1717,0.1214,False,No clear lead-lag pattern,130,130
+laravel,5,0.1717,0.0065,True,No clear lead-lag pattern,130,130
+rust,7,0.1686,0.0019,True,No clear lead-lag pattern,130,130
+android,5,0.1576,0.196,False,No clear lead-lag pattern,130,130
+dart,7,0.1398,0.0057,True,No clear lead-lag pattern,130,130
+vue,5,0.1327,0.739,False,No clear lead-lag pattern,130,130
+scala,6,0.1306,0.1074,False,No clear lead-lag pattern,130,130
+dotnet,5,0.1264,0.0521,False,No clear lead-lag pattern,130,130
+swift,3,0.1254,0.6046,False,No clear lead-lag pattern,130,130
+tensorflow,5,0.1208,0.1646,False,No clear lead-lag pattern,130,130
+ios,7,0.1171,0.4758,False,No clear lead-lag pattern,130,130
+cpp,1,0.1046,0.1298,False,No clear lead-lag pattern,130,130
+elasticsearch,3,-0.1191,0.2041,False,No clear lead-lag pattern,130,130
+react,1,-0.1542,0.3818,False,No clear lead-lag pattern,130,130
+agile,7,-0.1738,0.245,False,No clear lead-lag pattern,130,130
+flask,1,-0.2076,0.3003,False,No clear lead-lag pattern,130,130

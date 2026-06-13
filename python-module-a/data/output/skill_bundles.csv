@@ -1,0 +1,21 @@
+skill_1,skill_2,bundle,recent_count,older_count,growth_rate
+agile,langchain,agile + langchain,62,899,-0.93
+android,langchain,android + langchain,62,909,-0.931
+android,llm,android + llm,90,1347,-0.932
+agile,llm,agile + llm,90,1328,-0.932
+agile,fastapi,agile + fastapi,55,888,-0.937
+angular,langchain,angular + langchain,62,1023,-0.938
+android,fastapi,android + fastapi,55,896,-0.938
+angular,llm,angular + llm,90,1514,-0.94
+angular,fastapi,angular + fastapi,55,1000,-0.944
+agile,tailwind,agile + tailwind,56,1098,-0.948
+android,tailwind,android + tailwind,56,1105,-0.948
+agile,next.js,agile + next.js,63,1285,-0.95
+agile,typescript,agile + typescript,79,1628,-0.951
+android,next.js,android + next.js,63,1309,-0.951
+android,typescript,android + typescript,79,1650,-0.952
+agile,rust,agile + rust,28,597,-0.952
+agile,svelte,agile + svelte,16,353,-0.952
+android,svelte,android + svelte,16,362,-0.953
+android,rust,android + rust,28,613,-0.953
+angular,tailwind,angular + tailwind,56,1204,-0.953

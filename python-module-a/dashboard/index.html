@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skill Forecasting Engine</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:#0b0f1a;color:#e2e8f0;min-height:100vh}
+
+    /* Header */
+    header{
+      background:linear-gradient(135deg,#0f2340 0%,#0a1628 100%);
+      border-bottom:1px solid #1e3050;
+      padding:18px 32px;
+      display:flex;align-items:center;gap:16px;
+    }
+    .logo{width:42px;height:42px;background:linear-gradient(135deg,#3b82f6,#06b6d4);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .title h1{font-size:1.2rem;font-weight:700;color:#f0f9ff}
+    .title p{font-size:0.72rem;color:#64748b;margin-top:1px}
+    .header-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+    .status-row{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+    .next-scrape{font-size:0.68rem;color:#475569}
+    .live-dot{width:7px;height:7px;border-radius:50%;background:#34d399;display:inline-block;margin-right:5px;animation:blink 2s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    .last-update{font-size:0.7rem;color:#475569}
+    .week-badge{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);color:#93c5fd;padding:4px 12px;border-radius:20px;font-size:0.7rem}
+    .btn-refresh{background:transparent;border:1px solid #2a3a55;color:#94a3b8;padding:6px 14px;border-radius:8px;font-size:0.73rem;cursor:pointer;transition:.2s}
+    .btn-refresh:hover{border-color:#3b82f6;color:#60a5fa}
+
+    /* Layout */
+    main{padding:24px 32px;max-width:1440px;margin:0 auto}
+
+    /* Stat cards */
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:22px}
+    .stat{background:#111827;border:1px solid #1e2d45;border-radius:12px;padding:18px}
+    .stat .lbl{font-size:0.68rem;color:#475569;text-transform:uppercase;letter-spacing:.07em}
+    .stat .val{font-size:2rem;font-weight:700;margin:5px 0 3px}
+    .stat .sub{font-size:0.7rem;color:#475569}
+    .c-green{color:#34d399}.c-blue{color:#60a5fa}.c-amber{color:#fbbf24}.c-rose{color:#f87171}.c-purple{color:#a78bfa}
+
+    /* Skeleton */
+    .sk{background:linear-gradient(90deg,#1a2535 25%,#1e2d45 50%,#1a2535 75%);background-size:200% 100%;animation:sk 1.5s infinite;border-radius:6px;height:36px}
+    @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* Cards */
+    .row{display:grid;gap:18px;margin-bottom:18px}
+    .row-2{grid-template-columns:1.6fr 1fr}
+    .row-3{grid-template-columns:repeat(3,1fr)}
+    .row-2b{grid-template-columns:1fr 1fr}
+    @media(max-width:960px){.row-2,.row-3,.row-2b{grid-template-columns:1fr}}
+    .card{background:#111827;border:1px solid #1e2d45;border-radius:12px;padding:20px}
+    .card-title{font-size:0.82rem;font-weight:600;color:#cbd5e1;margin-bottom:3px}
+    .card-sub{font-size:0.7rem;color:#475569;margin-bottom:14px}
+
+    /* Skill selector */
+    .sel-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .sel-row label{font-size:0.72rem;color:#64748b}
+    select{background:#0b0f1a;border:1px solid #1e2d45;color:#e2e8f0;padding:5px 10px;border-radius:7px;font-size:0.75rem;cursor:pointer}
+    select:focus{outline:none;border-color:#3b82f6}
+
+    /* Table */
+    .tbl-wrap{max-height:320px;overflow-y:auto}
+    table{width:100%;border-collapse:collapse;font-size:0.77rem}
+    th{text-align:left;padding:8px 10px;color:#475569;font-weight:500;border-bottom:1px solid #1a2535;position:sticky;top:0;background:#111827;z-index:1}
+    td{padding:9px 10px;border-bottom:1px solid #1a2535}
+    tbody tr:hover{background:rgba(59,130,246,.05)}
+    tbody tr:last-child td{border-bottom:none}
+    .pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:0.67rem;font-weight:600}
+    .p-up  {background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.25)}
+    .p-dn  {background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.25)}
+    .p-st  {background:rgba(251,191,36,.12); color:#fbbf24;border:1px solid rgba(251,191,36,.25)}
+
+    /* Bundles */
+    .bundles{display:flex;flex-direction:column;gap:10px}
+    .bundle{background:#0b1120;border:1px solid #1a2d45;border-radius:9px;padding:12px 14px}
+    .b-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+    .b-tag{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25);color:#93c5fd;padding:2px 9px;border-radius:20px;font-size:0.7rem;font-weight:500}
+    .b-meta{display:flex;align-items:center;gap:10px;font-size:0.69rem;color:#475569}
+    .b-bar-bg{flex:1;height:4px;background:#1e2d45;border-radius:3px}
+    .b-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,#3b82f6,#06b6d4)}
+
+    /* Cluster tags */
+    .cluster-grid{display:flex;flex-direction:column;gap:8px}
+    .cluster-row{display:flex;align-items:flex-start;gap:10px}
+    .cluster-label{font-size:0.7rem;color:#64748b;min-width:120px;padding-top:3px}
+    .cluster-skills{display:flex;flex-wrap:wrap;gap:5px}
+    .c-tag{background:#0b1120;border:1px solid #1e2d45;color:#94a3b8;padding:2px 8px;border-radius:5px;font-size:0.68rem}
+
+    footer{text-align:center;padding:18px;font-size:0.68rem;color:#2d3748;border-top:1px solid #1a2535;margin-top:4px}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">📊</div>
+  <div class="title">
+    <h1>Skill Forecasting Engine</h1>
+    <p>Component 1 &nbsp;·&nbsp; IT22154408 &nbsp;·&nbsp; SLIIT R26-IT-128</p>
+  </div>
+  <div class="header-right">
+    <div class="status-row">
+      <span class="last-update"><span class="live-dot"></span>Updated: <span id="lastUpdate">—</span></span>
+      <span class="next-scrape">Next auto-scrape: <span id="nextScrape">—</span></span>
+    </div>
+    <span class="week-badge" id="weekBadge">Loading…</span>
+    <button class="btn-refresh" onclick="loadAll()">⟳ Refresh</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- Stat Cards -->
+  <div class="stats">
+    <div class="stat"><div class="lbl">Skills Tracked</div><div class="val c-blue" id="sSkills"><div class="sk"></div></div><div class="sub">Across 4 sources</div></div>
+    <div class="stat"><div class="lbl">Rising Skills</div><div class="val c-green" id="sRising"><div class="sk"></div></div><div class="sub">Next 3 months</div></div>
+    <div class="stat"><div class="lbl">Stable Skills</div><div class="val c-amber" id="sStable"><div class="sk"></div></div><div class="sub">Next 3 months</div></div>
+    <div class="stat"><div class="lbl">Falling Skills</div><div class="val c-rose" id="sFalling"><div class="sk"></div></div><div class="sub">Next 3 months</div></div>
+    <div class="stat"><div class="lbl">Data Weeks</div><div class="val c-purple" id="sWeeks"><div class="sk"></div></div><div class="sub">Training window</div></div>
+    <div class="stat"><div class="lbl">Global Lead Skills</div><div class="val c-blue" id="sLeadLag"><div class="sk"></div></div><div class="sub">Granger p &lt; 0.05</div></div>
+  </div>
+
+  <!-- Row 1: Forecast chart + All skills table -->
+  <div class="row row-2">
+
+    <div class="card">
+      <div class="card-title">12-Week Skill Demand Forecast</div>
+      <div class="card-sub">Solid line = historical data &nbsp;·&nbsp; Dashed line = ARIMA/ES forecast</div>
+      <div class="sel-row">
+        <label>Select skill:</label>
+        <select id="skillSel" onchange="drawForecastChart()"></select>
+      </div>
+      <canvas id="chartForecast" height="220"></canvas>
+    </div>
+
+    <div class="card">
+      <div class="card-title">All Skills — Forecast Summary</div>
+      <div class="card-sub">Sorted by predicted weekly demand</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Skill</th><th>Trend</th><th>Forecast /wk</th><th>Actual /wk</th></tr></thead>
+          <tbody id="tbAllSkills"><tr><td colspan="4" style="color:#475569;text-align:center;padding:20px">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Row 2: Lead-lag lag chart + Correlation chart + Rising bar -->
+  <div class="row row-3">
+
+    <div class="card">
+      <div class="card-title">Global → Local Lead (weeks)</div>
+      <div class="card-sub">How many weeks global search trends precede local job postings</div>
+      <canvas id="chartLag" height="230"></canvas>
+    </div>
+
+    <div class="card">
+      <div class="card-title">CCF Correlation Strength</div>
+      <div class="card-sub">Cross-correlation coefficient — higher = stronger global signal</div>
+      <canvas id="chartCorr" height="230"></canvas>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Top 10 by Predicted Demand</div>
+      <div class="card-sub">Average predicted count over next 4 weeks</div>
+      <canvas id="chartTopBar" height="230"></canvas>
+    </div>
+
+  </div>
+
+  <!-- Row 3: Bundles + Clusters -->
+  <div class="row row-2b">
+
+    <div class="card">
+      <div class="card-title">Skill Co-Occurrence Bundles</div>
+      <div class="card-sub">Skills most frequently appearing together in job postings</div>
+      <div class="bundles" id="bundleList">
+        <div class="sk" style="height:58px"></div>
+        <div class="sk" style="height:58px"></div>
+        <div class="sk" style="height:58px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Skill Clusters (BERTopic + KMeans)</div>
+      <div class="card-sub">Semantic groupings of related skills</div>
+      <div class="cluster-grid" id="clusterGrid">
+        <div class="sk" style="height:28px"></div>
+        <div class="sk" style="height:28px"></div>
+        <div class="sk" style="height:28px"></div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  SLIIT · R26-IT-128 · Skill Forecasting and Semantic Career Pathway Optimization Ecosystem · 2026
+  &nbsp;·&nbsp; Supervisors: Ms. D. S. Kuruppu &amp; Ms. K. Kahatapitiya
+</footer>
+
+<script>
+const API = 'http://localhost:8000';
+const C   = {
+  blue:'#3b82f6', cyan:'#06b6d4', green:'#34d399',
+  amber:'#fbbf24', rose:'#f87171', purple:'#a78bfa',
+  grid:'rgba(255,255,255,0.05)', text:'#4b5563'
+};
+Chart.defaults.color = C.text;
+Chart.defaults.font.family = "'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size   = 11;
+
+let charts       = {};
+let fcCache      = {};   // skill -> chart data cache
+let allSkillsData = [];
+
+// ── Fetch ─────────────────────────────────────────────────────────────────────
+async function api(path) {
+  const r = await fetch(API + path);
+  if (!r.ok) throw new Error(`${path} → ${r.status}`);
+  return r.json();
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function pill(trend) {
+  if (trend==='rising')  return `<span class="pill p-up">▲ Rising</span>`;
+  if (trend==='falling') return `<span class="pill p-dn">▼ Falling</span>`;
+  return `<span class="pill p-st">→ Stable</span>`;
+}
+function trendCol(t) { return t==='rising'?C.green:t==='falling'?C.rose:C.amber; }
+function destroyChart(id) { if(charts[id]){charts[id].destroy();delete charts[id];} }
+
+// ── Load everything ───────────────────────────────────────────────────────────
+async function loadAll() {
+  try {
+    const [status, topSkills, allSkills, leadLag, bundles, clusters] = await Promise.all([
+      api('/api/status'),
+      api('/api/forecasts/top?n=57'),
+      api('/api/forecasts/all'),
+      api('/api/lead-lag?significant_only=true'),
+      api('/api/bundles'),
+      api('/api/clusters'),
+    ]);
+
+    allSkillsData = topSkills;
+    fcCache       = {};    // clear on refresh
+
+    renderHeader(status);
+    renderStats(status, topSkills, leadLag);
+    renderSkillSelector(topSkills);
+    renderAllSkillsTable(allSkills);
+    renderLeadLagCharts(leadLag);
+    renderTopBar(topSkills);
+    renderBundles(bundles);
+    renderClusters(clusters);
+
+    await drawForecastChart();   // draw chart for first skill
+
+  } catch(e) {
+    console.error('loadAll error:', e);
+  }
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+function renderHeader(s) {
+  document.getElementById('lastUpdate').textContent =
+    s.last_scrape ? new Date(s.last_scrape).toLocaleString() : 'Not yet scraped';
+  document.getElementById('nextScrape').textContent = s.next_scrape || 'Mon 08:00';
+  document.getElementById('weekBadge').textContent  =
+    'Data through ' + (s.last_week_data || (s.dataset&&s.dataset.to) || '—');
+}
+
+// ── Stat cards ────────────────────────────────────────────────────────────────
+function renderStats(s, skills, leadLag) {
+  const rising  = skills.filter(x=>x.trend==='rising').length;
+  const stable  = skills.filter(x=>x.trend==='stable').length;
+  const falling = skills.filter(x=>x.trend==='falling').length;
+  document.getElementById('sSkills').textContent  = s.models?.total_skills || skills.length;
+  document.getElementById('sRising').textContent  = rising;
+  document.getElementById('sStable').textContent  = stable;
+  document.getElementById('sFalling').textContent = falling;
+  document.getElementById('sWeeks').textContent   = s.dataset?.total_weeks || '—';
+  document.getElementById('sLeadLag').textContent = leadLag.length;
+}
+
+// ── Skill selector ────────────────────────────────────────────────────────────
+function renderSkillSelector(skills) {
+  const sel = document.getElementById('skillSel');
+  sel.innerHTML = skills.map(s=>`<option value="${s.skill}">${s.skill}</option>`).join('');
+}
+
+// ── Forecast chart ────────────────────────────────────────────────────────────
+async function drawForecastChart() {
+  const skill = document.getElementById('skillSel').value;
+  if (!skill) return;
+
+  if (!fcCache[skill]) {
+    try { fcCache[skill] = await api(`/api/forecasts/chart/${encodeURIComponent(skill)}`); }
+    catch(e) { return; }
+  }
+  const d = fcCache[skill];
+
+  const hWeeks  = d.historical.map(x=>x.week);
+  const hCounts = d.historical.map(x=>x.count);
+  const fWeeks  = d.forecast.map(x=>x.week);
+  const fCounts = d.forecast.map(x=>x.count);
+
+  const allW    = [...hWeeks, ...fWeeks];
+  const histArr = [...hCounts, ...Array(fWeeks.length).fill(null)];
+  const foreArr = [...Array(hCounts.length-1).fill(null), hCounts[hCounts.length-1], ...fCounts];
+
+  destroyChart('forecast');
+  charts.forecast = new Chart(document.getElementById('chartForecast'), {
+    type:'line',
+    data:{
+      labels: allW,
+      datasets:[
+        { label:'Historical', data:histArr, borderColor:C.blue, borderWidth:2,
+          fill:false, pointRadius:0, tension:0.3 },
+        { label:'Forecast (12 weeks)', data:foreArr, borderColor:trendCol(d.trend),
+          borderWidth:2.5, borderDash:[7,4], fill:false, pointRadius:3, tension:0.3 },
+      ]
+    },
+    options:{
+      responsive:true,
+      interaction:{mode:'index',intersect:false},
+      plugins:{ legend:{labels:{boxWidth:11}} },
+      scales:{
+        x:{ grid:{color:C.grid}, ticks:{maxTicksLimit:14,font:{size:10}} },
+        y:{ grid:{color:C.grid}, title:{display:true,text:'Count / week'} }
+      }
+    }
+  });
+}
+
+// ── All skills table ──────────────────────────────────────────────────────────
+function renderAllSkillsTable(skills) {
+  document.getElementById('tbAllSkills').innerHTML = skills.map(s=>`
+    <tr>
+      <td style="font-weight:500;color:#e2e8f0">${s.skill}</td>
+      <td>${pill(s.trend)}</td>
+      <td style="color:#94a3b8">${(+s.predicted_count).toFixed(0)}</td>
+      <td style="color:#475569">${(+s.last_actual_count).toFixed(0)}</td>
+    </tr>`).join('');
+}
+
+// ── Lead-lag charts ───────────────────────────────────────────────────────────
+function renderLeadLagCharts(data) {
+  const top   = data.slice(0,10);
+  const names = top.map(d=>d.skill);
+  const lags  = top.map(d=>d.best_lag_weeks);
+  const corrs = top.map(d=>parseFloat((+d.ccf_correlation).toFixed(3)));
+
+  destroyChart('lag');
+  charts.lag = new Chart(document.getElementById('chartLag'),{
+    type:'bar',
+    data:{labels:names,datasets:[{
+      label:'Lead (weeks)', data:lags,
+      backgroundColor:lags.map(l=>l>=3?C.purple:l>=2?C.blue:C.cyan),
+      borderRadius:5
+    }]},
+    options:{
+      indexAxis:'y', responsive:true,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{color:C.grid},min:0,max:9,title:{display:true,text:'Weeks ahead'}},
+        y:{grid:{color:'transparent'}}
+      }
+    }
+  });
+
+  destroyChart('corr');
+  charts.corr = new Chart(document.getElementById('chartCorr'),{
+    type:'bar',
+    data:{labels:names,datasets:[{
+      label:'CCF correlation', data:corrs,
+      backgroundColor:corrs.map(c=>c>0.75?C.green:c>0.5?C.blue:C.amber),
+      borderRadius:5
+    }]},
+    options:{
+      indexAxis:'y', responsive:true,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{color:C.grid},min:0,max:1,title:{display:true,text:'Correlation (0–1)'}},
+        y:{grid:{color:'transparent'}}
+      }
+    }
+  });
+}
+
+// ── Top-demand bar ────────────────────────────────────────────────────────────
+function renderTopBar(skills) {
+  const top = skills.slice(0,10);
+  destroyChart('topBar');
+  charts.topBar = new Chart(document.getElementById('chartTopBar'),{
+    type:'bar',
+    data:{
+      labels:top.map(s=>s.skill),
+      datasets:[{
+        label:'Demand /wk',
+        data:top.map(s=>s.avg_predicted_count),
+        backgroundColor:top.map(s=>trendCol(s.trend)),
+        borderRadius:5
+      }]
+    },
+    options:{
+      indexAxis:'y', responsive:true,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{color:C.grid},title:{display:true,text:'Avg demand (next 4 weeks)'}},
+        y:{grid:{color:'transparent'}}
+      }
+    }
+  });
+}
+
+// ── Bundles ───────────────────────────────────────────────────────────────────
+function renderBundles(bundles) {
+  const el  = document.getElementById('bundleList');
+  const top = bundles.slice(0,8);
+  if (!top.length) { el.innerHTML='<div style="color:#475569;text-align:center;padding:20px;font-size:.78rem">No bundle data</div>'; return; }
+  const maxCnt = Math.max(...top.map(b=>b.recent_count));
+  el.innerHTML = top.map(b=>{
+    const pct = Math.round((b.recent_count/maxCnt)*100);
+    return `<div class="bundle">
+      <div class="b-tags">
+        <span class="b-tag">${b.skill_1}</span>
+        <span class="b-tag">${b.skill_2}</span>
+      </div>
+      <div class="b-meta">
+        <span>${b.recent_count} co-occ.</span>
+        <div class="b-bar-bg"><div class="b-bar" style="width:${pct}%"></div></div>
+        <span>${pct}%</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Clusters ──────────────────────────────────────────────────────────────────
+function renderClusters(clusters) {
+  // Group by kmeans_theme
+  const groups = {};
+  clusters.forEach(c=>{
+    const theme = c.kmeans_theme || 'Other';
+    if (!groups[theme]) groups[theme]=[];
+    if (groups[theme].length < 8) groups[theme].push(c.skill);
+  });
+  const el = document.getElementById('clusterGrid');
+  el.innerHTML = Object.entries(groups).map(([theme,skills])=>`
+    <div class="cluster-row">
+      <div class="cluster-label">${theme}</div>
+      <div class="cluster-skills">${skills.map(s=>`<span class="c-tag">${s}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+// ── Auto-refresh every 5 min ──────────────────────────────────────────────────
+setInterval(loadAll, 5*60*1000);
+loadAll();
+</script>
+</body>
+</html>

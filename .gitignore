@@ -9,6 +9,8 @@ __pycache__/
 dist/
 build/
 .env
+.claude
+logs/
 
 # Node
 node_modules/
