@@ -26,11 +26,23 @@ export const updateRoadmapItemSchema = z.object({
 });
 
 export const predictPathSchema = z.object({
-  current_role:  z.string().trim().optional(),
-  preferences:   z.object({}).passthrough().optional(),
+  current_role:      z.string().trim().optional(),
+  experience_months: z.number().int().min(0).max(600).optional(),
+  num_projects:      z.number().int().min(0).max(50).optional(),
+  preferences:       z.object({}).passthrough().optional(),
+  // What-if simulator: skills to add/remove on top of the real set; when
+  // simulate is true the result is not persisted to history.
+  add_skills:        z.array(z.string().trim().min(1)).max(20).optional(),
+  remove_skills:     z.array(z.string().trim().min(1)).max(50).optional(),
+  simulate:          z.boolean().optional(),
+});
+
+export const generateRoadmapSchema = z.object({
+  path_id: z.string().trim().min(1),
 });
 
 export type UpsertGoalDto       = z.infer<typeof upsertGoalSchema>;
 export type AddRoadmapItemDto   = z.infer<typeof addRoadmapItemSchema>;
 export type UpdateRoadmapItemDto = z.infer<typeof updateRoadmapItemSchema>;
 export type PredictPathDto      = z.infer<typeof predictPathSchema>;
+export type GenerateRoadmapDto  = z.infer<typeof generateRoadmapSchema>;

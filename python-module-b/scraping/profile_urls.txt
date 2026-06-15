@@ -1,0 +1,10 @@
+# LinkedIn Profile URLs — paste one URL per line
+# Format: https://www.linkedin.com/in/uvindu-pramuditha-72b92b237/
+#
+# How to collect these:
+# 1. Go to LinkedIn → search "Software Engineer" → filter location = Sri Lanka
+# 2. Open each profile → copy the URL from the browser address bar
+# 3. Paste below, one per line
+#
+# Example:
+# https://www.linkedin.com/in/example-person-123/

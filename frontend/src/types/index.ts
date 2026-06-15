@@ -141,16 +141,53 @@ export interface CareerTransition {
   transition_probability: number;
 }
 
+export interface SkillInsight {
+  skill: string;
+  velocity: "rising" | "stable" | "falling" | "unknown";
+  change_pct: number;
+  demand: number;
+  early_warning?: number; // weeks until the skill is expected to spike locally
+}
+
 export interface CareerPath {
   id: string;
   probability: number;
+  confidence_relative?: number; // share of confidence across the returned paths (0–1)
   transitions: CareerTransition[];
+  career_steps?: string[];
+  readiness_score?: number;
+  skills_matched?: string[];
+  skills_needed?: string[];
+  skill_insights?: SkillInsight[];
+}
+
+export interface CareerPredictionSnapshot {
+  id: string;
+  current_role?: string;
+  top_target_role?: string;
+  top_confidence?: number;
+  top_readiness?: number;
+  created_at: string;
+}
+
+export interface NodeMarket {
+  velocity: "rising" | "stable" | "falling" | "unknown";
+  demand_index: number;
+  top_rising: string[];
+}
+
+export interface CareerNodeMeta {
+  readiness?: number;
+  gate_skills?: string[];
+  eta_months?: number;
+  market?: NodeMarket;
 }
 
 export interface CareerGraphNode {
   id: string;
   label: string;
   type: "current" | "role";
+  meta?: CareerNodeMeta;
 }
 
 export interface CareerGraphEdge {
@@ -158,6 +195,7 @@ export interface CareerGraphEdge {
   target: string;
   probability: number;
   timeframe: string;
+  skills?: string[];
 }
 
 export interface CareerPrediction {

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Pathway Predictor — Component 2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+
+    .tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #1e40af; color: #fff;
+      padding: 2px 10px; border-radius: 9999px; font-size: 13px;
+      cursor: default; user-select: none;
+    }
+    .tag button {
+      background: none; border: none; color: #93c5fd;
+      font-size: 15px; line-height: 1; cursor: pointer; padding: 0;
+    }
+    .tag button:hover { color: #fff; }
+
+    .skill-input:focus { outline: none; }
+
+    .path-card { animation: slideUp 0.3s ease forwards; opacity: 0; }
+    .path-card:nth-child(1) { animation-delay: 0.05s; }
+    .path-card:nth-child(2) { animation-delay: 0.15s; }
+    .path-card:nth-child(3) { animation-delay: 0.25s; }
+
+    @keyframes slideUp {
+      from { transform: translateY(16px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .bar-fill { transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+
+    .step-arrow::after {
+      content: '→';
+      margin: 0 6px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .step-arrow:last-child::after { display: none; }
+
+    .spinner {
+      border: 3px solid #1e3a5f;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      animation: spin 0.7s linear infinite;
+      margin: auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="border-b border-gray-800 bg-gray-900/70 backdrop-blur sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm">C2</div>
+        <div>
+          <h1 class="font-semibold text-white leading-tight">Career Pathway Predictor</h1>
+          <p class="text-xs text-gray-400">Component 2 — SLIIT Research Project R26-IT-128</p>
+        </div>
+      </div>
+      <div id="modelBadge" class="hidden sm:flex items-center gap-2 bg-gray-800 rounded-full px-3 py-1 text-xs text-gray-300">
+        <span class="w-2 h-2 rounded-full bg-green-400"></span>
+        <span id="modelName">Loading model…</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main layout -->
+  <main class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-8 items-start">
+
+    <!-- ── Input Panel ── -->
+    <section class="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-6 sticky top-20">
+      <div>
+        <h2 class="text-lg font-semibold text-white">Your Profile</h2>
+        <p class="text-sm text-gray-400 mt-1">Enter your details to predict personalised career paths</p>
+      </div>
+
+      <!-- Skills -->
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Skills</label>
+        <div id="tagContainer"
+             class="min-h-[80px] w-full bg-gray-800 border border-gray-700 rounded-xl p-3 flex flex-wrap gap-2 cursor-text"
+             onclick="document.getElementById('skillInput').focus()">
+          <input id="skillInput" type="text" placeholder="Type a skill and press Enter…"
+                 class="skill-input bg-transparent text-sm text-gray-100 placeholder-gray-500 flex-1 min-w-[160px]"
+                 onkeydown="handleSkillInput(event)" />
+        </div>
+        <p class="text-xs text-gray-500 mt-1.5">e.g. Python, React, Docker, SQL, TensorFlow</p>
+      </div>
+
+      <!-- Current Role -->
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Current Role</label>
+        <select id="currentRole"
+                class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-100 focus:outline-none focus:border-blue-500">
+          <option value="Student">Student</option>
+          <option value="Intern">Intern</option>
+          <option value="Trainee">Trainee</option>
+          <option value="Junior Developer">Junior Developer</option>
+          <option value="Entry Level">Entry Level</option>
+          <option value="Graduate">Graduate</option>
+        </select>
+      </div>
+
+      <!-- Experience + Projects row -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">
+            Experience
+            <span class="text-gray-500 font-normal">(months)</span>
+          </label>
+          <input id="expMonths" type="number" min="0" max="120" value="0"
+                 class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-100 focus:outline-none focus:border-blue-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">
+            Projects
+            <span class="text-gray-500 font-normal">(count)</span>
+          </label>
+          <input id="numProjects" type="number" min="0" max="50" value="0"
+                 class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-100 focus:outline-none focus:border-blue-500" />
+        </div>
+      </div>
+
+      <!-- Predict button -->
+      <button id="predictBtn" onclick="runPrediction()"
+              class="w-full bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors text-sm">
+        Predict Career Paths
+      </button>
+
+      <!-- Quick-fill demo profiles -->
+      <div>
+        <p class="text-xs text-gray-500 mb-2">Quick-fill demo profiles</p>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="fillDemo('ml')"
+                  class="text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 px-3 py-1.5 rounded-lg transition-colors">
+            ML / AI
+          </button>
+          <button onclick="fillDemo('web')"
+                  class="text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 px-3 py-1.5 rounded-lg transition-colors">
+            Web / Full-Stack
+          </button>
+          <button onclick="fillDemo('devops')"
+                  class="text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 px-3 py-1.5 rounded-lg transition-colors">
+            DevOps / Cloud
+          </button>
+          <button onclick="fillDemo('security')"
+                  class="text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 px-3 py-1.5 rounded-lg transition-colors">
+            Security
+          </button>
+          <button onclick="fillDemo('blockchain')"
+                  class="text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 px-3 py-1.5 rounded-lg transition-colors">
+            Blockchain
+          </button>
+          <button onclick="fillDemo('game')"
+                  class="text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 px-3 py-1.5 rounded-lg transition-colors">
+            Game Dev
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Results Panel ── -->
+    <section id="resultsPanel" class="space-y-4">
+
+      <!-- Empty state -->
+      <div id="emptyState" class="flex flex-col items-center justify-center h-96 text-center">
+        <div class="w-16 h-16 rounded-2xl bg-gray-800 flex items-center justify-center mb-4 text-3xl">🗺️</div>
+        <p class="text-gray-400 font-medium">Your career paths will appear here</p>
+        <p class="text-gray-600 text-sm mt-1">Add your skills and hit <strong class="text-gray-500">Predict Career Paths</strong></p>
+      </div>
+
+      <!-- Loading state -->
+      <div id="loadingState" class="hidden flex flex-col items-center justify-center h-64">
+        <div class="spinner mb-4"></div>
+        <p class="text-gray-400 text-sm">Running prediction…</p>
+      </div>
+
+      <!-- Error state -->
+      <div id="errorState" class="hidden bg-red-950 border border-red-800 rounded-2xl p-5 text-red-300 text-sm"></div>
+
+      <!-- Path cards container -->
+      <div id="pathCards" class="hidden space-y-4"></div>
+    </section>
+
+  </main>
+
+  <script>
+    // ── State ──
+    let skills = [];
+
+    // ── Demo profiles ──
+    const DEMOS = {
+      ml: {
+        skills: ["Python", "TensorFlow", "scikit-learn", "NumPy", "Pandas", "SQL", "NLP", "Deep Learning", "Hugging Face", "Jupyter"],
+        role: "Student", exp: 0, projects: 4,
+      },
+      web: {
+        skills: ["React", "JavaScript", "HTML", "CSS", "Node.js", "MongoDB", "Git", "REST API", "TypeScript", "Tailwind CSS"],
+        role: "Intern", exp: 6, projects: 3,
+      },
+      devops: {
+        skills: ["Docker", "Kubernetes", "AWS", "Linux", "Python", "CI/CD", "Git", "Bash", "Terraform", "Helm"],
+        role: "Trainee", exp: 3, projects: 2,
+      },
+      security: {
+        skills: ["Penetration Testing", "Burpsuite", "Kali Linux", "Nmap", "OWASP", "Python", "Wireshark", "SIEM", "Vulnerability Assessment"],
+        role: "Intern", exp: 0, projects: 3,
+      },
+      blockchain: {
+        skills: ["Solidity", "Ethereum", "Smart Contracts", "Web3.js", "Hardhat", "JavaScript", "DeFi", "MetaMask", "Ethers.js"],
+        role: "Student", exp: 0, projects: 2,
+      },
+      game: {
+        skills: ["Unity", "C#", "Game Development", "Physics Simulation", "Unreal Engine", "3D Modeling Integration", "Git", "Visual Studio"],
+        role: "Student", exp: 0, projects: 3,
+      },
+    };
+
+    // ── Path card colour themes ──
+    const THEMES = [
+      { border: "border-blue-500/40",   badge: "bg-blue-900/60 text-blue-300",   bar: "bg-blue-500",   rank: "text-blue-400" },
+      { border: "border-purple-500/40", badge: "bg-purple-900/60 text-purple-300", bar: "bg-purple-500", rank: "text-purple-400" },
+      { border: "border-teal-500/40",   badge: "bg-teal-900/60 text-teal-300",   bar: "bg-teal-500",   rank: "text-teal-400" },
+    ];
+
+    // ── Skill tag helpers ──
+    function addSkill(raw) {
+      const val = raw.trim();
+      if (!val || skills.includes(val.toLowerCase())) return;
+      skills.push(val.toLowerCase());
+      renderTags();
+    }
+
+    function removeSkill(idx) {
+      skills.splice(idx, 1);
+      renderTags();
+    }
+
+    function renderTags() {
+      const container = document.getElementById("tagContainer");
+      const input = document.getElementById("skillInput");
+      // Remove old tags but keep the input
+      [...container.querySelectorAll(".tag")].forEach(el => el.remove());
+      skills.forEach((s, i) => {
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.innerHTML = `${s} <button onclick="removeSkill(${i})" title="Remove">×</button>`;
+        container.insertBefore(tag, input);
+      });
+    }
+
+    function handleSkillInput(e) {
+      const input = e.target;
+      if (e.key === "Enter" || e.key === ",") {
+        e.preventDefault();
+        addSkill(input.value);
+        input.value = "";
+      } else if (e.key === "Backspace" && input.value === "" && skills.length > 0) {
+        removeSkill(skills.length - 1);
+      }
+    }
+
+    function fillDemo(key) {
+      const d = DEMOS[key];
+      skills = [...d.skills.map(s => s.toLowerCase())];
+      renderTags();
+      document.getElementById("currentRole").value = d.role;
+      document.getElementById("expMonths").value = d.exp;
+      document.getElementById("numProjects").value = d.projects;
+    }
+
+    // ── Prediction ──
+    async function runPrediction() {
+      if (skills.length === 0) {
+        showError("Please add at least one skill before predicting.");
+        return;
+      }
+
+      setView("loading");
+
+      const payload = {
+        skills,
+        current_role: document.getElementById("currentRole").value,
+        experience_months: parseInt(document.getElementById("expMonths").value) || 0,
+        num_projects: parseInt(document.getElementById("numProjects").value) || 0,
+        top_k: 3,
+      };
+
+      try {
+        const res = await fetch("/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+        const data = await res.json();
+        renderResults(data.paths, payload.current_role);
+      } catch (err) {
+        showError(`Prediction failed: ${err.message}`);
+      }
+    }
+
+    function renderResults(paths, currentRole) {
+      if (!paths || paths.length === 0) {
+        showError("No career paths returned. Try adding more skills.");
+        return;
+      }
+
+      const container = document.getElementById("pathCards");
+      container.innerHTML = "";
+
+      paths.forEach((path, i) => {
+        const theme = THEMES[i] || THEMES[0];
+        const confPct = (path.confidence * 100).toFixed(1);
+        const readyPct = (path.readiness_score * 100).toFixed(0);
+
+        // Career steps
+        const steps = path.career_steps && path.career_steps.length > 0
+          ? path.career_steps
+          : [currentRole, path.target_role];
+        const stepsHtml = steps.map((s, idx) =>
+          `<span class="step-arrow inline-block text-xs font-medium text-gray-300 ${idx === steps.length - 1 ? 'text-white font-semibold' : ''}">${s}</span>`
+        ).join("");
+
+        // Skills
+        const matchedHtml = (path.skills_matched || []).slice(0, 6).map(s =>
+          `<span class="inline-block bg-green-900/50 text-green-300 border border-green-700/40 text-xs px-2.5 py-0.5 rounded-full">${s}</span>`
+        ).join("");
+
+        const neededHtml = (path.skills_needed || []).length > 0
+          ? (path.skills_needed || []).slice(0, 6).map(s =>
+              `<span class="inline-block bg-orange-900/50 text-orange-300 border border-orange-700/40 text-xs px-2.5 py-0.5 rounded-full">${s}</span>`
+            ).join("")
+          : `<span class="text-xs text-green-400 italic">You already have the key skills!</span>`;
+
+        const card = document.createElement("div");
+        card.className = `path-card bg-gray-900 border ${theme.border} rounded-2xl p-6 space-y-5`;
+        card.innerHTML = `
+          <!-- Card header -->
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl font-bold ${theme.rank}">#${path.path_number}</span>
+              <div>
+                <h3 class="text-lg font-semibold text-white leading-tight">${path.target_role}</h3>
+                <span class="text-xs text-gray-500">Predicted career target</span>
+              </div>
+            </div>
+            <span class="${theme.badge} text-sm font-semibold px-3 py-1 rounded-full whitespace-nowrap">
+              ${confPct}% confidence
+            </span>
+          </div>
+
+          <!-- Confidence bar -->
+          <div>
+            <div class="flex justify-between text-xs text-gray-400 mb-1.5">
+              <span>Model confidence</span><span>${confPct}%</span>
+            </div>
+            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+              <div class="bar-fill h-full ${theme.bar} rounded-full" style="width: 0%" data-target="${confPct}"></div>
+            </div>
+          </div>
+
+          <!-- Career steps -->
+          <div>
+            <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Career Path</p>
+            <div class="flex flex-wrap items-center gap-0">${stepsHtml}</div>
+          </div>
+
+          <!-- Readiness + skill sections -->
+          <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4 items-start">
+            <div class="space-y-3">
+              <!-- Skills you have -->
+              ${matchedHtml ? `
+              <div>
+                <p class="text-xs text-gray-500 mb-1.5">✓ Skills you have</p>
+                <div class="flex flex-wrap gap-1.5">${matchedHtml}</div>
+              </div>` : ""}
+
+              <!-- Skills needed -->
+              <div>
+                <p class="text-xs text-gray-500 mb-1.5">→ Skills to learn</p>
+                <div class="flex flex-wrap gap-1.5">${neededHtml}</div>
+              </div>
+            </div>
+
+            <!-- Readiness score -->
+            <div class="flex flex-col items-center justify-center w-20 shrink-0">
+              <svg viewBox="0 0 36 36" class="w-16 h-16 -rotate-90">
+                <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#1f2937" stroke-width="3.5"/>
+                <circle cx="18" cy="18" r="15.9155" fill="none"
+                        stroke="${i===0?'#3b82f6':i===1?'#a855f7':'#14b8a6'}"
+                        stroke-width="3.5"
+                        stroke-dasharray="${readyPct} 100"
+                        stroke-linecap="round"/>
+              </svg>
+              <span class="text-xs font-semibold text-gray-300 -mt-1">${readyPct}%</span>
+              <span class="text-xs text-gray-500">Readiness</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      setView("results");
+
+      // Animate bars after DOM paint
+      requestAnimationFrame(() => {
+        document.querySelectorAll(".bar-fill[data-target]").forEach(el => {
+          el.style.width = el.dataset.target + "%";
+        });
+      });
+    }
+
+    // ── View state helpers ──
+    function setView(state) {
+      document.getElementById("emptyState").classList.toggle("hidden", state !== "empty");
+      document.getElementById("loadingState").classList.toggle("hidden", state !== "loading");
+      document.getElementById("errorState").classList.toggle("hidden", state !== "error");
+      document.getElementById("pathCards").classList.toggle("hidden", state !== "results");
+    }
+
+    function showError(msg) {
+      const el = document.getElementById("errorState");
+      el.textContent = msg;
+      setView("error");
+    }
+
+    // ── Load model info badge ──
+    async function loadModelInfo() {
+      try {
+        const res = await fetch("/model-info");
+        const info = await res.json();
+        const badge = document.getElementById("modelBadge");
+        const label = document.getElementById("modelName");
+        label.textContent = `${info.best_model} · ${info.num_roles} roles · ${info.model_scores[info.best_model]?.test_acc ?? "—"}% acc`;
+        badge.classList.remove("hidden");
+      } catch (_) {}
+    }
+
+    loadModelInfo();
+  </script>
+</body>
+</html>

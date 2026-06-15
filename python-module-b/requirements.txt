@@ -1,0 +1,26 @@
+# Component 2 — Career Pathway Predictor
+# Install: pip install -r requirements.txt
+
+# Core ML
+scikit-learn>=1.3.0
+numpy>=1.24.0
+pandas>=2.0.0
+joblib>=1.3.0
+
+# Hugging Face Transformer (sentence-level skill embeddings)
+sentence-transformers>=2.6.0
+torch>=2.0.0                    # required by sentence-transformers
+
+# Graph (career transition graph visualisation)
+networkx>=3.1
+
+# Optional — for training progress bar
+tqdm>=4.65.0
+
+# Charts / evaluation
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Dashboard server
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0

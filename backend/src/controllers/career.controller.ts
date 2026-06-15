@@ -42,4 +42,19 @@ export const careerController = {
     const data = await careerService.predictPath(req.user!.id, req.body, userSkills);
     sendSuccess(res, data, "Career path generated");
   },
+
+  async getPredictions(req: AuthRequest, res: Response): Promise<void> {
+    const data = await careerService.getPredictions(req.user!.id);
+    sendSuccess(res, data, "Prediction history fetched");
+  },
+
+  async deletePrediction(req: AuthRequest, res: Response): Promise<void> {
+    const data = await careerService.deletePrediction(req.user!.id, p(req.params["id"]));
+    sendSuccess(res, data, "Prediction deleted");
+  },
+
+  async generateRoadmap(req: AuthRequest, res: Response): Promise<void> {
+    const data = await careerService.generateRoadmap(req.user!.id, req.body.path_id);
+    sendSuccess(res, data, "Roadmap generated from skill gaps", 201);
+  },
 };

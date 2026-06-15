@@ -1,5 +1,5 @@
 import apiClient from "@/lib/axios";
-import type { ApiResponse, CareerGoal, GoalSkillSnapshot, RoadmapItem, CareerPrediction } from "@/types";
+import type { ApiResponse, CareerGoal, GoalSkillSnapshot, RoadmapItem, CareerPrediction, CareerPredictionSnapshot } from "@/types";
 
 export const careerService = {
   getGoal: () =>
@@ -20,6 +20,12 @@ export const careerService = {
   deleteRoadmapItem: (id: string) =>
     apiClient.delete<ApiResponse<{ success: boolean }>>(`/career/roadmap/${id}`),
 
-  predictPath: (data?: { current_role?: string; preferences?: object }) =>
+  predictPath: (data?: { current_role?: string; experience_months?: number; num_projects?: number; preferences?: object; add_skills?: string[]; remove_skills?: string[]; simulate?: boolean }) =>
     apiClient.post<ApiResponse<CareerPrediction>>("/career/predict", data ?? {}),
+
+  getPredictions: () =>
+    apiClient.get<ApiResponse<CareerPredictionSnapshot[]>>("/career/predictions"),
+
+  generateRoadmap: (path_id: string) =>
+    apiClient.post<ApiResponse<{ created: number; items: RoadmapItem[] }>>("/career/roadmap/generate", { path_id }),
 };

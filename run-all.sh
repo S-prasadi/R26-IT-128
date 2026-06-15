@@ -5,6 +5,7 @@
 #   Backend  (Node/Express)      http://localhost:8081
 #   Frontend (Next.js)           http://localhost:3000
 #   Module A (FastAPI)           http://localhost:8001
+#   Module B (FastAPI)           http://localhost:8002
 #   Module C backend (Flask)     http://localhost:8003
 #   Module C frontend (Vite)     http://localhost:5173
 #   Module D (FastAPI)           http://localhost:8004
@@ -186,8 +187,9 @@ if [ -z "${GITHUB_TOKEN:-}" ] && [ -f "$ROOT/backend/.env" ]; then
 fi
 
 # --- Python modules (start first so heavy ML imports warm up) -----------------
-start_py "module-a"         "python-module-a"         "venv" "api/app.py" 8001 "$LOG_DIR/module-a.log"
-start_py "module-c-backend" "python-module-c/backend" "venv" "app.py"     8003 "$LOG_DIR/module-c-backend.log"
+start_py "module-a"         "python-module-a"         "venv" "api/app.py"   8001 "$LOG_DIR/module-a.log"
+start_py "module-b"         "python-module-b"         "venv" "dashboard.py" 8002 "$LOG_DIR/module-b.log"
+start_py "module-c-backend" "python-module-c/backend" "venv" "app.py"       8003 "$LOG_DIR/module-c-backend.log"
 start_py "module-d"         "python-module-d"         "venv" "main.py"    8004 "$LOG_DIR/module-d.log"
 
 # --- Node services ------------------------------------------------------------
@@ -204,6 +206,7 @@ cat <<EOF
   Frontend (Next.js)        ${G}http://localhost:3000${N}
   Backend  (Express API)    ${G}http://localhost:8081${N}
   Module A (FastAPI)        ${G}http://localhost:8001${N}
+  Module B (FastAPI)        ${G}http://localhost:8002${N}
   Module C backend (Flask)  ${G}http://localhost:8003${N}
   Module C frontend (Vite)  ${G}http://localhost:5173${N}
   Module D (FastAPI)        ${G}http://localhost:8004${N}
