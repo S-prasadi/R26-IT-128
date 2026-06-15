@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/api/index.js",
     "test:auth": "node scripts/test-auth-api.mjs",
+    "test:career": "node scripts/test-career-flow.mjs",
     "type-check": "tsc --noEmit"
   },
   "keywords": [],

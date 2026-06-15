@@ -5,6 +5,7 @@
   Backend  (Node/Express)      http://localhost:8081
   Frontend (Next.js)           http://localhost:3000
   Module A (FastAPI)           http://localhost:8001
+  Module B (FastAPI)           http://localhost:8002
   Module C backend (Flask)     http://localhost:8003
   Module C frontend (Vite)     http://localhost:5173
   Module D (FastAPI)           http://localhost:8004
@@ -26,16 +27,33 @@ New-Item -ItemType Directory -Force -Path $LOGDIR | Out-Null
 # --- Locate Python ---
 function Find-Python {
     $candidates = @(
+        # Anaconda / Miniconda (user)
+        "$env:USERPROFILE\anaconda3\python.exe",
+        "$env:USERPROFILE\miniconda3\python.exe",
+        # Anaconda / Miniconda (system)
+        "C:\ProgramData\Anaconda3\python.exe",
+        "C:\ProgramData\miniconda3\python.exe",
+        # Standard python.org installer (user AppData)
         "$env:LOCALAPPDATA\Programs\Python\Python313\python.exe",
         "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe",
-        "$env:LOCALAPPDATA\Programs\Python\Python311\python.exe"
+        "$env:LOCALAPPDATA\Programs\Python\Python311\python.exe",
+        "$env:LOCALAPPDATA\Programs\Python\Python310\python.exe",
+        # Standard python.org installer (system-wide)
+        "C:\Python313\python.exe",
+        "C:\Python312\python.exe",
+        "C:\Python311\python.exe",
+        "C:\Python310\python.exe",
+        "C:\Program Files\Python313\python.exe",
+        "C:\Program Files\Python312\python.exe",
+        "C:\Program Files\Python311\python.exe"
     )
     foreach ($c in $candidates) { if (Test-Path $c) { return $c } }
-    foreach ($n in "py", "python") {
+    # Search PATH, but skip the Windows Store stub (it's not a real interpreter)
+    foreach ($n in "py", "python", "python3") {
         $cmd = Get-Command $n -ErrorAction SilentlyContinue
-        if ($cmd) { return $cmd.Source }
+        if ($cmd -and $cmd.Source -notmatch "WindowsApps") { return $cmd.Source }
     }
-    throw "Python 3 not found. Install from https://python.org and retry."
+    throw "Python 3 not found. Install Anaconda or Python from https://python.org and retry."
 }
 $PYTHON = Find-Python
 Write-Host "[run-all] Python: $PYTHON" -ForegroundColor Green
@@ -90,7 +108,7 @@ function Start-Py([string]$name, [string]$relDir, [string]$venvRel, [string]$scr
 
     if ($script:MODE -eq "force" -or ($script:MODE -eq "auto" -and -not (Test-Path $flag))) {
         if (Test-Path $req) {
-            clog "${name}: installing c (first run may be slow)..."
+            clog "${name}: installing deps (first run may be slow)..."
             & $pip install -q --upgrade pip
             & $pip install -r $req
             if ($LASTEXITCODE -eq 0) { New-Item -ItemType File -Force -Path $flag | Out-Null }
@@ -142,9 +160,10 @@ clog "Launching all services...  (logs -> $LOGDIR\)" "Green"
 Write-Host ""
 
 # Python modules first - heavy ML imports need time to warm up
-Start-Py  "module-a"          "python-module-a"         "venv" "api\app.py" 8001
-Start-Py  "module-c-backend"  "python-module-c\backend" "venv" "app.py"     8003
-Start-Py  "module-d"          "python-module-d"         "venv" "main.py"    8004
+Start-Py  "module-a"          "python-module-a"         "venv" "api\app.py"    8001
+Start-Py  "module-b"          "python-module-b"         "venv" "dashboard.py"  8002
+Start-Py  "module-c-backend"  "python-module-c\backend" "venv" "app.py"        8003
+Start-Py  "module-d"          "python-module-d"         "venv" "main.py"       8004
 
 # Node services
 Start-Node "backend"           "backend"                  8081
@@ -159,6 +178,7 @@ Write-Host "  ----------------------------------------"
 Write-Host "  Frontend (Next.js)        http://localhost:3000"
 Write-Host "  Backend  (Express API)    http://localhost:8081"
 Write-Host "  Module A (FastAPI)        http://localhost:8001"
+Write-Host "  Module B (FastAPI)        http://localhost:8002"
 Write-Host "  Module C backend (Flask)  http://localhost:8003"
 Write-Host "  Module C frontend (Vite)  http://localhost:5173"
 Write-Host "  Module D (FastAPI)        http://localhost:8004"
