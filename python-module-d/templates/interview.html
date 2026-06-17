@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interview Emotion Detector</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1a1d27;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #2a2d3e;
+    }
+    header h1 { font-size: 1.4rem; font-weight: 600; }
+    header p  { font-size: 0.8rem; color: #888; margin-top: 2px; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.5rem;
+      padding: 1.5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Camera panel */
+    .cam-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .video-wrap {
+      position: relative;
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+    }
+    #video  { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #canvas { display: none; }
+
+    .overlay-label {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: rgba(0,0,0,0.55);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: #ccc;
+    }
+
+    /* Bounding box drawn by JS */
+    #bbox-svg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+
+    .controls { display: flex; gap: 0.75rem; }
+    button {
+      flex: 1;
+      padding: 0.65rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+    button:hover { opacity: 0.85; }
+    #btn-start { background: #2ecc71; color: #000; }
+    #btn-stop  { background: #e74c3c; color: #fff; }
+
+    /* Stats panel */
+    .stats-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card {
+      background: #1a1d27;
+      border-radius: 10px;
+      padding: 1.1rem 1.3rem;
+      border: 1px solid #2a2d3e;
+    }
+    .card-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .emotion-name {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .confidence {
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    .state-box {
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+      border-left: 4px solid;
+    }
+    .state-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      opacity: 0.6;
+    }
+    .state-value {
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* Bar chart */
+    .bar-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+    }
+    .bar-label { width: 68px; color: #aaa; text-transform: capitalize; }
+    .bar-track {
+      flex: 1;
+      height: 10px;
+      background: #2a2d3e;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 5px;
+      background: #3498db;
+      transition: width 0.25s ease;
+    }
+    .bar-pct { width: 36px; text-align: right; color: #888; }
+
+    /* Legend */
+    .legend { font-size: 0.75rem; color: #666; line-height: 1.7; }
+    .legend span { color: #aaa; }
+
+    #status {
+      font-size: 0.8rem;
+      color: #888;
+      text-align: center;
+      padding: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Interview Emotion Detector</h1>
+  <p>Module D · SLIIT R26-IT-128 · Real-time facial emotion analysis</p>
+</header>
+
+<div class="layout">
+
+  <!-- Left: camera -->
+  <div class="cam-panel">
+    <div class="video-wrap">
+      <video id="video" autoplay muted playsinline></video>
+      <canvas id="canvas"></canvas>
+      <svg id="bbox-svg" viewBox="0 0 1 1" preserveAspectRatio="none"></svg>
+      <div class="overlay-label" id="overlay-label">Camera off</div>
+    </div>
+    <div class="controls">
+      <button id="btn-start">&#9654; Start</button>
+      <button id="btn-stop" disabled>&#9646;&#9646; Stop</button>
+    </div>
+    <div id="status">Click Start to begin analysis</div>
+  </div>
+
+  <!-- Right: stats -->
+  <div class="stats-panel">
+
+    <div class="card">
+      <div class="card-title">Detected Emotion</div>
+      <div class="emotion-name" id="emotion-name">—</div>
+      <div class="confidence" id="confidence"></div>
+    </div>
+
+    <div id="state-box" class="state-box" style="background:#1a1d2720;border-color:#444">
+      <div class="state-label">Interview State</div>
+      <div class="state-value" id="state-value">—</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Emotion Scores</div>
+      <div class="bar-list" id="bar-list"></div>
+    </div>
+
+    <div class="card legend">
+      <div class="card-title">Emotion → State Mapping</div>
+      <span>😊 Happy / 😐 Neutral</span> → Confident<br>
+      <span>😨 Fearful / 😲 Surprised</span> → Nervous<br>
+      <span>😢 Sad</span> → Confused<br>
+      <span>😠 Angry / 🤢 Disgusted</span> → Stressed
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const video       = document.getElementById('video');
+  const canvas      = document.getElementById('canvas');
+  const bboxSvg     = document.getElementById('bbox-svg');
+  const btnStart    = document.getElementById('btn-start');
+  const btnStop     = document.getElementById('btn-stop');
+  const statusEl    = document.getElementById('status');
+  const overlayLbl  = document.getElementById('overlay-label');
+  const emotionName = document.getElementById('emotion-name');
+  const confidenceEl= document.getElementById('confidence');
+  const stateBox    = document.getElementById('state-box');
+  const stateValue  = document.getElementById('state-value');
+  const barList     = document.getElementById('bar-list');
+
+  const ctx = canvas.getContext('2d');
+
+  let running   = false;
+  let stream    = null;
+  let loopTimer = null;
+
+  const BAR_COLORS = {
+    angry:'#e74c3c', disgusted:'#1abc9c', fearful:'#e67e22',
+    happy:'#2ecc71', neutral:'#3498db',   sad:'#9b59b6', surprised:'#f1c40f'
+  };
+
+  // Build bar rows once (order fixed)
+  const LABELS = ['happy','neutral','fearful','surprised','sad','angry','disgusted'];
+  LABELS.forEach(label => {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `
+      <div class="bar-label">${label}</div>
+      <div class="bar-track"><div class="bar-fill" id="bar-${label}" style="width:0%;background:${BAR_COLORS[label]}"></div></div>
+      <div class="bar-pct" id="pct-${label}">0%</div>`;
+    barList.appendChild(row);
+  });
+
+  btnStart.addEventListener('click', async () => {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      await video.play();
+      running = true;
+      btnStart.disabled = true;
+      btnStop.disabled  = false;
+      overlayLbl.textContent = '● Live';
+      overlayLbl.style.color = '#2ecc71';
+      statusEl.textContent = 'Analyzing…';
+      loop();
+    } catch (e) {
+      statusEl.textContent = 'Camera error: ' + e.message;
+    }
+  });
+
+  btnStop.addEventListener('click', () => {
+    running = false;
+    clearTimeout(loopTimer);
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    stream = null;
+    btnStart.disabled = false;
+    btnStop.disabled  = true;
+    overlayLbl.textContent = 'Camera off';
+    overlayLbl.style.color = '#ccc';
+    statusEl.textContent = 'Stopped';
+    clearBbox();
+  });
+
+  async function loop() {
+    if (!running) return;
+    await sendFrame();
+    loopTimer = setTimeout(loop, 200);   // ~5 fps
+  }
+
+  async function sendFrame() {
+    canvas.width  = video.videoWidth  || 640;
+    canvas.height = video.videoHeight || 480;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const b64 = canvas.toDataURL('image/jpeg', 0.7);
+
+    try {
+      const res  = await fetch('/predict', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ image: b64 }),
+      });
+      const data = await res.json();
+      updateUI(data);
+    } catch (_) {
+      statusEl.textContent = 'Server error — is app.py running?';
+    }
+  }
+
+  function updateUI(data) {
+    if (!data.face) {
+      emotionName.textContent = 'No face';
+      confidenceEl.textContent = '';
+      stateValue.textContent = '—';
+      stateBox.style.borderColor = '#444';
+      stateBox.style.background  = '#1a1d2720';
+      stateValue.style.color = '#ccc';
+      clearBbox();
+      statusEl.textContent = 'No face detected';
+      return;
+    }
+
+    emotionName.textContent  = capitalise(data.emotion);
+    emotionName.style.color  = BAR_COLORS[data.emotion] || '#fff';
+    confidenceEl.textContent = data.confidence + '% confidence';
+
+    stateValue.textContent   = data.interview_state;
+    stateValue.style.color   = data.state_color;
+    stateBox.style.borderColor = data.state_color;
+    stateBox.style.background  = data.state_color + '18';
+
+    // Update bars
+    const probs = data.probs;
+    LABELS.forEach(label => {
+      const pct = probs[label] ?? 0;
+      document.getElementById('bar-' + label).style.width = pct + '%';
+      document.getElementById('pct-' + label).textContent = pct.toFixed(1) + '%';
+    });
+
+    // Draw bounding box
+    drawBbox(data.bbox, canvas.width, canvas.height);
+    statusEl.textContent = '';
+  }
+
+  function drawBbox(bbox, fw, fh) {
+    const { x, y, w, h } = bbox;
+    const xPct = (x / fw  * 100).toFixed(2);
+    const yPct = (y / fh  * 100).toFixed(2);
+    const wPct = (w / fw  * 100).toFixed(2);
+    const hPct = (h / fh  * 100).toFixed(2);
+    bboxSvg.innerHTML = `
+      <rect x="${xPct}%" y="${yPct}%" width="${wPct}%" height="${hPct}%"
+            fill="none" stroke="#2ecc71" stroke-width="2"
+            rx="4" vector-effect="non-scaling-stroke"/>`;
+  }
+
+  function clearBbox() { bboxSvg.innerHTML = ''; }
+
+  function capitalise(s) { return s ? s[0].toUpperCase() + s.slice(1) : s; }
+</script>
+</body>
+</html>

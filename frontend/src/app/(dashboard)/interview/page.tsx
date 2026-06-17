@@ -14,11 +14,12 @@ type Step = (typeof STEPS)[number];
 
 const DOCUMENT_CONTEXT_LIMIT = 10000;
 const TOPICS = ["Frontend Development", "Backend Development", "DevOps", "Data Science", "System Design", "Full-Stack Development"];
-const EMOTIONS = ["Confident", "Neutral", "Nervous", "Engaged", "Confused"];
+const EMOTIONS = ["Confident", "Neutral", "Nervous", "Stressed", "Confused"];
 const EMOTION_COLORS: Record<string, string> = {
   Confident: "var(--teal)",
   Neutral:   "var(--text2)",
   Nervous:   "var(--rose)",
+  Stressed:  "var(--rose)",
   Engaged:   "var(--accent)",
   Confused:  "var(--amber)",
 };
@@ -38,22 +39,28 @@ export default function InterviewPage() {
   const [showHistory, setShowHistory] = useState(false);
   const [viewSession, setViewSession] = useState<InterviewSession | null>(null);
   const startTime = useRef<number>(0);
+  const videoRef        = useRef<HTMLVideoElement>(null);
+  const canvasRef       = useRef<HTMLCanvasElement>(null);
+  const streamRef       = useRef<MediaStream | null>(null);
+  const emotionTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [form, setForm] = useState({ topic: "Frontend Development", difficulty: 3 });
   const [currentEmotion, setCurrentEmotion] = useState("Neutral");
+  const [cameraError, setCameraError] = useState("");
   const [docFile, setDocFile] = useState<File | null>(null);
   const [extractedText, setExtractedText] = useState("");
   const [extracting, setExtracting] = useState(false);
 
+  useEffect(() => { loadSessions(); }, []);
+
+  // Start/stop webcam when entering/leaving the Live Interview step
   useEffect(() => {
-    loadSessions();
-    // Simulate random emotion changes during live interview
-    const t = setInterval(() => {
-      if (step === "Live Interview") {
-        setCurrentEmotion(EMOTIONS[Math.floor(Math.random() * EMOTIONS.length)]);
-      }
-    }, 3000);
-    return () => clearInterval(t);
+    if (step === "Live Interview") {
+      startWebcam();
+    } else {
+      stopWebcam();
+    }
+    return () => stopWebcam();
   }, [step]);
 
   async function loadSessions() {
@@ -65,6 +72,52 @@ export default function InterviewPage() {
       toast.error("Failed to load sessions");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function startWebcam() {
+    setCameraError("");
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240, facingMode: "user" } });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      emotionTimerRef.current = setInterval(captureAndPredict, 200);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setCameraError(msg);
+    }
+  }
+
+  function stopWebcam() {
+    if (emotionTimerRef.current) { clearInterval(emotionTimerRef.current); emotionTimerRef.current = null; }
+    if (streamRef.current) { streamRef.current.getTracks().forEach((t) => t.stop()); streamRef.current = null; }
+    if (videoRef.current) { videoRef.current.srcObject = null; }
+  }
+
+  async function captureAndPredict() {
+    const video  = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas || video.readyState < 2) return;
+    canvas.width  = video.videoWidth  || 320;
+    canvas.height = video.videoHeight || 240;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.drawImage(video, 0, 0);
+    const base64 = canvas.toDataURL("image/jpeg", 0.7).split(",")[1];
+    try {
+      const res = await fetch("http://localhost:8004/predict", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ frame: base64 }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.face && data.interview_state) setCurrentEmotion(data.interview_state);
+      }
+    } catch {
+      // Module D unreachable — keep last emotion
     }
   }
 
@@ -311,12 +364,30 @@ export default function InterviewPage() {
               <div>
                 <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 16, border: "1px solid var(--border)", marginBottom: 12 }}>
                   <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text2)", textTransform: "uppercase", marginBottom: 12 }}>Emotion Detector</div>
-                  <div style={{ background: "#000", borderRadius: "var(--radius)", aspectRatio: "4/3", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 10 }}>
-                    <span style={{ color: "var(--text3)", fontSize: 12 }}>📷 Webcam</span>
+                  <div style={{ background: "#000", borderRadius: "var(--radius)", aspectRatio: "4/3", overflow: "hidden", position: "relative", marginBottom: 10 }}>
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      muted
+                      playsInline
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    />
+                    {cameraError && (
+                      <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6 }}>
+                        <span style={{ fontSize: 24 }}>📷</span>
+                        <span style={{ color: "var(--text3)", fontSize: 11, textAlign: "center", padding: "0 8px" }}>Camera unavailable</span>
+                      </div>
+                    )}
                   </div>
+                  <canvas ref={canvasRef} style={{ display: "none" }} />
                   <div style={{ textAlign: "center", padding: "8px 0" }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: EMOTION_COLORS[currentEmotion] }}>● {currentEmotion}</span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: EMOTION_COLORS[currentEmotion] ?? "var(--text2)" }}>● {currentEmotion}</span>
                   </div>
+                  {cameraError && (
+                    <div style={{ fontSize: 11, color: "var(--text3)", textAlign: "center", marginTop: 4 }}>
+                      Allow camera access in Chrome settings to enable emotion detection.
+                    </div>
+                  )}
                 </div>
                 <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 12, border: "1px solid var(--border)" }}>
                   <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text2)", textTransform: "uppercase", marginBottom: 8 }}>Emotion Timeline</div>

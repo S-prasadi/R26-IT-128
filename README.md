@@ -16,7 +16,7 @@ PathwayIQ is a full-stack AI platform that helps professionals understand where 
 6. [Environment Variables](#6-environment-variables)
 7. [Running the Frontend](#7-running-the-frontend)
 8. [Running the Backend](#8-running-the-backend)
-9. [Running the Python Microservices (Modules A, C, D)](#9-running-the-python-microservices-modules-a-c-d)
+9. [Running the Python Microservices (Modules A, B, C, D)](#9-running-the-python-microservices-modules-a-b-c-d)
 10. [Database Setup (Supabase)](#10-database-setup-supabase)
 11. [API Reference](#11-api-reference)
 12. [Feature Deep-Dives](#12-feature-deep-dives)
@@ -32,7 +32,7 @@ PathwayIQ is built around **four AI modules**, each solving a distinct part of t
 | Module | Name | What it does |
 |--------|------|-------------|
 | **A** | Skill Forecaster | Analyses 2.5 years of weekly skill-demand data (Google Trends + job portals, global & Sri Lanka) and forecasts which skills will be in high demand over the next 12 weeks using ARIMA / Exponential Smoothing. Detects global→local lead-lag signals (CCF + Granger) and sends early-warning alerts for fast-rising technologies. **Integrated** (FastAPI, port 8001). |
-| **B** | Career Predictor | Takes a user's current skill set and predicts the most likely and most achievable career paths. Outputs role transition probabilities and recommended skill gaps to close. *(Not yet wired — backend uses mock fallback.)* |
+| **B** | Career Predictor | Takes a user's current skill set and predicts the most likely and most achievable career paths using a Logistic Regression classifier over sentence-transformer embeddings (`all-MiniLM-L6-v2`). Trained on 184 canonical IT roles (27,600 synthetic records derived from 493 real job postings). Returns top-K role predictions with beam-search career ladders, per-step skill gates, ETA estimates, and readiness scores. **Integrated** (FastAPI, port 8002; standalone dashboard UI at `/`). |
 | **C** | CV Analyser | Parses uploaded CVs/resumes (PDF/DOCX/TXT), extracts skills via keyword matching, scores the CV against 24 job-role profiles with a pre-trained scikit-learn model, computes an ATS-quality score, and returns ranked role matches with missing-skill gaps and learning recommendations. **Integrated** (Flask, port 8003). |
 | **D** | Interview Simulator | Generates tailored interview questions using GitHub Models (GPT-4o mini). Accepts an uploaded document (job description, resume, notes) — EasyOCR extracts the text and the questions are generated around that context. Tracks **real-time facial emotion** via webcam using a TensorFlow/Keras model (7 emotion classes mapped to interview states: Confident, Nervous, Confused, Stressed). Analyses responses in real time. Includes a standalone emotion detector UI at `/interview`. |
 
@@ -41,6 +41,7 @@ PathwayIQ is built around **four AI modules**, each solving a distinct part of t
 - [frontend/README.md](frontend/README.md) — all pages and UI features
 - [backend/README.md](backend/README.md) — API gateway, route groups, key flows
 - [python-module-a/README.md](python-module-a/README.md) — Skill Forecasting Engine
+- [python-module-b/README.md](python-module-b/README.md) — Career Pathway Predictor
 - [python-module-c/README.md](python-module-c/README.md) — CV Job Analyzer
 - [python-module-d/README.md](python-module-d/README.md) — Interview & Document Intelligence
 
@@ -88,6 +89,7 @@ The backend acts as the **orchestration layer** — it handles auth, data persis
 | Backend | Node.js, Express 5, TypeScript, Zod (validation), Jose (JWT), Multer (file upload) |
 | Database | Supabase (PostgreSQL, Row Level Security, Auth, Storage) |
 | Python AI (Module A) | FastAPI, Uvicorn, pandas, statsmodels (ARIMA/ES), scikit-learn, joblib, APScheduler |
+| Python AI (Module B) | FastAPI, Uvicorn, scikit-learn, sentence-transformers (`all-MiniLM-L6-v2`), PyTorch, NumPy, pandas, joblib, networkx |
 | Python AI (Module C) | Flask, flask-cors, pandas, scikit-learn (**pinned 1.6.1**), joblib, PyPDF2, python-docx, dateparser, requests |
 | Python AI (Module D) | FastAPI, Uvicorn, EasyOCR, pypdf, pdf2image, Pillow, OpenCV, NumPy, TensorFlow/Keras, OpenAI SDK (GitHub Models endpoint), Jinja2 |
 | AI Models | GitHub Models — GPT-4o mini via `https://models.inference.ai.azure.com`; pre-trained Keras emotion model (7-class facial expression recognition); pre-trained scikit-learn CV-scoring regressor; ARIMA/Exponential-Smoothing skill-demand forecasts |
@@ -140,6 +142,19 @@ The backend acts as the **orchestration layer** — it handles auth, data persis
 │   ├── model/                 # forecasting.py, lead_lag.py, clustering.py, pipeline.py
 │   ├── scraping/              # dataset generation + weekly scraper
 │   ├── data/                  # raw/processed/output CSVs + saved model artifacts
+│   └── requirements.txt
+│
+├── python-module-b/            # Career Pathway Predictor (FastAPI, :8002)
+│   ├── dashboard.py            # FastAPI app — POST /predict, GET /model-info, serves static UI
+│   ├── train_all.py            # 4-step pipeline: prepare → train → evaluate → predict
+│   ├── generate_balanced_data.py  # Synthetic training record generator
+│   ├── cleaned_data/           # IT_Job_Roles_Skills.csv (493 roles), training_data.csv
+│   ├── saved_models/           # classifier.pkl, label_encoder.pkl, mlb.pkl,
+│   │                           #   role_skill_profiles.pkl, model_info.json,
+│   │                           #   X_encoded.npy, y_labels.npy
+│   ├── charts/                 # Evaluation charts (model comparison, learning curves,
+│   │                           #   confusion matrix, per-class F1)
+│   ├── static/index.html       # Standalone career predictor dashboard UI
 │   └── requirements.txt
 │
 ├── python-module-c/            # CV Analyser microservice (Flask, :8003)
@@ -273,7 +288,7 @@ GET http://localhost:8081/api/health/supabase
 
 ---
 
-## 9. Running the Python Microservices (Modules A, C, D)
+## 9. Running the Python Microservices (Modules A, B, C, D)
 
 Each Python module is a standalone service with its **own** virtual environment. The backend reaches them over HTTP at the ports configured in `backend/.env` (A=8001, B=8002, C=8003, D=8004). If a service is down, the backend falls back to mock data — so you can run only the modules you need.
 
@@ -309,7 +324,74 @@ Starts on **http://localhost:8001** (dashboard + `/docs`). Key endpoints:
 
 ---
 
-### 9.2 Module C — CV Analyser (Flask, port 8003)
+### 9.2 Module B — Career Pathway Predictor (FastAPI, port 8002)
+
+Powers the **Career page** — given a user's skills, current role, and experience it predicts the top-K most achievable career paths using a Logistic Regression model over sentence-transformer embeddings. The backend calls its `POST /predict` endpoint.
+
+```bash
+cd python-module-b
+python3 -m venv venv
+source venv/bin/activate                 # Windows: venv\Scripts\activate
+pip install --upgrade pip
+pip install -r requirements.txt
+python dashboard.py
+```
+
+> **First run note:** `sentence-transformers` will download the `all-MiniLM-L6-v2` model (~90MB) on first startup. Subsequent startups are instant.
+
+Starts on **http://localhost:8002** (standalone dashboard UI at `/`, auto-docs at `/docs`). Key endpoints:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/predict` | POST | **Backend adapter** — `{ skills, current_role, experience_months, num_projects, top_k }` → `{ paths }` with beam-search career ladders |
+| `/model-info` | GET | Returns model metadata: best classifier, accuracy scores, number of roles covered |
+| `/` | GET | Serves the standalone career predictor UI (`static/index.html`) |
+
+Each path in the `/predict` response contains:
+
+| Field | Description |
+|-------|-------------|
+| `target_role` | Predicted destination role |
+| `confidence` | Classifier probability (0–1) |
+| `career_steps` | Full seniority ladder from current role to target (Intern → Junior → Mid → Senior → Lead) |
+| `step_gates` | Per-step `{ role, skills, eta_months }` — the top skills needed at each rung and estimated time to get there |
+| `readiness_score` | Frequency-weighted fraction of the target role's required skills the user already has (0–1) |
+| `skills_matched` | Skills the user has that appear in the target role's profile |
+| `skills_needed` | Top missing skills ranked by importance to the target role |
+
+**Model details:**
+
+| Metric | Value |
+|--------|-------|
+| Dataset | `IT_Job_Roles_Skills.csv` — 493 raw IT job postings, normalised to 184 canonical roles |
+| Training records | 150 synthetic records × 184 roles = ~27,600 total |
+| Encoder | `all-MiniLM-L6-v2` sentence-transformer (384-dim embeddings) |
+| Classifier | Logistic Regression (C=2.0, lbfgs, max_iter=1000) |
+| Train accuracy | 95.14% |
+| Test accuracy | 94.31% (gap 0.83% — "Good fit") |
+| 5-fold CV | 94.30% ± 0.14% |
+| Top-3 accuracy | 99.55% |
+
+**Re-training (optional):**
+
+The `saved_models/` directory ships with pre-trained artifacts — no re-training is needed to run the service. To retrain from scratch:
+
+```bash
+python train_all.py                         # all 4 steps
+python train_all.py --step prepare          # generate training_data.csv only
+python train_all.py --step train            # train and save models
+python train_all.py --step evaluate         # generate evaluation charts to charts/
+python train_all.py --step predict          # run demo predictions
+
+# Custom prediction from CLI:
+python train_all.py --skills "Python,Docker,AWS" --role "DevOps Intern" --experience 6 --projects 3
+```
+
+> **Note:** Re-training requires `sentence-transformers` and `torch` (≈2 GB). The runtime service only needs the saved `.pkl` / `.npy` / `.json` artifacts — it does not use `torch` at inference time once the model is loaded.
+
+---
+
+### 9.3 Module C — CV Analyser (Flask, port 8003)
 
 Powers the **CV page → Analyse step**. Parses an uploaded CV, scores it against 24 job-role profiles with a pre-trained scikit-learn model, and returns ranked matches + recommendations. The backend calls its `POST /analyze` endpoint.
 
@@ -336,7 +418,7 @@ Starts on **http://localhost:8003**. Key endpoints:
 
 ---
 
-### 9.3 Module D — Interview AI (FastAPI, port 8004)
+### 9.4 Module D — Interview AI (FastAPI, port 8004)
 
 Module D is the consolidated Interview AI microservice. It was formed by merging the original Module D (Q&A, OCR, CV parsing) with Component 4 (real-time facial emotion detection). It now provides all interview-related AI functionality in a single FastAPI service on port 8004.
 
@@ -484,7 +566,7 @@ All endpoints require a `Authorization: Bearer <supabase-jwt>` header unless mar
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/career` | Get career predictions for current user |
-| POST | `/api/career/predict` | Generate new career path prediction |
+| POST | `/api/career/predict` | Generate new career path prediction → **calls Module B `/predict`** (returns `paths[]` with `target_role`, `career_steps`, `step_gates`, `readiness_score`, `skills_needed`) |
 
 ### CV (Module C)
 
@@ -646,26 +728,30 @@ Start the Python services first (the backend calls them), then the backend, then
 # Terminal 1 — Module A (Skill Forecaster, :8001)
 cd python-module-a && source venv/bin/activate && python api/app.py
 
-# Terminal 2 — Module C (CV Analyser, :8003)
+# Terminal 2 — Module B (Career Predictor, :8002)
+cd python-module-b && source venv/bin/activate && python dashboard.py
+# Expected: "Loading Career Pathway model ..." then "Model ready." then Uvicorn on :8002
+
+# Terminal 3 — Module C (CV Analyser, :8003)
 cd python-module-c/backend && source venv/bin/activate && python app.py
 
-# Terminal 3 — Module D (Interview AI, :8004)
+# Terminal 4 — Module D (Interview AI, :8004)
 cd python-module-d && source venv/bin/activate
 export GITHUB_TOKEN=your_token    # optional — enables full AI responses
 python main.py
 # Expected: "Emotion model loaded: 7 classes" then "Uvicorn running on http://0.0.0.0:8004"
 
-# Terminal 4 — Backend (:8081)
+# Terminal 5 — Backend (:8081)
 cd backend && npm run dev
 
-# Terminal 5 — Frontend (:3000)
+# Terminal 6 — Frontend (:3000)
 cd frontend && npm run dev
 
-# Terminal 6 — (optional) Supabase local
+# Terminal 7 — (optional) Supabase local
 npx supabase start
 ```
 
-> Module B is not yet wired — the backend serves mock career data until it is. Any Python service you skip simply falls back to mock data.
+> Any Python service you skip simply falls back to mock data — start only the modules you need.
 
 ### Typical request flow
 
@@ -724,3 +810,7 @@ cd frontend && npm run type-check
 | GitHub-verified skills section is empty on the CV page | Expected — Module C does not produce GitHub verification; that is a separate feature. |
 | Skill forecast / CV analysis shows obviously fake data (React/TypeScript/Node mock) | The corresponding Python module (A on :8001 / C on :8003) is not running — start it. |
 | Skill/CV data didn't update after starting the module | No backend restart needed (URLs are read per request) — just click Run Forecast / Analyse again. |
+| Module B startup shows `Loading Career Pathway model ...` then hangs | First run is downloading `all-MiniLM-L6-v2` (~90MB). Allow it to complete — subsequent startups load instantly from cache. |
+| Career predictions show mock data | Module B (:8002) is not running — start it with `python dashboard.py` in `python-module-b/`. |
+| `saved_models/classifier.pkl not found` on Module B startup | Run `python train_all.py` in `python-module-b/` to generate the model artifacts. Pre-built artifacts are included in the repo; check they weren't accidentally deleted. |
+| Module B returns low-confidence or unexpected roles | The sentence-transformer needs skills spelled consistently (e.g. `"machine learning"`, not `"ML"`). Pass full skill names. |
