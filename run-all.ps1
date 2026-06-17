@@ -34,6 +34,7 @@ function Find-Python {
         "C:\ProgramData\Anaconda3\python.exe",
         "C:\ProgramData\miniconda3\python.exe",
         # Standard python.org installer (user AppData)
+        "$env:LOCALAPPDATA\Python\bin\python.exe",
         "$env:LOCALAPPDATA\Programs\Python\Python313\python.exe",
         "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe",
         "$env:LOCALAPPDATA\Programs\Python\Python311\python.exe",
@@ -55,8 +56,34 @@ function Find-Python {
     }
     throw "Python 3 not found. Install Anaconda or Python from https://python.org and retry."
 }
-$PYTHON = Find-Python
-Write-Host "[run-all] Python: $PYTHON" -ForegroundColor Green
+
+# Modules B, C, D require Python 3.13 — scikit-learn 1.6.1 and pydantic-core have
+# no pre-built wheels for Python 3.14 on Windows and must be compiled otherwise.
+function Find-Python313 {
+    $candidates = @(
+        "$env:LOCALAPPDATA\Programs\Python\Python313\python.exe",
+        "C:\Python313\python.exe",
+        "C:\Program Files\Python313\python.exe"
+    )
+    foreach ($c in $candidates) { if (Test-Path $c) { return $c } }
+    # Try the py launcher
+    try {
+        $p = & py -3.13 -c "import sys; print(sys.executable)" 2>$null
+        if ($p) { return $p.Trim() }
+    } catch {}
+    return $null
+}
+
+$PYTHON    = Find-Python
+$PYTHON313 = Find-Python313
+Write-Host "[run-all] Python (default): $PYTHON" -ForegroundColor Green
+if ($PYTHON313) {
+    Write-Host "[run-all] Python 3.13:      $PYTHON313" -ForegroundColor Green
+} else {
+    Write-Host "[run-all] WARNING: Python 3.13 not found. Modules B/C/D may fail to install deps." -ForegroundColor Yellow
+    Write-Host "[run-all]   Install from https://python.org/downloads and retry." -ForegroundColor Yellow
+    $PYTHON313 = $PYTHON   # fall back so the script still runs
+}
 
 # --- Install mode ---
 $MODE = if ($Install) { "force" } elseif ($NoInstall) { "skip" } else { "auto" }
@@ -89,9 +116,12 @@ function Free-Port([int]$port, [string]$name) {
         }
 }
 
-function Start-Py([string]$name, [string]$relDir, [string]$venvRel, [string]$script, [int]$port) {
+function Start-Py([string]$name, [string]$relDir, [string]$venvRel, [string]$script, [int]$port, [string]$pyExeOverride = "") {
     $dir   = Join-Path $ROOT $relDir
     if (-not (Test-Path $dir)) { clog "skip $name - $relDir not found" "Yellow"; return }
+
+    # Use the caller-supplied Python (e.g. 3.13) or fall back to the global default
+    $createPy = if ($pyExeOverride) { $pyExeOverride } else { $PYTHON }
 
     $venv  = Join-Path $dir $venvRel
     $pip   = Join-Path $venv "Scripts\pip.exe"
@@ -101,16 +131,16 @@ function Start-Py([string]$name, [string]$relDir, [string]$venvRel, [string]$scr
     $log   = Join-Path $LOGDIR "$name.log"
 
     if (-not (Test-Path $venv)) {
-        clog "${name}: creating venv..."
-        & $PYTHON -m venv $venv
+        clog "${name}: creating venv with $createPy ..."
+        & $createPy -m venv $venv
         $script:MODE = "force"
     }
 
     if ($script:MODE -eq "force" -or ($script:MODE -eq "auto" -and -not (Test-Path $flag))) {
         if (Test-Path $req) {
-            clog "${name}: installing deps (first run may be slow)..."
+            clog "${name}: installing deps (first run may be slow for large packages like torch)..."
             & $pip install -q --upgrade pip
-            & $pip install -r $req
+            & $pip install -r $req --timeout 300
             if ($LASTEXITCODE -eq 0) { New-Item -ItemType File -Force -Path $flag | Out-Null }
         }
     }
@@ -159,11 +189,13 @@ Write-Host ""
 clog "Launching all services...  (logs -> $LOGDIR\)" "Green"
 Write-Host ""
 
-# Python modules first - heavy ML imports need time to warm up
-Start-Py  "module-a"          "python-module-a"         "venv" "api\app.py"    8001
-Start-Py  "module-b"          "python-module-b"         "venv" "dashboard.py"  8002
-Start-Py  "module-c-backend"  "python-module-c\backend" "venv" "app.py"        8003
-Start-Py  "module-d"          "python-module-d"         "venv" "main.py"       8004
+# Python modules first — heavy ML imports need time to warm up.
+# Modules B, C, D are pinned to Python 3.13 (scikit-learn 1.6.1 / pydantic-core
+# have no pre-built wheels for Python 3.14 on Windows).
+Start-Py  "module-a"          "python-module-a"         "venv" "api\app.py"    8001 $PYTHON
+Start-Py  "module-b"          "python-module-b"         "venv" "dashboard.py"  8002 $PYTHON313
+Start-Py  "module-c-backend"  "python-module-c\backend" "venv" "app.py"        8003 $PYTHON313
+Start-Py  "module-d"          "python-module-d"         "venv" "main.py"       8004 $PYTHON313
 
 # Node services
 Start-Node "backend"           "backend"                  8081
