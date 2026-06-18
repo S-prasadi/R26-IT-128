@@ -301,13 +301,14 @@
     canvas.width  = video.videoWidth  || 640;
     canvas.height = video.videoHeight || 480;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const b64 = canvas.toDataURL('image/jpeg', 0.7);
+    // Strip the "data:image/jpeg;base64," prefix — the backend b64decodes raw bytes.
+    const b64 = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
 
     try {
       const res  = await fetch('/predict', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ image: b64 }),
+        body:    JSON.stringify({ frame: b64 }),
       });
       const data = await res.json();
       updateUI(data);
@@ -352,7 +353,9 @@
   }
 
   function drawBbox(bbox, fw, fh) {
-    const { x, y, w, h } = bbox;
+    // Backend returns bbox as an array [x, y, w, h]; bail out if absent.
+    if (!Array.isArray(bbox) || bbox.length < 4) { clearBbox(); return; }
+    const [x, y, w, h] = bbox;
     const xPct = (x / fw  * 100).toFixed(2);
     const yPct = (y / fh  * 100).toFixed(2);
     const wPct = (w / fw  * 100).toFixed(2);

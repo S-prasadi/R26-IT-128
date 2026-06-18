@@ -9,6 +9,7 @@ import {
   createSessionSchema,
   endSessionSchema,
   submitResponseSchema,
+  predictEmotionSchema,
 } from "../validations/interview.validation";
 import type { AuthRequest } from "../types";
 
@@ -36,5 +37,9 @@ router.patch("/:id", requirePermission("interviews:write"),
 router.post("/:id/responses", requirePermission("interviews:write"),
   validate(submitResponseSchema),
   (req, res) => interviewController.submitResponse(req as AuthRequest, res as Response));
+
+router.post("/predict-emotion", requirePermission("interviews:write"),
+  validate(predictEmotionSchema),
+  (req, res) => interviewController.predictEmotion(req as AuthRequest, res as Response));
 
 export default router;

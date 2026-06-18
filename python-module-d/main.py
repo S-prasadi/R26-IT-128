@@ -31,6 +31,7 @@ _log = logging.getLogger("module-d")
 import certifi
 import numpy as np
 import uvicorn
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
@@ -118,16 +119,58 @@ def _get_ocr_reader() -> easyocr.Reader:
         raise
 
 
-# GitHub Models endpoint — set GITHUB_TOKEN in your environment
-GITHUB_TOKEN = os.environ.get(
-    "GITHUB_TOKEN", "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")
+# GitHub Models endpoint — set GITHUB_TOKEN in python-module-d/.env or the environment.
+# Never hardcode the token; without one, every LLM feature degrades to a deterministic fallback.
+load_dotenv(Path(__file__).parent / ".env")
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_MODELS_BASE_URL = "https://models.inference.ai.azure.com"
 GITHUB_MODEL = "gpt-4o-mini"
 
-github_client = OpenAI(base_url=GITHUB_MODELS_BASE_URL, api_key=GITHUB_TOKEN)
+# Construct the client even without a token (placeholder key) so the service still boots;
+# every LLM route guards on `if not GITHUB_TOKEN` and returns a fallback before calling it.
+github_client = OpenAI(base_url=GITHUB_MODELS_BASE_URL, api_key=GITHUB_TOKEN or "unset")
 
 DIFFICULTY_LABELS = {1: "very easy", 2: "easy",
                      3: "medium", 4: "hard", 5: "expert"}
+
+# Per-state engagement weights — engagement is computed deterministically from the real
+# webcam emotion timeline, never invented by the LLM.
+EMOTION_WEIGHTS = {"Engaged": 95, "Confident": 90, "Neutral": 65,
+                   "Nervous": 40, "Confused": 35, "Stressed": 30}
+
+
+def _engagement_summary(emotion_data: dict):
+    """Derive (engagement_score, emotion_summary) from the captured emotion timeline.
+
+    Returns (None, ...) when no camera data was sent, so the UI can show "no signal"
+    instead of a fabricated number.
+    """
+    emotion_data = emotion_data or {}
+    timeline = emotion_data.get("timeline") or []
+    emotions: list[str] = [str(pt["emotion"]) for pt in timeline
+                           if isinstance(pt, dict) and pt.get("emotion")]
+    # Fall back to a single dominant snapshot if no timeline was provided.
+    if not emotions and emotion_data.get("dominant"):
+        emotions = [str(emotion_data["dominant"])]
+    if not emotions:
+        return None, {"dominant": None, "distribution": {}}
+
+    counts: dict[str, int] = {}
+    for e in emotions:
+        counts[e] = counts.get(e, 0) + 1
+    total = len(emotions)
+    distribution = {e: round(c / total * 100) for e, c in counts.items()}
+    dominant = max(counts, key=lambda k: counts[k])
+    score = round(sum(EMOTION_WEIGHTS.get(e, 60) for e in emotions) / total)
+    return max(0, min(100, score)), {"dominant": dominant, "distribution": distribution}
+
+
+def _heuristic_score(text: str) -> int:
+    """Length-based fallback score so a session never dies when the LLM is unavailable."""
+    words = len((text or "").split())
+    if words == 0:
+        return 0
+    return max(20, min(85, 30 + words // 2))
 
 
 # ── Pydantic schemas ─────────────────────────────────────────────────────────
@@ -143,6 +186,10 @@ class GenerateQuestionsRequest(BaseModel):
 class AnalyseResponseRequest(BaseModel):
     question_id: str
     response_text: str = ""
+    question_text: str = ""           # the question being answered (for context-aware scoring)
+    question_type: str = ""           # behavioral | technical | situational
+    topic: str = ""                   # interview topic, e.g. "React"
+    difficulty: int = 3               # 1–5
     emotion_data: dict = {}
 
 
@@ -687,37 +734,86 @@ def extract_cv(req: ExtractCvRequest):
     }
 
 
+CRITERIA_KEYS = ("relevance", "technical_accuracy", "depth", "structure", "communication")
+
+
+def _scoring_fallback(req: AnalyseResponseRequest, engagement_score, emotion_summary, note: str):
+    """Deterministic response used when the LLM is unavailable, so a session never dies."""
+    return {
+        "score": _heuristic_score(req.response_text),
+        "feedback": note,
+        "criteria": {},
+        "strengths": [],
+        "improvements": [],
+        "model_answer": "",
+        "engagement_score": engagement_score,
+        "emotion_summary": emotion_summary,
+    }
+
+
 @app.post("/analyze-response")
 def analyze_response(req: AnalyseResponseRequest):
+    # Engagement is computed from the real webcam timeline — the LLM never invents it.
+    engagement_score, emotion_summary = _engagement_summary(req.emotion_data)
+
     if not GITHUB_TOKEN:
-        return {
-            "score": 72,
-            "feedback": "Good understanding demonstrated. Try to be more specific with concrete examples and measurable outcomes.",
-            "engagement_score": 68,
-            "emotion_summary": {"dominant": "Confident", "distribution": {"Confident": 45, "Neutral": 30, "Nervous": 15, "Engaged": 10}},
-        }
+        return _scoring_fallback(
+            req, engagement_score, emotion_summary,
+            "AI scoring is disabled (no GITHUB_TOKEN). Add concrete examples and measurable outcomes to strengthen this answer.",
+        )
 
     try:
+        difficulty_label = DIFFICULTY_LABELS.get(int(req.difficulty or 3), "medium")
         prompt = (
-            f"You are an interview coach. Evaluate this candidate response.\n\n"
-            f"Response: \"{req.response_text}\"\n\n"
-            "Return ONLY valid JSON — no markdown:\n"
-            '{"score": 0-100, "feedback": "...", "engagement_score": 0-100, "emotion_summary": {"dominant": "...", "distribution": {}}}'
+            "You are a senior technical interviewer. Evaluate the candidate's answer to THIS "
+            "question. Judge relevance to the question first, then technical accuracy, depth, "
+            "structure, and communication. An empty or off-topic answer must score below 40. "
+            "Reward concrete, correct, well-structured answers.\n\n"
+            f"Topic: {req.topic or 'general'}\n"
+            f"Question type: {req.question_type or 'general'}\n"
+            f"Difficulty: {difficulty_label}\n"
+            f"Question: \"{req.question_text}\"\n"
+            f"Candidate answer: \"{req.response_text}\"\n\n"
+            "Respond with JSON of exactly this shape:\n"
+            '{"score": <0-100 overall>, '
+            '"feedback": "<2-3 sentences, specific and actionable>", '
+            '"criteria": {"relevance": <0-100>, "technical_accuracy": <0-100>, "depth": <0-100>, '
+            '"structure": <0-100>, "communication": <0-100>}, '
+            '"strengths": ["<short point>"], "improvements": ["<short point>"], '
+            '"model_answer": "<a strong, concise example answer>"}'
         )
         response = github_client.chat.completions.create(
             model=GITHUB_MODEL,
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.4,
-            max_tokens=512,
+            temperature=0.3,
+            max_tokens=700,
+            response_format={"type": "json_object"},  # JSON mode — no markdown fences to strip
         )
-        raw = response.choices[0].message.content.strip()
-        if raw.startswith("```"):
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        return json.loads(raw)
+        data = json.loads(response.choices[0].message.content)
+
+        # Clamp the overall score and every criterion to 0–100.
+        if isinstance(data.get("score"), (int, float)):
+            data["score"] = max(0, min(100, round(float(data["score"]))))
+        criteria = data.get("criteria")
+        if isinstance(criteria, dict):
+            data["criteria"] = {
+                k: max(0, min(100, round(float(v))))
+                for k, v in criteria.items() if k in CRITERIA_KEYS and isinstance(v, (int, float))
+            }
+
+        # Engagement is ours, not the model's.
+        data["engagement_score"] = engagement_score
+        data["emotion_summary"] = emotion_summary
+        data.setdefault("strengths", [])
+        data.setdefault("improvements", [])
+        data.setdefault("model_answer", "")
+        return data
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+        _log.warning("analyze-response LLM failed, using heuristic fallback: %s", exc)
+        return _scoring_fallback(
+            req, engagement_score, emotion_summary,
+            "Scored automatically (AI unavailable). Add specific examples and structure your answer toward a clear outcome.",
+        )
 
 
 class PredictRequest(BaseModel):

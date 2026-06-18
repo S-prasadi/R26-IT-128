@@ -21,7 +21,11 @@ const mockQuestions = (topic: string, difficulty: number) => ({
 const MOCK_RESPONSE_ANALYSIS = {
   score: 72,
   feedback: "Good understanding demonstrated. Try to be more specific with concrete examples and measurable outcomes.",
-  engagement_score: 68,
+  criteria: {} as Record<string, number>,
+  strengths: [] as string[],
+  improvements: [] as string[],
+  model_answer: "",
+  engagement_score: 68 as number | null,
   emotion_summary: { dominant: "Confident", distribution: { Confident: 45, Neutral: 30, Nervous: 15, Engaged: 10 } },
 };
 
@@ -55,7 +59,7 @@ export const interviewService = {
     const { data: responses } = questionIds.length
       ? await supabaseAdmin
           .from("interview_responses")
-          .select("id, question_id, response_text, score, feedback, emotion_data, engagement_score, created_at")
+          .select("id, question_id, response_text, score, feedback, emotion_data, engagement_score, analysis, created_at")
           .in("question_id", questionIds)
       : { data: [] };
 
@@ -105,14 +109,37 @@ export const interviewService = {
   },
 
   async endSession(sessionId: string, userId: string, dto: EndSessionDto) {
+    // Verify ownership and collect this session's question ids.
+    const { data: owned } = await supabaseAdmin
+      .from("interview_sessions")
+      .select("id, interview_questions(id)")
+      .eq("id", sessionId)
+      .eq("user_id", userId)
+      .single();
+    if (!owned) throw new AppError("Session not found", HTTP_STATUS.NOT_FOUND);
+
+    // Derive the session totals from the real per-question scores — never trust the client.
+    const questionIds = ((owned.interview_questions as Array<{ id: string }>) ?? []).map((q) => q.id);
+    const { data: responses } = questionIds.length
+      ? await supabaseAdmin
+          .from("interview_responses")
+          .select("score, engagement_score")
+          .in("question_id", questionIds)
+      : { data: [] as Array<{ score: number | null; engagement_score: number | null }> };
+
+    const avg = (vals: number[]) =>
+      vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : null;
+    const scores      = (responses ?? []).map((r) => r.score).filter((s): s is number => typeof s === "number");
+    const engagements = (responses ?? []).map((r) => r.engagement_score).filter((s): s is number => typeof s === "number");
+
     const { data, error } = await supabaseAdmin
       .from("interview_sessions")
       .update({
-        status:          "completed",
-        overall_score:   dto.overall_score,
-        engagement_score: dto.engagement_score,
+        status:           "completed",
+        overall_score:    avg(scores),
+        engagement_score: avg(engagements),
         duration_seconds: dto.duration_seconds,
-        ended_at:        new Date().toISOString(),
+        ended_at:         new Date().toISOString(),
       })
       .eq("id", sessionId)
       .eq("user_id", userId)
@@ -121,6 +148,15 @@ export const interviewService = {
     if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
     if (!data) throw new AppError("Session not found", HTTP_STATUS.NOT_FOUND);
     return data;
+  },
+
+  async predictEmotion(frame: string) {
+    // Proxy a single webcam frame to Module D so the browser never talks to Python directly.
+    return callPython(
+      `${pythonUrls.moduleD()}/predict`,
+      { frame },
+      { face: false, interview_state: "Neutral", confidence: 0, probs: {}, bbox: null }
+    );
   },
 
   async extractDocumentText(fileBuffer: Buffer, mimetype: string): Promise<{ extracted_text: string }> {
@@ -134,19 +170,31 @@ export const interviewService = {
   },
 
   async submitResponse(sessionId: string, userId: string, dto: SubmitResponseDto) {
-    // Verify session ownership and that the question belongs to this session.
-    const { data: question } = await supabaseAdmin
+    // Verify session ownership and pull the question context for context-aware scoring.
+    const { data: session } = await supabaseAdmin
       .from("interview_sessions")
-      .select("id, interview_questions!inner(id)")
+      .select("id, topic, interview_questions!inner(id, question_text, question_type, difficulty)")
       .eq("id", sessionId)
       .eq("user_id", userId)
       .eq("interview_questions.id", dto.question_id)
       .single();
-    if (!question) throw new AppError("Question not found for this session", HTTP_STATUS.NOT_FOUND);
+    if (!session) throw new AppError("Question not found for this session", HTTP_STATUS.NOT_FOUND);
+    const question = (session.interview_questions as Array<{
+      id: string; question_text: string; question_type: string; difficulty: number;
+    }>)[0];
 
+    // Give the scorer the question itself — without it the LLM grades the answer in a vacuum.
     const analysis = await callPython(
       `${pythonUrls.moduleD()}/analyze-response`,
-      { question_id: dto.question_id, response_text: dto.response_text, emotion_data: dto.emotion_data },
+      {
+        question_id:   dto.question_id,
+        response_text: dto.response_text,
+        question_text: question.question_text,
+        question_type: question.question_type,
+        topic:         session.topic,
+        difficulty:    question.difficulty,
+        emotion_data:  dto.emotion_data,
+      },
       MOCK_RESPONSE_ANALYSIS
     ) as typeof MOCK_RESPONSE_ANALYSIS;
 
@@ -157,6 +205,12 @@ export const interviewService = {
       feedback:          analysis.feedback,
       engagement_score:  analysis.engagement_score,
       emotion_data:      { ...dto.emotion_data, summary: analysis.emotion_summary },
+      analysis: {
+        criteria:     analysis.criteria ?? {},
+        strengths:    analysis.strengths ?? [],
+        improvements: analysis.improvements ?? [],
+        model_answer: analysis.model_answer ?? "",
+      },
     };
 
     const { data: existing } = await supabaseAdmin
@@ -175,7 +229,7 @@ export const interviewService = {
           .insert(responsePayload);
 
     const { data, error } = await query
-      .select("id, question_id, score, feedback, engagement_score, emotion_data, created_at")
+      .select("id, question_id, score, feedback, engagement_score, emotion_data, analysis, created_at")
       .single();
     if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
     return data;

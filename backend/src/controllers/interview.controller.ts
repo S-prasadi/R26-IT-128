@@ -41,6 +41,11 @@ export const interviewController = {
     sendSuccess(res, data, "Response submitted");
   },
 
+  async predictEmotion(req: AuthRequest, res: Response): Promise<void> {
+    const data = await interviewService.predictEmotion(p(req.body.frame));
+    sendSuccess(res, data, "Emotion predicted");
+  },
+
   async extractDocument(req: AuthRequest, res: Response): Promise<void> {
     if (!req.file) {
       res.status(400).json({ success: false, message: "No file uploaded." });

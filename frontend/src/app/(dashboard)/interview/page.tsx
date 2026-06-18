@@ -14,7 +14,6 @@ type Step = (typeof STEPS)[number];
 
 const DOCUMENT_CONTEXT_LIMIT = 10000;
 const TOPICS = ["Frontend Development", "Backend Development", "DevOps", "Data Science", "System Design", "Full-Stack Development"];
-const EMOTIONS = ["Confident", "Neutral", "Nervous", "Stressed", "Confused"];
 const EMOTION_COLORS: Record<string, string> = {
   Confident: "var(--teal)",
   Neutral:   "var(--text2)",
@@ -43,6 +42,9 @@ export default function InterviewPage() {
   const canvasRef       = useRef<HTMLCanvasElement>(null);
   const streamRef       = useRef<MediaStream | null>(null);
   const emotionTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Per-question webcam emotion timeline, sampled ~1 fps and sent on submit.
+  const emotionTimeline = useRef<Array<{ t: number; emotion: string }>>([]);
+  const lastTlPush      = useRef<number>(0);
 
   const [form, setForm] = useState({ topic: "Frontend Development", difficulty: 3 });
   const [currentEmotion, setCurrentEmotion] = useState("Neutral");
@@ -107,17 +109,22 @@ export default function InterviewPage() {
     ctx.drawImage(video, 0, 0);
     const base64 = canvas.toDataURL("image/jpeg", 0.7).split(",")[1];
     try {
-      const res = await fetch("http://localhost:8004/predict", {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ frame: base64 }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.face && data.interview_state) setCurrentEmotion(data.interview_state);
+      const res = await interviewService.predictEmotion(base64);
+      const data = res.data.data;
+      if (data?.face && data.interview_state) {
+        setCurrentEmotion(data.interview_state);
+        // Sample into the per-question timeline at ~1 fps so engagement reflects the whole answer.
+        const now = Date.now();
+        if (now - lastTlPush.current >= 1000) {
+          lastTlPush.current = now;
+          emotionTimeline.current.push({
+            t: Math.round((now - startTime.current) / 1000),
+            emotion: data.interview_state,
+          });
+        }
       }
     } catch {
-      // Module D unreachable — keep last emotion
+      // Backend / Module D unreachable — keep last emotion
     }
   }
 
@@ -167,11 +174,14 @@ export default function InterviewPage() {
       const res = await interviewService.submitResponse(current.id, {
         question_id: q.id,
         response_text: response,
-        emotion_data: { dominant: currentEmotion, captured_at: new Date().toISOString() },
+        emotion_data: { dominant: currentEmotion, timeline: emotionTimeline.current },
       });
       const r = res.data.data;
       setLastFeedback({ score: r.score ?? 0, feedback: r.feedback ?? "" });
       setResponse("");
+      // Start a fresh emotion timeline for the next question.
+      emotionTimeline.current = [];
+      lastTlPush.current = 0;
     } catch {
       toast.error("Failed to submit response");
     } finally {
@@ -194,9 +204,9 @@ export default function InterviewPage() {
     setEnding(true);
     try {
       const duration = Math.round((Date.now() - startTime.current) / 1000);
+      // overall_score / engagement_score are computed server-side from the real
+      // per-question scores — the client only reports how long the session ran.
       const res = await interviewService.endSession(current.id, {
-        overall_score:   Math.round(Math.random() * 30 + 65),
-        engagement_score: Math.round(Math.random() * 30 + 60),
         duration_seconds: duration,
       });
       setCurrent({ ...current, ...res.data.data });
@@ -392,10 +402,13 @@ export default function InterviewPage() {
                 <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 12, border: "1px solid var(--border)" }}>
                   <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text2)", textTransform: "uppercase", marginBottom: 8 }}>Emotion Timeline</div>
                   <div style={{ display: "flex", gap: 2, height: 8 }}>
-                    {Array.from({ length: 20 }, (_, i) => {
-                      const e = EMOTIONS[Math.floor(Math.random() * EMOTIONS.length)];
-                      return <div key={i} style={{ flex: 1, height: "100%", borderRadius: 2, background: EMOTION_COLORS[e] }} title={e} />;
-                    })}
+                    {emotionTimeline.current.length === 0 ? (
+                      <div style={{ flex: 1, height: "100%", borderRadius: 2, background: "var(--border)" }} title="Waiting for webcam…" />
+                    ) : (
+                      emotionTimeline.current.slice(-20).map((pt, i) => (
+                        <div key={i} style={{ flex: 1, height: "100%", borderRadius: 2, background: EMOTION_COLORS[pt.emotion] ?? "var(--text2)" }} title={`${pt.emotion} @ ${pt.t}s`} />
+                      ))
+                    )}
                   </div>
                 </div>
               </div>

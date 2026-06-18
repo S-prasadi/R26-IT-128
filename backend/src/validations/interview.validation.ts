@@ -21,6 +21,11 @@ export const submitResponseSchema = z.object({
   emotion_data:  z.record(z.any()).optional(),
 });
 
-export type CreateSessionDto  = z.infer<typeof createSessionSchema>;
-export type EndSessionDto     = z.infer<typeof endSessionSchema>;
-export type SubmitResponseDto = z.infer<typeof submitResponseSchema>;
+export const predictEmotionSchema = z.object({
+  frame: z.string().min(1),  // base64-encoded JPEG webcam frame
+});
+
+export type CreateSessionDto   = z.infer<typeof createSessionSchema>;
+export type EndSessionDto      = z.infer<typeof endSessionSchema>;
+export type SubmitResponseDto  = z.infer<typeof submitResponseSchema>;
+export type PredictEmotionDto  = z.infer<typeof predictEmotionSchema>;
