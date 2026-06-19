@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import { toast } from "sonner";
 import { PiqBtn, PiqSpinner, PiqStatCard } from "@/components/piq/primitives";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -34,7 +34,7 @@ export default function InterviewPage() {
   const [loading, setLoading]         = useState(true);
   const [starting, setStarting]       = useState(false);
   const [ending, setEnding]           = useState(false);
-  const [lastFeedback, setLastFeedback] = useState<{ score: number; feedback: string } | null>(null);
+  const [lastFeedback, setLastFeedback] = useState<{ score: number; feedback: string; emotion: EmotionSummary | null } | null>(null);
   const [showHistory, setShowHistory] = useState(false);
   const [viewSession, setViewSession] = useState<InterviewSession | null>(null);
   const startTime = useRef<number>(0);
@@ -177,7 +177,7 @@ export default function InterviewPage() {
         emotion_data: { dominant: currentEmotion, timeline: emotionTimeline.current },
       });
       const r = res.data.data;
-      setLastFeedback({ score: r.score ?? 0, feedback: r.feedback ?? "" });
+      setLastFeedback({ score: r.score ?? 0, feedback: r.feedback ?? "", emotion: getEmotionSummary(r.emotion_data) });
       setResponse("");
       // Start a fresh emotion timeline for the next question.
       emotionTimeline.current = [];
@@ -206,10 +206,13 @@ export default function InterviewPage() {
       const duration = Math.round((Date.now() - startTime.current) / 1000);
       // overall_score / engagement_score are computed server-side from the real
       // per-question scores — the client only reports how long the session ran.
-      const res = await interviewService.endSession(current.id, {
+      await interviewService.endSession(current.id, {
         duration_seconds: duration,
       });
-      setCurrent({ ...current, ...res.data.data });
+      // Re-fetch the full session so the Summary has each question's response
+      // (score, feedback, emotion) — endSession only returns session-level fields.
+      const full = await interviewService.getSession(current.id);
+      setCurrent(full.data.data);
       setStep("Summary");
       await loadSessions();
     } catch {
@@ -347,6 +350,7 @@ export default function InterviewPage() {
                       <span style={{ fontWeight: 600, color: "var(--teal)" }}>Score: {lastFeedback.score}/100</span>
                     </div>
                     <p style={{ fontSize: 14, color: "var(--text2)", margin: 0, lineHeight: 1.6 }}>{lastFeedback.feedback}</p>
+                    <EmotionBar summary={lastFeedback.emotion} />
                     <div style={{ marginTop: 12 }}>
                       <PiqBtn size="sm" onClick={handleNextQuestion} disabled={ending}>
                         {qIndex < questions.length - 1 ? "Next Question →" : ending ? "Ending…" : "End Session"}
@@ -489,16 +493,7 @@ export default function InterviewPage() {
 
               <div style={{ fontWeight: 600, fontSize: 14, color: "var(--text2)", textTransform: "uppercase", marginBottom: 10 }}>Questions & Responses</div>
               {questions.map((q, i) => (
-                <div key={q.id} style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 16, border: "1px solid var(--border)", marginBottom: 10 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                    <span style={{ fontSize: 12, color: "var(--text2)" }}>Q{i + 1} — {q.question_type}</span>
-                    {q.response?.score != null && (
-                      <span style={{ fontWeight: 700, color: q.response.score >= 80 ? "var(--teal)" : q.response.score >= 60 ? "var(--amber)" : "var(--rose)" }}>{q.response.score}/100</span>
-                    )}
-                  </div>
-                  <p style={{ fontSize: 14, margin: "0 0 6px", fontWeight: 500 }}>{q.question_text}</p>
-                  {q.response?.feedback && <p style={{ fontSize: 13, color: "var(--text2)", margin: 0 }}>{q.response.feedback}</p>}
-                </div>
+                <QuestionReview key={q.id} q={q} index={i} />
               ))}
 
               <div style={{ marginTop: 20 }}>
@@ -531,14 +526,7 @@ function SessionHistory({ sessions, onView, viewSession, onBack }: {
           <ScoreCard label="Engagement Score" score={viewSession.engagement_score ?? 0} />
         </div>
         {(viewSession.questions ?? []).map((q, i) => (
-          <div key={q.id} style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 14, border: "1px solid var(--border)", marginBottom: 8 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-              <span style={{ fontSize: 12, color: "var(--text2)" }}>Q{i + 1}</span>
-              {q.response?.score != null && <span style={{ fontWeight: 700, color: "var(--accent)" }}>{q.response.score}/100</span>}
-            </div>
-            <p style={{ fontSize: 14, margin: "0 0 4px", fontWeight: 500 }}>{q.question_text}</p>
-            {q.response?.feedback && <p style={{ fontSize: 13, color: "var(--text2)", margin: 0 }}>{q.response.feedback}</p>}
-          </div>
+          <QuestionReview key={q.id} q={q} index={i} />
         ))}
       </div>
     );
@@ -625,6 +613,97 @@ function InfoRow({ label, value }: { label: string; value: string }) {
     <div style={{ display: "flex", gap: 8, marginBottom: 6, fontSize: 14 }}>
       <span style={{ color: "var(--text2)", minWidth: 80 }}>{label}:</span>
       <span>{value}</span>
+    </div>
+  );
+}
+
+type EmotionSummary = { dominant: string | null; distribution: Record<string, number> };
+
+// Pull the per-answer emotion summary the backend attaches under emotion_data.summary.
+// Returns null when no camera signal was captured, so callers can render "no signal".
+function getEmotionSummary(ed?: Record<string, unknown> | null): EmotionSummary | null {
+  const s = (ed as { summary?: Partial<EmotionSummary> } | null | undefined)?.summary;
+  if (!s || !s.dominant) return null;
+  return { dominant: s.dominant, distribution: s.distribution ?? {} };
+}
+
+// Dominant-emotion chip + a stacked distribution bar for a single answer.
+function EmotionBar({ summary, label }: { summary: EmotionSummary | null; label?: string }) {
+  if (!summary?.dominant) return null;
+  const { dominant, distribution } = summary;
+  const segments = Object.entries(distribution ?? {}).sort((a, b) => b[1] - a[1]);
+  return (
+    <div style={{ marginTop: 10 }}>
+      {label && <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text3)", textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 4 }}>{label}</div>}
+      <span style={{ fontSize: 13, fontWeight: 600, color: EMOTION_COLORS[dominant] ?? "var(--text2)" }}>● {dominant}</span>
+      {segments.length > 0 && (
+        <div style={{ display: "flex", gap: 2, height: 6, marginTop: 6, borderRadius: 3, overflow: "hidden" }}>
+          {segments.map(([emotion, pct]) => (
+            <div key={emotion} title={`${emotion} ${pct}%`} style={{ width: `${pct}%`, background: EMOTION_COLORS[emotion] ?? "var(--text2)" }} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// A labeled, emoji-led section inside a question review card.
+function ReviewBlock({ icon, label, color, boxed, children }: { icon: string; label: string; color: string; boxed?: boolean; children: ReactNode }) {
+  return (
+    <div style={{ marginTop: 10, ...(boxed ? { background: "var(--surf3)", borderLeft: `3px solid ${color}`, borderRadius: 6, padding: "8px 10px" } : {}) }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+        <span aria-hidden>{icon}</span>{label}
+      </div>
+      <div style={{ fontSize: 13.5, color: "var(--text2)", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{children}</div>
+    </div>
+  );
+}
+
+// Full per-question review: question, the candidate's answer, feedback, strengths,
+// improvements, the suggested model answer, and the captured emotion. Shared by the
+// end-of-session Summary and the Session History detail so both stay consistent.
+function QuestionReview({ q, index }: { q: InterviewQuestion; index: number }) {
+  const r = q.response;
+  const score = r?.score;
+  const scoreColor = score == null ? "var(--text2)" : score >= 80 ? "var(--teal)" : score >= 60 ? "var(--amber)" : "var(--rose)";
+  const typeColor = Q_TYPE_COLORS[q.question_type] ?? "var(--text2)";
+  const answer       = r?.response_text?.trim();
+  const model        = r?.analysis?.model_answer?.trim();
+  const strengths    = (r?.analysis?.strengths ?? []).filter(Boolean);
+  const improvements = (r?.analysis?.improvements ?? []).filter(Boolean);
+  return (
+    <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 16, border: "1px solid var(--border)", marginBottom: 10 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, gap: 8 }}>
+        <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text2)", textTransform: "uppercase" }}>Question {index + 1}</span>
+          <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 20, background: `${typeColor}20`, color: typeColor, border: `1px solid ${typeColor}40`, textTransform: "capitalize" }}>{q.question_type}</span>
+        </span>
+        {score != null && <span style={{ fontWeight: 700, color: scoreColor }}>{score}/100</span>}
+      </div>
+
+      <p style={{ fontSize: 14, margin: 0, fontWeight: 500, lineHeight: 1.5 }}>❓ {q.question_text}</p>
+
+      <ReviewBlock icon="📝" label="Your Answer" color="var(--accent)" boxed>
+        {answer || <span style={{ color: "var(--text3)", fontStyle: "italic" }}>No answer provided</span>}
+      </ReviewBlock>
+
+      {r?.feedback && <ReviewBlock icon="💡" label="Feedback" color="var(--amber)">{r.feedback}</ReviewBlock>}
+
+      {strengths.length > 0 && (
+        <ReviewBlock icon="✅" label="Strengths" color="var(--teal)">
+          {strengths.map((s, i) => <div key={i}>• {s}</div>)}
+        </ReviewBlock>
+      )}
+
+      {improvements.length > 0 && (
+        <ReviewBlock icon="🎯" label="Improvements" color="var(--rose)">
+          {improvements.map((s, i) => <div key={i}>• {s}</div>)}
+        </ReviewBlock>
+      )}
+
+      {model && <ReviewBlock icon="⭐" label="Suggested Answer" color="var(--teal)" boxed>{model}</ReviewBlock>}
+
+      <EmotionBar summary={getEmotionSummary(r?.emotion_data)} label="🎭 Emotion While Answering" />
     </div>
   );
 }

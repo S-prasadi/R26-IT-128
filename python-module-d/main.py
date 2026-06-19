@@ -59,10 +59,55 @@ _EMOTION_TO_STATE = {
     "disgusted": "Stressed",
     "fearful":   "Nervous",
     "happy":     "Confident",
-    "neutral":   "Confident",
+    "neutral":   "Neutral",     # neutral is its own state, not "Confident"
     "sad":       "Confused",
     "surprised": "Nervous",
 }
+
+# ── Emotion sensitivity tuning ────────────────────────────────────────────────
+# FER models are heavily biased toward "neutral", so a plain argmax almost always
+# reads neutral → the live state felt stuck on one value and looked insensitive.
+# Instead of taking the single top class, `_emotion_state` aggregates the whole
+# probability vector into interview states and DISCOUNTS the dominant neutral class
+# so subtle expressions surface. Tune these to dial detection sensitivity:
+#   NEUTRAL_WEIGHT     fraction of the neutral probability that counts toward
+#                      "Neutral" — LOWER = MORE sensitive to other emotions.
+#   NEUTRAL_DOMINANCE  if neutral is at least this strong, stay "Neutral" unless an
+#                      expressive state clearly shows (prevents flicker/noise).
+#   MIN_EXPRESSIVE     minimum aggregated score for a non-neutral state to win.
+NEUTRAL_WEIGHT    = 0.45
+NEUTRAL_DOMINANCE = 0.70
+MIN_EXPRESSIVE    = 0.12
+
+
+def _emotion_state(preds) -> tuple[str, float]:
+    """Map a 7-class emotion probability vector to an interview state.
+
+    Aggregates probability per interview state and discounts the over-dominant
+    neutral class so the result tracks subtle expressions instead of always reading
+    neutral. Returns (interview_state, confidence_for_that_state).
+    """
+    neutral_p = float(preds[_EMOTION_LABELS.index("neutral")])
+
+    scores: dict[str, float] = {}
+    for i, p in enumerate(preds):
+        emo    = _EMOTION_LABELS[i]
+        weight = NEUTRAL_WEIGHT if emo == "neutral" else 1.0
+        state  = _EMOTION_TO_STATE[emo]
+        scores[state] = scores.get(state, 0.0) + float(p) * weight
+
+    # Strongest expressive (non-neutral) state.
+    expressive = {s: v for s, v in scores.items() if s != "Neutral"}
+    top_state, top_score = (max(expressive.items(), key=lambda kv: kv[1])
+                            if expressive else ("Neutral", 0.0))
+
+    # Stay Neutral when neutral clearly dominates and nothing expressive crosses the bar.
+    if neutral_p >= NEUTRAL_DOMINANCE and top_score < MIN_EXPRESSIVE:
+        return "Neutral", neutral_p
+    # Otherwise the strongest expressive state wins once it clears the noise floor.
+    if top_score >= MIN_EXPRESSIVE:
+        return top_state, top_score
+    return "Neutral", neutral_p
 
 _emotion_model = None
 _face_cascade  = None
@@ -823,7 +868,7 @@ class PredictRequest(BaseModel):
 @app.post("/predict")
 def predict(req: PredictRequest):
     """Accept a base64 JPEG frame, detect face, run Keras emotion model."""
-    _fallback = {"face": False, "interview_state": "Confident", "confidence": 0.0, "probs": {}, "bbox": None}
+    _fallback = {"face": False, "interview_state": "Neutral", "confidence": 0.0, "probs": {}, "bbox": None}
 
     if _emotion_model is None or _face_cascade is None:
         return _fallback
@@ -851,12 +896,9 @@ def predict(req: PredictRequest):
         roi = roi.astype("float32") / 255.0
         roi = roi.reshape(1, 48, 48, 1)
 
-        preds      = _emotion_model.predict(roi, verbose=0)[0]
-        idx        = int(np.argmax(preds))
-        label      = _EMOTION_LABELS[idx]
-        confidence = float(preds[idx])
-        probs      = {_EMOTION_LABELS[i]: round(float(preds[i]), 4) for i in range(len(_EMOTION_LABELS))}
-        state      = _EMOTION_TO_STATE.get(label, "Confident")
+        preds             = _emotion_model.predict(roi, verbose=0)[0]
+        probs             = {_EMOTION_LABELS[i]: round(float(preds[i]), 4) for i in range(len(_EMOTION_LABELS))}
+        state, confidence = _emotion_state(preds)
 
         return {
             "face":            True,
