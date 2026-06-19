@@ -1,10 +1,21 @@
 import axios, { AxiosError } from "axios";
 import { env } from "../config/env";
 
+// Thrown when a Python service can't be reached (network error / timeout) and the
+// caller asked us NOT to silently substitute a fallback — lets the caller surface
+// a real "model offline" state instead of returning fake data.
+export class PythonUnavailableError extends Error {
+  constructor(public url: string) {
+    super(`Python service unreachable at ${url}`);
+    this.name = "PythonUnavailableError";
+  }
+}
+
 export async function callPython(
   url: string,
   body: object,
-  fallback: object
+  fallback: object,
+  opts?: { throwOnUnreachable?: boolean }
 ): Promise<object> {
   try {
     const response = await axios.post(url, body, { timeout: 60000 });
@@ -19,7 +30,11 @@ export async function callPython(
       console.error(`[Python] ${url} responded ${axiosErr.response.status}: ${detail}`);
       throw new Error(`Python service error (${axiosErr.response.status}): ${detail}`);
     }
-    // Service is unreachable (network error / timeout) — use mock fallback
+    // Service is unreachable (network error / timeout).
+    if (opts?.throwOnUnreachable) {
+      console.error(`[Python] Service unreachable at ${url} — surfacing offline error`);
+      throw new PythonUnavailableError(url);
+    }
     console.warn(`[Python] Service unreachable at ${url} — using mock fallback`);
     return fallback;
   }

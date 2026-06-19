@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/common/PageHeader";
 import { careerService } from "@/services/career.service";
 import { skillService } from "@/services/skill.service";
 import { cvService } from "@/services/cv.service";
-import type { CareerGoal, GoalSkillSnapshot, RoadmapItem, CareerPrediction, CareerPredictionSnapshot, CareerPath, CareerGraphNode, SkillInsight, UserSkill, CV } from "@/types";
+import type { CareerGoal, GoalSkillSnapshot, RoadmapItem, CareerPrediction, CareerPredictionSnapshot, CareerPath, CareerGraphNode, SkillInsight, UserSkill, CV, ModelStatus } from "@/types";
 import CareerFlowGraph from "./CareerFlowGraph";
 import { BarChart, Bar, LineChart, Line, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { PiqChartContainer, PiqTooltip, PIQ_COLORS } from "@/components/piq/charts";
@@ -23,229 +23,11 @@ const STATUS_COLORS: Record<string, string> = {
 
 // ─── Node Tree Component ────────────────────────────────────────────────────
 
-const BRANCH_COLORS = ["#6366f1", "#14b8a6", "#f59e0b"];
-
 function readinessColor(score: number | undefined) {
   if (score === undefined) return "var(--surf3)";
   if (score >= 0.7) return "#14b8a6";
   if (score >= 0.4) return "#f59e0b";
   return "#f43f5e";
-}
-
-function CareerNodeTree({ paths }: { paths: CareerPath[] }) {
-  const [hovered, setHovered] = useState<string | null>(null);
-
-  if (!paths.length) return null;
-
-  // All paths share the same root (career_steps[0])
-  const root = paths[0].career_steps?.[0] ?? "Current";
-  const maxDepth = Math.max(...paths.map((p) => (p.career_steps?.length ?? 1) - 1));
-
-  const W = 900;
-  const NODE_W = 148;
-  const NODE_H = 40;
-  const ROW_H = 120;
-  const TOP_PAD = 60;
-  const SVG_H = TOP_PAD + (maxDepth + 1) * ROW_H + 80;
-
-  // Column x-centers for each path branch
-  const colX = (i: number) => {
-    const total = paths.length;
-    const span = W * 0.72;
-    const start = W / 2 - span / 2;
-    if (total === 1) return W / 2;
-    return start + (i / (total - 1)) * span;
-  };
-
-  const rootX = W / 2;
-  const rootY = TOP_PAD;
-
-  // Compute node positions: node key → {x, y, depth, pathIdx}
-  const nodePos = new Map<string, { x: number; y: number; depth: number; pathIdx: number }>();
-  nodePos.set(root, { x: rootX, y: rootY, depth: 0, pathIdx: -1 });
-
-  paths.forEach((p, pi) => {
-    const steps = p.career_steps ?? [];
-    steps.slice(1).forEach((role, di) => {
-      const key = `${pi}::${role}`;
-      nodePos.set(key, { x: colX(pi), y: TOP_PAD + (di + 1) * ROW_H, depth: di + 1, pathIdx: pi });
-    });
-  });
-
-  // Build edge list: {from, to, pathIdx, label}
-  const edges: { fx: number; fy: number; tx: number; ty: number; pathIdx: number; label: string }[] = [];
-  paths.forEach((p, pi) => {
-    const steps = p.career_steps ?? [];
-    const conf = `${Math.round(p.probability * 100)}%`;
-    steps.forEach((_, i) => {
-      if (i === 0) return;
-      const fromKey = i === 1 ? root : `${pi}::${steps[i - 1]}`;
-      const toKey = `${pi}::${steps[i]}`;
-      const from = nodePos.get(fromKey);
-      const to   = nodePos.get(toKey);
-      if (from && to) {
-        edges.push({ fx: from.x, fy: from.y, tx: to.x, ty: to.y, pathIdx: pi, label: i === 1 ? conf : "" });
-      }
-    });
-  });
-
-  function bezier(fx: number, fy: number, tx: number, ty: number) {
-    const cy = (fy + ty) / 2;
-    return `M ${fx} ${fy + NODE_H / 2} C ${fx} ${cy}, ${tx} ${cy}, ${tx} ${ty - NODE_H / 2}`;
-  }
-
-  return (
-    <div style={{ overflowX: "auto" }}>
-      <svg width={W} height={SVG_H} style={{ display: "block", margin: "0 auto" }}>
-        {/* Edges */}
-        {edges.map((e, i) => {
-          const col = BRANCH_COLORS[e.pathIdx % BRANCH_COLORS.length];
-          const isHov = hovered === `p${e.pathIdx}`;
-          return (
-            <g key={i}>
-              <path
-                d={bezier(e.fx, e.fy, e.tx, e.ty)}
-                fill="none"
-                stroke={col}
-                strokeWidth={isHov ? 2.5 : 1.5}
-                strokeOpacity={isHov ? 1 : 0.45}
-                strokeDasharray={e.pathIdx === 0 ? "none" : "5 3"}
-              />
-              {e.label && (
-                <text
-                  x={(e.fx + e.tx) / 2 + 8}
-                  y={(e.fy + e.ty) / 2}
-                  fontSize={10}
-                  fill={col}
-                  fontWeight={600}
-                  textAnchor="middle"
-                  opacity={0.8}
-                >
-                  {e.label}
-                </text>
-              )}
-            </g>
-          );
-        })}
-
-        {/* Root node */}
-        <g
-          onMouseEnter={() => setHovered("root")}
-          onMouseLeave={() => setHovered(null)}
-          style={{ cursor: "default" }}
-        >
-          <rect
-            x={rootX - NODE_W / 2}
-            y={rootY - NODE_H / 2}
-            width={NODE_W}
-            height={NODE_H}
-            rx={8}
-            fill="var(--surf3)"
-            stroke="var(--border2)"
-            strokeWidth={1.5}
-          />
-          <text x={rootX} y={rootY + 5} textAnchor="middle" fontSize={12} fontWeight={700} fill="var(--text)">
-            {root.length > 18 ? root.slice(0, 17) + "…" : root}
-          </text>
-        </g>
-
-        {/* Branch nodes */}
-        {paths.map((p, pi) => {
-          const steps = p.career_steps ?? [];
-          const col = BRANCH_COLORS[pi % BRANCH_COLORS.length];
-          return steps.slice(1).map((role, di) => {
-            const key = `${pi}::${role}`;
-            const pos = nodePos.get(key);
-            if (!pos) return null;
-            const isFinal = di === steps.length - 2;
-            const fillCol = isFinal ? readinessColor(p.readiness_score) : col + "22";
-            const strokeCol = isFinal ? readinessColor(p.readiness_score) : col;
-            const textCol = isFinal ? "#fff" : col;
-            const isHov = hovered === `p${pi}`;
-            const label = role.length > 18 ? role.slice(0, 17) + "…" : role;
-
-            return (
-              <g
-                key={key}
-                onMouseEnter={() => setHovered(`p${pi}`)}
-                onMouseLeave={() => setHovered(null)}
-                style={{ cursor: "pointer" }}
-              >
-                <rect
-                  x={pos.x - NODE_W / 2}
-                  y={pos.y - NODE_H / 2}
-                  width={NODE_W}
-                  height={NODE_H}
-                  rx={8}
-                  fill={fillCol}
-                  stroke={strokeCol}
-                  strokeWidth={isHov ? 2 : 1.5}
-                  opacity={isHov ? 1 : 0.88}
-                />
-                <text x={pos.x} y={pos.y + 5} textAnchor="middle" fontSize={11} fontWeight={600} fill={isFinal ? textCol : col}>
-                  {label}
-                </text>
-                {/* Readiness badge on final node */}
-                {isFinal && p.readiness_score !== undefined && (
-                  <text x={pos.x} y={pos.y + NODE_H / 2 + 14} textAnchor="middle" fontSize={10} fill={strokeCol} fontWeight={500}>
-                    {Math.round(p.readiness_score * 100)}% ready
-                  </text>
-                )}
-              </g>
-            );
-          });
-        })}
-      </svg>
-
-      {/* Legend */}
-      <div style={{ display: "flex", gap: 20, justifyContent: "center", marginTop: 8, flexWrap: "wrap" }}>
-        {paths.map((p, pi) => (
-          <div key={pi} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--text2)" }}>
-            <div style={{ width: 10, height: 10, borderRadius: "50%", background: BRANCH_COLORS[pi % BRANCH_COLORS.length] }} />
-            Path {pi + 1}: {p.career_steps?.[p.career_steps.length - 1] ?? "?"} · {Math.round(p.probability * 100)}% confidence
-          </div>
-        ))}
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginLeft: 16 }}>
-          {[["#14b8a6", "≥70% ready"], ["#f59e0b", "40–69%"], ["#f43f5e", "<40%"]].map(([c, l]) => (
-            <span key={l} style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "var(--text3)" }}>
-              <span style={{ width: 8, height: 8, borderRadius: 2, background: c, display: "inline-block" }} />{l}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Skill gap cards */}
-      <div style={{ display: "grid", gridTemplateColumns: `repeat(${paths.length}, 1fr)`, gap: 12, marginTop: 20 }}>
-        {paths.map((p, pi) => (
-          <div key={pi} style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 14, border: `1px solid ${BRANCH_COLORS[pi % BRANCH_COLORS.length]}44` }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: BRANCH_COLORS[pi % BRANCH_COLORS.length], marginBottom: 8 }}>
-              Path {pi + 1} · {p.career_steps?.[p.career_steps.length - 1]}
-            </div>
-            {p.skills_matched && p.skills_matched.length > 0 && (
-              <div style={{ marginBottom: 6 }}>
-                <div style={{ fontSize: 10, color: "var(--text3)", marginBottom: 4 }}>You have</div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                  {p.skills_matched.map((s) => (
-                    <span key={s} style={{ fontSize: 10, padding: "2px 7px", borderRadius: 10, background: "#14b8a622", color: "#14b8a6", fontWeight: 500 }}>{s}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-            {p.skills_needed && p.skills_needed.length > 0 && (
-              <div>
-                <div style={{ fontSize: 10, color: "var(--text3)", marginBottom: 4 }}>Skills to gain</div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                  {p.skills_needed.slice(0, 6).map((s) => (
-                    <span key={s} style={{ fontSize: 10, padding: "2px 7px", borderRadius: 10, background: "#f43f5e22", color: "#f43f5e", fontWeight: 500 }}>+{s}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 }
 
 // ─── Gap-skill market badge ───────────────────────────────────────────────
@@ -269,6 +51,80 @@ function SkillInsightChip({ insight }: { insight: SkillInsight }) {
       {insight.early_warning ? (
         <span title="Expected to spike in the local market" style={{ color: "var(--accent)", fontWeight: 600 }}>⚡ ~{insight.early_warning}w</span>
       ) : null}
+    </div>
+  );
+}
+
+// ─── Step-by-step path breakdown ──────────────────────────────────────────
+// Surfaces the per-step detail the model already returns: time-to-reach
+// (timeframe_months), gate skills (skill_gaps), readiness, and the per-role
+// market trend (from the graph nodes), as a readable list alongside the graph.
+
+function CareerStepList({ prediction, paths, goal = false }: { prediction: CareerPrediction; paths?: CareerPath[]; goal?: boolean }) {
+  const marketByRole = new Map((prediction.graph_nodes ?? []).map((n) => [n.label, n.meta?.market]));
+  const readyByRole  = new Map((prediction.graph_nodes ?? []).map((n) => [n.label, n.meta?.readiness]));
+  const list = paths ?? prediction.paths;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      {list.map((p, pi) => {
+        const steps = p.career_steps ?? [];
+        const current = steps[0] ?? "Current";
+        const target = steps[steps.length - 1] ?? "?";
+        const confPct = Math.round((p.confidence_relative ?? p.probability) * 100);
+        return (
+          <div key={p.id ?? pi} style={{ background: "var(--surf)", borderRadius: "var(--radius)", padding: 16, border: goal ? "1px solid #f59e0b66" : "1px solid var(--border)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 12 }}>
+              <div style={{ fontWeight: 700, fontSize: 14 }}>{goal ? <>🎯 Goal · {target}</> : <>Path {pi + 1} · {target}</>}</div>
+              <span style={{ fontSize: 12, color: "var(--text2)", whiteSpace: "nowrap" }}>{goal ? `skills point here ${confPct}%` : `${confPct}% confidence`}</span>
+            </div>
+
+            {/* Starting point */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--text3)", flexShrink: 0 }} />
+              <span style={{ fontSize: 13 }}><span style={{ color: "var(--text3)" }}>You are here · </span><b>{current}</b></span>
+            </div>
+
+            {(p.transitions ?? []).map((t, i) => {
+              const isFinal = i === (p.transitions?.length ?? 0) - 1;
+              const ready = isFinal ? p.readiness_score : readyByRole.get(t.role);
+              const rc = readinessColor(ready);
+              const market = marketByRole.get(t.role);
+              const vm = market ? VELOCITY_META[market.velocity] : null;
+              return (
+                <div key={i} style={{ display: "flex", gap: 10, paddingLeft: 4, marginBottom: 8 }}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
+                    <span style={{ color: "var(--text3)", fontSize: 14, lineHeight: 1 }}>↓</span>
+                    <span style={{ width: 10, height: 10, borderRadius: "50%", background: isFinal ? rc : "var(--accent)" }} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                      <b style={{ fontSize: 13 }}>{t.role}</b>
+                      <span style={{ fontSize: 11, color: "var(--text2)" }}>~{t.timeframe_months} months to reach</span>
+                      {ready != null && (
+                        <span style={{ fontSize: 11, fontWeight: 600, color: rc }}>{Math.round(ready * 100)}% ready</span>
+                      )}
+                      {vm && market!.velocity !== "unknown" && (
+                        <span style={{ fontSize: 11, fontWeight: 600, color: vm.color }}>
+                          {vm.arrow} {vm.label}{market!.demand_index ? ` · index ${market!.demand_index}` : ""}
+                        </span>
+                      )}
+                    </div>
+                    {(t.skill_gaps?.length ?? 0) > 0 && (
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 5 }}>
+                        <span style={{ fontSize: 10, color: "var(--text3)", marginRight: 2 }}>Skills to unlock:</span>
+                        {t.skill_gaps.map((s) => (
+                          <span key={s} style={{ fontSize: 10, padding: "2px 7px", borderRadius: 10, background: "var(--surf2)", border: "1px solid var(--border)", color: "var(--text2)" }}>{s}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -304,6 +160,15 @@ export default function CareerPage() {
   const [showAddItem, setShowAddItem] = useState(false);
   const [currentRole, setCurrentRole] = useState("");
   const [expMonths, setExpMonths] = useState(0);
+  const [numProjects, setNumProjects] = useState(0);
+
+  // Skills the user feeds the model for a prediction (pre-filled from tracked
+  // skills, but fully editable — mirrors the model's own demo UI).
+  const [predictSkills, setPredictSkills] = useState<string[]>([]);
+  const [predictSkillInput, setPredictSkillInput] = useState("");
+
+  // Career model health — drives the online/offline badge + pauses predictions.
+  const [modelStatus, setModelStatus] = useState<ModelStatus | null>(null);
 
   // Inline editing
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -337,9 +202,15 @@ export default function CareerPage() {
         setRoadmap(roadmapRes.data.data ?? []);
         const us = skillsRes.data.data ?? [];
         setUserSkills(us);
-        setWhatIfSkills(us.map((u) => u.skills?.name ?? "").filter(Boolean));
+        const trackedNames = us.map((u) => u.skills?.name ?? "").filter(Boolean);
+        setWhatIfSkills(trackedNames);
+        setPredictSkills(trackedNames);
         setCvs(cvsRes.data.data ?? []);
         setHistory(historyRes.data.data ?? []);
+        // Model health is non-critical to the page load — fetch best-effort.
+        careerService.getModelStatus()
+          .then((r) => setModelStatus(r.data.data))
+          .catch(() => setModelStatus({ module_b: { online: false }, module_a: { online: false } }));
       } catch {
         toast.error("Failed to load career data");
       } finally {
@@ -375,21 +246,32 @@ export default function CareerPage() {
   }
 
   async function handlePredict() {
+    if (predictSkills.length === 0) { toast.error("Add at least one skill to predict your path"); return; }
     setPredicting(true);
     try {
       const res = await careerService.predictPath({
         current_role:      currentRole.trim() || "Student",
         experience_months: expMonths,
-        num_projects:      0,
+        num_projects:      numProjects,
+        skills:            predictSkills,
       });
       setPrediction(res.data.data);
+      setSimResult(null);
+      // Reset the what-if simulator to the same skill set this prediction used.
+      setWhatIfSkills(predictSkills);
       toast.success("Career path generated");
       try {
         const h = await careerService.getPredictions();
         setHistory(h.data.data ?? []);
       } catch { /* history is non-critical */ }
-    } catch {
-      toast.error("Failed to generate path");
+    } catch (err) {
+      // 503 = career model offline — reflect it in the badge and pause predictions.
+      if ((err as { response?: { status?: number } })?.response?.status === 503) {
+        setModelStatus((s) => ({ module_a: s?.module_a ?? { online: false }, module_b: { ...(s?.module_b ?? {}), online: false } }));
+        toast.error("The career model is offline — predictions are paused");
+      } else {
+        toast.error("Failed to generate path");
+      }
     } finally {
       setPredicting(false);
     }
@@ -420,23 +302,23 @@ export default function CareerPage() {
   async function handleSimulate() {
     setSimulating(true);
     try {
-      // Derive add/remove relative to the user's real tracked skills.
-      const real = userSkills.map((u) => (u.skills?.name ?? "").toLowerCase()).filter(Boolean);
-      const want = whatIfSkills.map((s) => s.toLowerCase());
-      const add_skills = whatIfSkills.filter((s) => !real.includes(s.toLowerCase()));
-      const remove_skills = userSkills.map((u) => u.skills?.name ?? "").filter((n) => n && !want.includes(n.toLowerCase()));
+      // The what-if chip list *is* the simulated skill set — send it directly as
+      // the explicit base (not persisted). Delta vs `prediction` is shown below.
       const res = await careerService.predictPath({
         current_role: currentRole.trim() || "Student",
         experience_months: expMonths,
-        num_projects: 0,
-        add_skills,
-        remove_skills,
+        num_projects: numProjects,
+        skills: whatIfSkills,
         simulate: true,
       });
       setSimResult(res.data.data);
       toast.success("Simulation ready");
-    } catch {
-      toast.error("Simulation failed");
+    } catch (err) {
+      if ((err as { response?: { status?: number } })?.response?.status === 503) {
+        toast.error("The career model is offline — simulation paused");
+      } else {
+        toast.error("Simulation failed");
+      }
     } finally {
       setSimulating(false);
     }
@@ -706,30 +588,100 @@ export default function CareerPage() {
           {step === "Career Path" && (
             <div>
               {/* Prediction inputs */}
-              <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 16, border: "1px solid var(--border)", marginBottom: 20, display: "flex", gap: 16, flexWrap: "wrap", alignItems: "flex-end" }}>
-                <div style={{ flex: "1 1 200px" }}>
-                  <label style={{ fontSize: 12, color: "var(--text2)", display: "block", marginBottom: 4 }}>Your Current Role</label>
-                  <input
-                    value={currentRole}
-                    onChange={(e) => setCurrentRole(e.target.value)}
-                    placeholder="e.g. Student, Junior Developer…"
-                    style={inputStyle}
-                  />
+              <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 16, border: "1px solid var(--border)", marginBottom: 20 }}>
+                {/* Header + model status badge */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>Predict your career path</div>
+                  {modelStatus && (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, padding: "4px 9px", borderRadius: 999, border: "1px solid var(--border)", background: "var(--surf)", color: "var(--text2)" }}>
+                      <span style={{ width: 7, height: 7, borderRadius: "50%", background: modelStatus.module_b.online ? "var(--teal)" : "#ef4444" }} />
+                      {modelStatus.module_b.online
+                        ? `Model online${modelStatus.module_b.best_model ? ` · ${modelStatus.module_b.best_model}` : ""}${modelStatus.module_b.num_roles ? ` · ${modelStatus.module_b.num_roles} roles` : ""}`
+                        : "Model offline"}
+                    </span>
+                  )}
                 </div>
-                <div style={{ flex: "0 1 160px" }}>
-                  <label style={{ fontSize: 12, color: "var(--text2)", display: "block", marginBottom: 4 }}>Experience (months)</label>
-                  <input
-                    type="number"
-                    min={0}
-                    max={600}
-                    value={expMonths}
-                    onChange={(e) => setExpMonths(Number(e.target.value))}
-                    style={inputStyle}
-                  />
+
+                {/* Offline banner */}
+                {modelStatus?.module_b.online === false && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", borderRadius: "var(--radius)", background: "#ef444415", border: "1px solid #ef444455", color: "#ef4444", fontSize: 13, marginBottom: 14 }}>
+                    <span style={{ fontSize: 15 }}>⚠️</span>
+                    <span>The career model is offline — predictions are paused. Start Module B (port 8002) and reload.</span>
+                  </div>
+                )}
+
+                {/* Skills tag-box (fed to the model, pre-filled from your tracked skills) */}
+                <div style={{ marginBottom: 14 }}>
+                  <label style={{ fontSize: 12, color: "var(--text2)", display: "block", marginBottom: 4 }}>
+                    Skills <span style={{ color: "var(--text3)" }}>· edit the list the model uses to predict</span>
+                  </label>
+                  <div
+                    onClick={() => document.getElementById("predict-skill-input")?.focus()}
+                    style={{ minHeight: 44, display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center", padding: 8, borderRadius: "var(--radius)", border: "1px solid var(--border2)", background: "var(--surf3)", cursor: "text" }}
+                  >
+                    {predictSkills.map((s) => (
+                      <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 8px", borderRadius: 999, background: "var(--accentD)", color: "var(--accent)", fontSize: 12, fontWeight: 500 }}>
+                        {s}
+                        <button onClick={(e) => { e.stopPropagation(); setPredictSkills((prev) => prev.filter((x) => x !== s)); }} style={{ border: "none", background: "transparent", cursor: "pointer", color: "var(--accent)", fontSize: 13, lineHeight: 1, padding: 0 }}>✕</button>
+                      </span>
+                    ))}
+                    <input
+                      id="predict-skill-input"
+                      value={predictSkillInput}
+                      onChange={(e) => setPredictSkillInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        const v = predictSkillInput.trim();
+                        if ((e.key === "Enter" || e.key === ",") && v) {
+                          e.preventDefault();
+                          setPredictSkills((prev) => prev.some((x) => x.toLowerCase() === v.toLowerCase()) ? prev : [...prev, v]);
+                          setPredictSkillInput("");
+                        } else if (e.key === "Backspace" && !predictSkillInput && predictSkills.length) {
+                          setPredictSkills((prev) => prev.slice(0, -1));
+                        }
+                      }}
+                      placeholder={predictSkills.length ? "Add a skill…" : "Type a skill and press Enter (e.g. react, python, docker)…"}
+                      style={{ flex: "1 1 160px", minWidth: 140, border: "none", outline: "none", background: "transparent", color: "var(--text)", fontSize: 13 }}
+                    />
+                  </div>
                 </div>
-                <PiqBtn onClick={handlePredict} disabled={predicting}>
-                  {predicting ? "Analysing 347 IT roles…" : "Generate My Path"}
-                </PiqBtn>
+
+                {/* Role / experience / projects / predict */}
+                <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "flex-end" }}>
+                  <div style={{ flex: "1 1 200px" }}>
+                    <label style={{ fontSize: 12, color: "var(--text2)", display: "block", marginBottom: 4 }}>Your Current Role</label>
+                    <input
+                      value={currentRole}
+                      onChange={(e) => setCurrentRole(e.target.value)}
+                      placeholder="e.g. Student, Junior Developer…"
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div style={{ flex: "0 1 140px" }}>
+                    <label style={{ fontSize: 12, color: "var(--text2)", display: "block", marginBottom: 4 }}>Experience (months)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={600}
+                      value={expMonths}
+                      onChange={(e) => setExpMonths(Number(e.target.value))}
+                      style={inputStyle}
+                    />
+                  </div>
+                  <div style={{ flex: "0 1 120px" }}>
+                    <label style={{ fontSize: 12, color: "var(--text2)", display: "block", marginBottom: 4 }}>Projects</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={50}
+                      value={numProjects}
+                      onChange={(e) => setNumProjects(Number(e.target.value))}
+                      style={inputStyle}
+                    />
+                  </div>
+                  <PiqBtn onClick={handlePredict} disabled={predicting || modelStatus?.module_b.online === false}>
+                    {predicting ? "Analysing 347 IT roles…" : "Generate My Path"}
+                  </PiqBtn>
+                </div>
               </div>
 
               {history.length > 0 && (
@@ -779,6 +731,26 @@ export default function CareerPage() {
                       {prediction.paths.length} predicted paths · drag to pan, scroll to zoom · <b>click a role</b> for skills & market · node colour = readiness
                     </div>
                     <CareerFlowGraph prediction={prediction} onSelect={setSelectedNode} />
+                  </div>
+
+                  {/* Path to your goal */}
+                  {prediction.goal_path && (
+                    <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 20, border: "1px solid #f59e0b44", marginBottom: 20 }}>
+                      <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>🎯 Path to your goal{goal?.target_role ? ` · ${goal.target_role}` : ""}</div>
+                      <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 16 }}>
+                        Your skills-predicted paths above may not end at the goal you set — this is the route that does, with the skills to close the gap.
+                      </div>
+                      <CareerStepList prediction={prediction} paths={[prediction.goal_path]} goal />
+                    </div>
+                  )}
+
+                  {/* Step-by-step breakdown */}
+                  <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 20, border: "1px solid var(--border)", marginBottom: 20 }}>
+                    <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Step-by-step path</div>
+                    <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 16 }}>
+                      Each step shows time-to-reach, the skills that unlock it, readiness, and the role's live market trend.
+                    </div>
+                    <CareerStepList prediction={prediction} />
                   </div>
 
                   {/* What-if simulator */}

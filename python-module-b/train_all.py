@@ -876,6 +876,67 @@ def predict_career_paths(
     return results
 
 
+# =============================================================================
+# SECTION 5b - Goal-directed path (always ends at a user-chosen target role)
+# =============================================================================
+
+def _target_confidence(model: "CareerPathwayModel", clean: list,
+                       target_role: str, experience_months: int,
+                       num_projects: int):
+    """The classifier's probability for `target_role` given the user's skills —
+    i.e. how strongly their current profile already points at the goal. None when
+    the goal isn't one of the model's known classes."""
+    classes = list(model.label_encoder.classes_)
+    if target_role not in classes:
+        return None
+    X = model._encode_input(clean, experience_months, len(clean), num_projects)
+    probs = model.classifier.predict_proba(X)[0]
+    return float(probs[classes.index(target_role)])
+
+
+def _readiness_toward(model: "CareerPathwayModel", clean: list, target_role: str) -> dict:
+    """Skill gap toward the goal. Falls back to the domain's mid-role profile when
+    the goal has no profile of its own, so we never return the misleading 1.0 that
+    an empty-profile lookup yields in `_skill_gap`."""
+    profiles = getattr(model, "role_skill_profiles", {}) or {}
+    if profiles.get(target_role):
+        return model._skill_gap(clean, target_role)
+    base = _MID_BY_DOMAIN.get(_domain(target_role))
+    if base and profiles.get(base):
+        return model._skill_gap(clean, base)
+    return {"matched": set(), "missing_ranked": [], "readiness": 0.0}
+
+
+def predict_path_to_target(
+    model: "CareerPathwayModel",
+    skills: list,
+    current_role: str,
+    target_role: str,
+    experience_months: int = 0,
+    num_projects: int = 0,
+) -> dict:
+    """Build a single career path that always ends at `target_role`, in the same
+    shape as a `/predict` path. Reuses the seniority-ladder + skill-gap helpers."""
+    clean = [s.lower().strip() for s in skills if s.strip()]
+    steps = get_career_steps(current_role, target_role)
+    gap = _readiness_toward(model, clean, target_role)
+    step_gates = [
+        _step_gate(model, steps[i], steps[i + 1], clean)
+        for i in range(len(steps) - 1)
+    ]
+    conf = _target_confidence(model, clean, target_role, experience_months, num_projects)
+    return {
+        "path_number":     0,
+        "target_role":     target_role,
+        "confidence":      conf if conf is not None else 0.0,
+        "career_steps":    steps,
+        "step_gates":      step_gates,
+        "readiness_score": gap["readiness"],
+        "skills_matched":  sorted(gap["matched"]),
+        "skills_needed":   gap["missing_ranked"],
+    }
+
+
 def format_predictions(results: list) -> str:
     lines = ["\n" + "=" * 60, "  CAREER PATHWAY PREDICTIONS", "=" * 60]
     for r in results:

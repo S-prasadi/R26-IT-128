@@ -45,6 +45,9 @@ router.post("/predict", requirePermission("career:read"),
   validate(predictPathSchema),
   (req, res) => careerController.predictPath(req as AuthRequest, res as Response));
 
+router.get("/model-status", requirePermission("career:read"),
+  (req, res) => careerController.modelStatus(req as AuthRequest, res as Response));
+
 router.get("/predictions", requirePermission("career:read"),
   (req, res) => careerController.getPredictions(req as AuthRequest, res as Response));
 

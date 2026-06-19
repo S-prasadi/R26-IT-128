@@ -43,6 +43,11 @@ export const careerController = {
     sendSuccess(res, data, "Career path generated");
   },
 
+  async modelStatus(_req: AuthRequest, res: Response): Promise<void> {
+    const data = await careerService.getModelStatus();
+    sendSuccess(res, data, "Model status fetched");
+  },
+
   async getPredictions(req: AuthRequest, res: Response): Promise<void> {
     const data = await careerService.getPredictions(req.user!.id);
     sendSuccess(res, data, "Prediction history fetched");

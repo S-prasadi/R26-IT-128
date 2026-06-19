@@ -153,6 +153,7 @@ export interface CareerPath {
   id: string;
   probability: number;
   confidence_relative?: number; // share of confidence across the returned paths (0–1)
+  is_goal?: boolean;            // the goal-directed path (always reaches the user's set goal)
   transitions: CareerTransition[];
   career_steps?: string[];
   readiness_score?: number;
@@ -181,6 +182,7 @@ export interface CareerNodeMeta {
   gate_skills?: string[];
   eta_months?: number;
   market?: NodeMarket;
+  is_goal?: boolean; // this role is the user's set goal (highlighted in the graph)
 }
 
 export interface CareerGraphNode {
@@ -202,6 +204,12 @@ export interface CareerPrediction {
   paths: CareerPath[];
   graph_nodes: CareerGraphNode[];
   graph_edges: CareerGraphEdge[];
+  goal_path?: CareerPath | null; // path that reaches the user's set goal (when a goal is set)
+}
+
+export interface ModelStatus {
+  module_b: { online: boolean; best_model?: string | null; num_roles?: number | null };
+  module_a: { online: boolean };
 }
 
 // --- CV structured section content ---

@@ -30,6 +30,10 @@ export const predictPathSchema = z.object({
   experience_months: z.number().int().min(0).max(600).optional(),
   num_projects:      z.number().int().min(0).max(50).optional(),
   preferences:       z.object({}).passthrough().optional(),
+  // Skills the user explicitly enters for this prediction (mirrors the model's
+  // own demo UI). When provided, these are used as the base skill set instead of
+  // the auto-derived tracked-skills + CV set.
+  skills:            z.array(z.string().trim().min(1)).max(50).optional(),
   // What-if simulator: skills to add/remove on top of the real set; when
   // simulate is true the result is not persisted to history.
   add_skills:        z.array(z.string().trim().min(1)).max(20).optional(),

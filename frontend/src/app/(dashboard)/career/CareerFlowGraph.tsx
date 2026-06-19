@@ -30,7 +30,8 @@ function RoleNode({ data }: NodeProps<Node<RoleNodeData>>) {
   const n = data.node;
   const isCurrent = n.type === "current";
   const meta = n.meta ?? {};
-  const ring = isCurrent ? "#0ea5e9" : readinessColor(meta.readiness);
+  const isGoal = !!meta.is_goal;
+  const ring = isGoal ? "#f59e0b" : isCurrent ? "#0ea5e9" : readinessColor(meta.readiness);
   const vel = VEL[meta.market?.velocity ?? "unknown"];
   return (
     <div
@@ -40,14 +41,14 @@ function RoleNode({ data }: NodeProps<Node<RoleNodeData>>) {
         borderRadius: 12,
         background: "var(--surf, #fff)",
         border: `2px solid ${ring}`,
-        boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+        boxShadow: isGoal ? "0 0 0 3px #f59e0b33, 0 1px 4px rgba(0,0,0,0.08)" : "0 1px 4px rgba(0,0,0,0.08)",
         cursor: "pointer",
         fontFamily: "inherit",
       }}
     >
       <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
-      <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: 0.5, color: isCurrent ? "#0ea5e9" : "var(--text3,#94a3b8)" }}>
-        {isCurrent ? "You are here" : "Role"}
+      <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: 0.5, color: isGoal ? "#f59e0b" : isCurrent ? "#0ea5e9" : "var(--text3,#94a3b8)" }}>
+        {isGoal ? "🎯 Your goal" : isCurrent ? "You are here" : "Role"}
       </div>
       <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.2, marginTop: 2, color: "var(--text,#0f172a)" }}>{n.label}</div>
       {!isCurrent && (

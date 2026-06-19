@@ -18,7 +18,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 sys.path.insert(0, str(Path(__file__).parent))
-from train_all import CareerPathwayModel, predict_career_paths
+from train_all import CareerPathwayModel, predict_career_paths, predict_path_to_target
 
 app = FastAPI(title="Career Pathway Predictor")
 model: CareerPathwayModel | None = None
@@ -64,6 +64,32 @@ async def predict(req: PredictRequest):
         top_k=req.top_k,
     )
     return {"paths": results}
+
+
+class TargetRequest(BaseModel):
+    skills: list[str]
+    current_role: str = "Student"
+    target_role: str
+    experience_months: int = 0
+    num_projects: int = 0
+
+
+@app.post("/predict-to-target")
+async def predict_to_target(req: TargetRequest):
+    """A single career path that always ends at the user's chosen goal role."""
+    if model is None:
+        return JSONResponse({"error": "Model not loaded"}, status_code=503)
+    if not req.target_role.strip():
+        return JSONResponse({"error": "target_role required"}, status_code=400)
+    path = predict_path_to_target(
+        model=model,
+        skills=req.skills,
+        current_role=req.current_role,
+        target_role=req.target_role,
+        experience_months=req.experience_months,
+        num_projects=req.num_projects,
+    )
+    return {"path": path}
 
 
 @app.get("/model-info")
