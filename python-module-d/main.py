@@ -31,7 +31,7 @@ _log = logging.getLogger("module-d")
 import certifi
 import numpy as np
 import uvicorn
-from dotenv import load_dotenv
+from dotenv import dotenv_values, load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
@@ -164,12 +164,38 @@ def _get_ocr_reader() -> easyocr.Reader:
         raise
 
 
-# GitHub Models endpoint — set GITHUB_TOKEN in python-module-d/.env or the environment.
-# Never hardcode the token; without one, every LLM feature degrades to a deterministic fallback.
-load_dotenv(Path(__file__).parent / ".env")
-GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+def _resolve_github_token() -> tuple[str, str]:
+    """Load GITHUB_TOKEN from the module env file, backend env file, or the process environment."""
+    env_files = [
+        Path(__file__).resolve().parent / ".env",
+        Path(__file__).resolve().parent.parent / "backend" / ".env",
+    ]
+
+    for env_path in env_files:
+        if env_path.exists():
+            load_dotenv(env_path, override=False)
+            values = dotenv_values(env_path)
+            token = (values.get("GITHUB_TOKEN") or "").strip()
+            if token:
+                os.environ["GITHUB_TOKEN"] = token
+                return token, str(env_path)
+
+    token = (os.environ.get("GITHUB_TOKEN") or "").strip()
+    if token:
+        return token, "environment"
+    return "", "unset"
+
+
+# GitHub Models endpoint — set GITHUB_TOKEN in python-module-d/.env, backend/.env,
+# or the shell environment. Without one, every LLM feature degrades to a deterministic fallback.
+GITHUB_TOKEN, GITHUB_TOKEN_SOURCE = _resolve_github_token()
 GITHUB_MODELS_BASE_URL = "https://models.inference.ai.azure.com"
 GITHUB_MODEL = "gpt-4o-mini"
+
+if GITHUB_TOKEN:
+    _log.info("GitHub token loaded from %s", GITHUB_TOKEN_SOURCE)
+else:
+    _log.warning("GITHUB_TOKEN not set - LLM features disabled, using fallbacks")
 
 # Construct the client even without a token (placeholder key) so the service still boots;
 # every LLM route guards on `if not GITHUB_TOKEN` and returns a fallback before calling it.

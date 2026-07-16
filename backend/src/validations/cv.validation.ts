@@ -12,7 +12,6 @@ export const updateCVSchema = z.object({
   github_url:               z.string().url().optional().nullable(),
   linkedin_url:             z.string().url().optional().nullable(),
   summary:                  z.string().trim().optional(),
-  ats_score:                z.number().int().min(0).max(100).optional(),
   match_score:              z.number().int().min(0).max(100).optional(),
   bert_skills:              z.array(z.any()).optional(),
   github_verified_skills:   z.array(z.any()).optional(),

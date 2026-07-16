@@ -88,13 +88,35 @@ if ($PYTHON313) {
 # --- Install mode ---
 $MODE = if ($Install) { "force" } elseif ($NoInstall) { "skip" } else { "auto" }
 
-# --- GITHUB_TOKEN from backend/.env ---
-if (-not $env:GITHUB_TOKEN) {
-    $envFile = Join-Path $ROOT "backend\.env"
-    if (Test-Path $envFile) {
-        $line = Get-Content $envFile | Where-Object { $_ -match "^GITHUB_TOKEN=" } | Select-Object -First 1
-        if ($line) { $env:GITHUB_TOKEN = ($line -split "=", 2)[1] }
+function Get-EnvValueFromFile([string]$envFile, [string]$key) {
+    if (-not (Test-Path $envFile)) { return $null }
+    $line = Get-Content $envFile | Where-Object { $_ -match "^$([regex]::Escape($key))=" } | Select-Object -First 1
+    if (-not $line) { return $null }
+    return ($line -split "=", 2)[1].Trim().Trim('"').Trim("'")
+}
+
+# --- GITHUB_TOKEN from backend/.env or python-module-d/.env ---
+$githubToken = $env:GITHUB_TOKEN
+$githubTokenSource = "process environment"
+if (-not $githubToken) {
+    foreach ($candidate in @(
+        (Join-Path $ROOT "backend\.env"),
+        (Join-Path $ROOT "python-module-d\.env")
+    )) {
+        $value = Get-EnvValueFromFile $candidate "GITHUB_TOKEN"
+        if ($value) {
+            $githubToken = $value
+            $githubTokenSource = $candidate
+            break
+        }
     }
+}
+
+if ($githubToken) {
+    $env:GITHUB_TOKEN = $githubToken
+    Write-Host "[run-all] GITHUB_TOKEN loaded from $githubTokenSource" -ForegroundColor Green
+} else {
+    Write-Host "[run-all] WARNING: GITHUB_TOKEN not found in backend/.env or python-module-d/.env" -ForegroundColor Yellow
 }
 
 # --- Job tracking ---
