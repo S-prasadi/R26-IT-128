@@ -135,7 +135,7 @@ export default function RolesPage() {
         <div style={{ padding: 32, display: "flex", flexDirection: "column", alignItems: "center", gap: 10, textAlign: "center", background: "var(--surf)", borderRadius: "var(--radiusLg)", border: "1px solid var(--border)" }}>
           <Icon n="alert" s={28} c="var(--rose)" />
           <div style={{ fontSize: 15, color: "var(--rose)", fontWeight: 500 }}>{apiError}</div>
-          <PiqBtn variant="secondary" size="sm" icon="refresh" onClick={() => { setApiError(null); loadRoles(); }}>Retry</PiqBtn>
+          <PiqBtn variant="secondary" size="sm" icon="refresh" onClick={() => { setApiError(null); loadData(); }}>Retry</PiqBtn>
         </div>
       )}
 

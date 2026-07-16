@@ -487,7 +487,6 @@ export default function CareerPage() {
                         <span style={{ fontSize: 16 }}>📄</span>
                         <span style={{ fontSize: 13, color: "var(--text2)" }}>Attached CV:</span>
                         <span style={{ fontSize: 13, fontWeight: 600 }}>{cv.title}</span>
-                        {cv.ats_score != null && <span style={{ fontSize: 11, marginLeft: "auto", color: "var(--teal)" }}>ATS {cv.ats_score}%</span>}
                       </div>
                     ) : null; })()}
                     {goal.skills_snapshot && goal.skills_snapshot.length > 0 && (
@@ -535,7 +534,6 @@ export default function CareerPage() {
                           <label key={cv.id} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, cursor: "pointer", padding: "6px 10px", borderRadius: "var(--radius)", background: selectedCvId === cv.id ? "var(--accentD)" : "transparent", border: `1px solid ${selectedCvId === cv.id ? "var(--accent)" : "var(--border2)"}` }}>
                             <input type="radio" name="cv_select" checked={selectedCvId === cv.id} onChange={() => setSelectedCvId(cv.id)} style={{ accentColor: "var(--accent)" }} />
                             <span style={{ flex: 1, fontWeight: selectedCvId === cv.id ? 600 : 400 }}>{cv.title}</span>
-                            {cv.ats_score != null && <span style={{ fontSize: 11, color: "var(--teal)" }}>ATS {cv.ats_score}%</span>}
                           </label>
                         ))}
                       </div>
