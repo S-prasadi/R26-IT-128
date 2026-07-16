@@ -3,6 +3,7 @@ import { cvService } from "../services/cv.service";
 import { interviewService } from "../services/interview.service";
 import { notificationService } from "../services/notification.service";
 import { sendSuccess } from "../utils/response";
+import { normalizeMimeType } from "../utils/mime";
 import type { AuthRequest } from "../types";
 
 const p = (v: unknown): string => (typeof v === "string" ? v : String(v));
@@ -71,8 +72,9 @@ export const cvController = {
     // (PDF/PNG/JPG/TXT) which is OCR'd via Module D.
     let jobText: string = typeof req.body?.job_text === "string" ? req.body.job_text.trim() : "";
     if (!jobText && req.file) {
+      const normalizedMime = normalizeMimeType(req.file.mimetype);
       try {
-        const { extracted_text } = await interviewService.extractDocumentText(req.file.buffer, req.file.mimetype);
+        const { extracted_text } = await interviewService.extractDocumentText(req.file.buffer, normalizedMime);
         jobText = extracted_text.trim();
       } catch {
         res.status(422).json({ success: false, message: "Could not extract text from the uploaded file. Please paste the job description as text instead." });

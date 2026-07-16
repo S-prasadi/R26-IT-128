@@ -278,14 +278,25 @@ def _pdf_to_images(pdf_bytes: bytes) -> list[Image.Image]:
 
 
 def _ocr_images(images: list[Image.Image]) -> str:
-    reader = _get_ocr_reader()
+    try:
+        reader = _get_ocr_reader()
+    except Exception as exc:
+        _log.warning("EasyOCR init failed: %s", exc)
+        return ""
+
     texts = []
     for img in images:
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-            img.save(tmp.name)
-            results = reader.readtext(tmp.name, detail=0)
+        try:
+            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+                img.save(tmp.name)
+                try:
+                    results = reader.readtext(tmp.name, detail=0)
+                finally:
+                    os.unlink(tmp.name)
             texts.append(" ".join(results))
-            os.unlink(tmp.name)
+        except Exception as exc:
+            _log.warning("OCR failed for image: %s", exc)
+            texts.append("")
     return "\n".join(texts)
 
 
@@ -380,13 +391,19 @@ def extract_ocr(req: ExtractOcrRequest):
         return {"text": _ocr_images(images)}
 
     if mimetype in ("image/png", "image/jpeg", "image/jpg"):
-        image = Image.open(io.BytesIO(file_bytes))
-        reader = _get_ocr_reader()
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-            image.save(tmp.name)
-            results = reader.readtext(tmp.name, detail=0)
-            os.unlink(tmp.name)
-        return {"text": " ".join(results)}
+        try:
+            image = Image.open(io.BytesIO(file_bytes))
+            reader = _get_ocr_reader()
+            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+                image.save(tmp.name)
+                try:
+                    results = reader.readtext(tmp.name, detail=0)
+                finally:
+                    os.unlink(tmp.name)
+            return {"text": " ".join(results)}
+        except Exception as exc:
+            _log.warning("Image OCR failed for %s: %s", mimetype, exc)
+            return {"text": ""}
 
     raise HTTPException(
         status_code=400, detail=f"Unsupported mimetype: {req.mimetype}")

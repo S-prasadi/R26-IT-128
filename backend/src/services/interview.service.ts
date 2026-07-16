@@ -1,6 +1,7 @@
 import { supabaseAdmin } from "../config/supabase";
 import { AppError } from "../middlewares/error.middleware";
 import { HTTP_STATUS } from "../constants/http";
+import { normalizeMimeType } from "../utils/mime";
 import { callPython, pythonUrls } from "./python.service";
 import type {
   CreateSessionDto,
@@ -160,10 +161,16 @@ export const interviewService = {
   },
 
   async extractDocumentText(fileBuffer: Buffer, mimetype: string): Promise<{ extracted_text: string }> {
+    const normalizedMime = normalizeMimeType(mimetype);
+
+    if (normalizedMime === "text/plain") {
+      return { extracted_text: fileBuffer.toString("utf8", 0, fileBuffer.length).trim() };
+    }
+
     const file_b64 = fileBuffer.toString("base64");
     const result = await callPython(
       `${pythonUrls.moduleD()}/extract-ocr`,
-      { file_b64, mimetype },
+      { file_b64, mimetype: normalizedMime },
       { text: "" }
     ) as { text: string };
     return { extracted_text: result.text ?? "" };
