@@ -25,7 +25,6 @@ const MOCK_CV_ANALYSIS = {
     { skill: "TypeScript", verified: true,  confidence: 0.87, evidence_url: null },
     { skill: "Node.js",    verified: false, confidence: 0.40, evidence_url: null },
   ],
-  ats_score: 74,
   job_matches: [
     { title: "Frontend Developer",     company: "99x Technology",  match_pct: 88, skill_gaps: ["Redux","Jest"] },
     { title: "Full-Stack Engineer",    company: "WSO2",            match_pct: 76, skill_gaps: ["Java","Kubernetes"] },
@@ -74,7 +73,7 @@ export const cvService = {
   async listCVs(userId: string) {
     const { data, error } = await supabaseAdmin
       .from("cvs")
-      .select("id, title, ats_score, match_score, github_url, linkedin_url, created_at, updated_at")
+      .select("id, title, match_score, github_url, linkedin_url, created_at, updated_at")
       .eq("user_id", userId)
       .order("created_at", { ascending: false });
     if (error) throw new AppError(error.message, HTTP_STATUS.INTERNAL_SERVER_ERROR);
@@ -121,7 +120,7 @@ export const cvService = {
     const { data, error } = await supabaseAdmin
       .from("cvs")
       .insert({ user_id: userId, ...dto })
-      .select("id, title, ats_score, match_score, github_url, linkedin_url, created_at")
+      .select("id, title, match_score, github_url, linkedin_url, created_at")
       .single();
     if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
     progressService.updateProgress(userId, "cv", 10).catch(() => {});
@@ -134,7 +133,7 @@ export const cvService = {
       .update(dto)
       .eq("id", cvId)
       .eq("user_id", userId)
-      .select("id, title, ats_score, match_score, updated_at")
+      .select("id, title, match_score, updated_at")
       .single();
     if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
     if (!data) throw new AppError("CV not found", HTTP_STATUS.NOT_FOUND);
@@ -313,7 +312,6 @@ export const cvService = {
 
     // Store analysis results back into DB
     await supabaseAdmin.from("cvs").update({
-      ats_score: result.ats_score,
       match_score: matchScore,
       bert_skills: result.extracted_skills,
       github_verified_skills: result.github_verified,
@@ -354,7 +352,7 @@ export const cvService = {
     notificationService.sendNotification(
       userId,
       "CV Analysis Complete",
-      `Your CV scored ${result.ats_score}/100 ATS score with ${result.job_matches?.length ?? 0} job matches found.`,
+      `Your CV analysis is complete with ${result.job_matches?.length ?? 0} job matches found.`,
       "success"
     ).catch(() => {});
 

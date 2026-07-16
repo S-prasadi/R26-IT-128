@@ -253,7 +253,7 @@ export interface CVSuggestion {
 export interface CVAnalysisResult {
   extracted_skills: Array<{ name: string; proficiency_label: string; confidence: number }>;
   github_verified: Array<{ skill: string; verified: boolean; confidence: number }>;
-  ats_score: number;
+  ats_score?: number;
   job_matches: Array<{ title: string; company: string; match_pct: number; skill_gaps: string[] }>;
   suggestions: Array<{ section: string; issue: string; fix_example: string }>;
 }

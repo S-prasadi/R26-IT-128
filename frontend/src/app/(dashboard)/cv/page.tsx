@@ -92,26 +92,29 @@ export default function CVPage() {
 
       // Restore the stored analysis so revisiting a CV shows results
       // immediately without re-running Module C.
-      if (cv.ats_score != null) {
-        setAnalysis({
-          ats_score:        cv.ats_score,
-          extracted_skills: (cv.bert_skills as CVAnalysisResult["extracted_skills"]) ?? [],
-          github_verified:  (cv.github_verified_skills as CVAnalysisResult["github_verified"]) ?? [],
-          job_matches: (cv.job_matches ?? []).map((m) => ({
-            title:      m.job_title,
-            company:    m.company ?? "",
-            match_pct:  m.match_pct,
-            skill_gaps: m.skill_gaps ?? [],
-          })),
-          suggestions: (cv.suggestions ?? []).map((s) => ({
-            section:     s.section_type ?? "summary",
-            issue:       s.issue,
-            fix_example: s.fix_example ?? "",
-          })),
-        });
-      } else {
-        setAnalysis(null);
-      }
+      const restoredAnalysis = {
+        extracted_skills: (cv.bert_skills as CVAnalysisResult["extracted_skills"]) ?? [],
+        github_verified:  (cv.github_verified_skills as CVAnalysisResult["github_verified"]) ?? [],
+        job_matches: (cv.job_matches ?? []).map((m) => ({
+          title:      m.job_title,
+          company:    m.company ?? "",
+          match_pct:  m.match_pct,
+          skill_gaps: m.skill_gaps ?? [],
+        })),
+        suggestions: (cv.suggestions ?? []).map((s) => ({
+          section:     s.section_type ?? "summary",
+          issue:       s.issue,
+          fix_example: s.fix_example ?? "",
+        })),
+      };
+      setAnalysis(
+        restoredAnalysis.extracted_skills.length ||
+        restoredAnalysis.github_verified.length ||
+        restoredAnalysis.job_matches.length ||
+        restoredAnalysis.suggestions.length
+          ? restoredAnalysis
+          : null
+      );
 
       setStep("CV Editor");
     } catch {
@@ -324,8 +327,6 @@ export default function CVPage() {
     toast.success(`Suggestion applied to ${sec} section`);
   }
 
-  const scoreColor = (s?: number) => !s ? "var(--text2)" : s >= 80 ? "var(--teal)" : s >= 60 ? "var(--amber)" : "var(--rose)";
-
   const sectionFilled = {
     experience: structuredSections.experience.length > 0,
     education:  structuredSections.education.length  > 0,
@@ -334,18 +335,14 @@ export default function CVPage() {
     summary:    structuredSections.summary.trim().length > 0,
   };
 
-  const bestATS      = cvList.length > 0 ? Math.max(...cvList.map((c) => c.ats_score ?? 0)) : 0;
-  const analysedCount = cvList.filter((c) => c.ats_score != null).length;
-
   return (
     <div style={{ maxWidth: 1000, margin: "0 auto" }}>
       <PageHeader title="CV & Proficiency" description="Build, optimise, and analyse your CV against real job postings" />
 
       {!loading && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 24 }}>
-          <PiqStatCard label="CVs Created"   value={cvList.length}                    icon="cv"    color="var(--accent)" sub="Total CVs" />
-          <PiqStatCard label="Best ATS Score" value={bestATS > 0 ? bestATS : "—"}    icon="trend" color="var(--teal)"   sub="Top score" />
-          <PiqStatCard label="Analysed CVs"   value={analysedCount}                   icon="check" color="var(--amber)"  sub="With feedback" />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 14, marginBottom: 24 }}>
+          <PiqStatCard label="CVs Created" value={cvList.length} icon="cv" color="var(--accent)" sub="Total CVs" />
+          <PiqStatCard label="With Insights" value={cvList.filter((c) => c.match_score != null || c.bert_skills?.length || c.github_verified_skills?.length).length} icon="check" color="var(--amber)" sub="Ready for review" />
         </div>
       )}
 
@@ -376,11 +373,8 @@ export default function CVPage() {
                     <div key={cv.id} style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 18, border: "1px solid var(--border)" }}>
                       <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 8 }}>{cv.title}</div>
                       <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
-                        {cv.ats_score != null && (
-                          <span style={{ fontSize: 12, padding: "2px 8px", borderRadius: 20, background: `${scoreColor(cv.ats_score)}20`, color: scoreColor(cv.ats_score), border: `1px solid ${scoreColor(cv.ats_score)}40` }}>ATS {cv.ats_score}%</span>
-                        )}
                         {cv.match_score != null && (
-                          <span style={{ fontSize: 12, padding: "2px 8px", borderRadius: 20, background: `${scoreColor(cv.match_score)}20`, color: scoreColor(cv.match_score), border: `1px solid ${scoreColor(cv.match_score)}40` }}>Match {cv.match_score}%</span>
+                          <span style={{ fontSize: 12, padding: "2px 8px", borderRadius: 20, background: "var(--accentD)", color: "var(--accent)", border: "1px solid var(--accentL)" }}>Match {cv.match_score}%</span>
                         )}
                       </div>
                       <div style={{ fontSize: 12, color: "var(--text3)", marginBottom: 12 }}>{new Date(cv.created_at).toLocaleDateString()}</div>
@@ -569,23 +563,8 @@ export default function CVPage() {
                     <PiqBtn size="sm" variant="secondary" onClick={handleAnalyse} disabled={analysing}>↻ Re-analyse CV</PiqBtn>
                   </div>
 
-                  {/* Score gauges */}
+                  {/* Insights */}
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px,1fr))", gap: 16, marginBottom: 24 }}>
-                    <PiqChartContainer title="ATS Score" height={200}>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <RadialBarChart innerRadius="60%" outerRadius="90%"
-                          data={[{ name: "ATS", value: analysis.ats_score, fill: analysis.ats_score >= 80 ? PIQ_COLORS.teal : analysis.ats_score >= 60 ? PIQ_COLORS.amber : PIQ_COLORS.rose }]}
-                          startAngle={220} endAngle={-40}>
-                          <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
-                          <RadialBar dataKey="value" cornerRadius={6} background={{ fill: "var(--surf2)" }} />
-                        </RadialBarChart>
-                      </ResponsiveContainer>
-                      <div style={{ textAlign: "center", marginTop: -100, position: "relative", zIndex: 1, pointerEvents: "none" }}>
-                        <div style={{ fontSize: 28, fontWeight: 700, color: analysis.ats_score >= 80 ? "var(--teal)" : analysis.ats_score >= 60 ? "var(--amber)" : "var(--rose)" }}>{analysis.ats_score}</div>
-                        <div style={{ fontSize: 12, color: "var(--text3)" }}>/ 100</div>
-                      </div>
-                    </PiqChartContainer>
-
                     {analysis.job_matches?.length > 0 && (() => {
                       const top = analysis.job_matches.slice(0, 3);
                       const avg = Math.round(top.reduce((s, m) => s + m.match_pct, 0) / top.length);
@@ -639,7 +618,7 @@ export default function CVPage() {
                           )}
                         </div>
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontSize: 24, fontWeight: 700, color: scoreColor(m.match_pct) }}>{m.match_pct}%</div>
+                          <div style={{ fontSize: 24, fontWeight: 700, color: "var(--accent)" }}>{m.match_pct}%</div>
                           <div style={{ fontSize: 12, color: "var(--text3)" }}>match</div>
                         </div>
                       </div>
