@@ -42,7 +42,7 @@ export const interviewController = {
   },
 
   async predictEmotion(req: AuthRequest, res: Response): Promise<void> {
-    const data = await interviewService.predictEmotion(p(req.body.frame));
+    const data = await interviewService.predictEmotion(p(req.body.frame), Number(req.body.sensitivity ?? 50));
     sendSuccess(res, data, "Emotion predicted");
   },
 

@@ -354,6 +354,8 @@ export interface InterviewSession {
   started_at?: string;
   ended_at?: string;
   created_at: string;
+  is_demo?: boolean;
+  emotion_sensitivity?: number;
   questions?: InterviewQuestion[];
 }
 

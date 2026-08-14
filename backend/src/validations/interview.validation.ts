@@ -3,10 +3,12 @@ import { z } from "zod";
 const DOCUMENT_CONTEXT_LIMIT = 10000;
 
 export const createSessionSchema = z.object({
-  topic:         z.string().trim().min(1),
-  difficulty:    z.number().int().min(1).max(5).default(3),
-  skills:        z.array(z.string()).optional(),
-  document_text: z.string().transform((value) => value.slice(0, DOCUMENT_CONTEXT_LIMIT)).optional(),
+  topic:                z.string().trim().min(1),
+  difficulty:           z.number().int().min(1).max(5).default(3),
+  skills:               z.array(z.string()).optional(),
+  document_text:        z.string().transform((value) => value.slice(0, DOCUMENT_CONTEXT_LIMIT)).optional(),
+  demo:                 z.boolean().optional().default(false),
+  emotion_sensitivity:  z.number().int().min(0).max(100).optional().default(50),
 });
 
 export const endSessionSchema = z.object({
@@ -22,7 +24,8 @@ export const submitResponseSchema = z.object({
 });
 
 export const predictEmotionSchema = z.object({
-  frame: z.string().min(1),  // base64-encoded JPEG webcam frame
+  frame:       z.string().min(1),  // base64-encoded JPEG webcam frame
+  sensitivity: z.number().int().min(0).max(100).optional().default(50),
 });
 
 export type CreateSessionDto   = z.infer<typeof createSessionSchema>;
