@@ -34,7 +34,7 @@ PathwayIQ is built around **four AI modules**, each solving a distinct part of t
 | **A** | Skill Forecaster | Analyses 2.5 years of weekly skill-demand data (Google Trends + job portals, global & Sri Lanka) and forecasts which skills will be in high demand over the next 12 weeks using ARIMA / Exponential Smoothing. Detects global→local lead-lag signals (CCF + Granger) and sends early-warning alerts for fast-rising technologies. **Integrated** (FastAPI, port 8001). |
 | **B** | Career Predictor | Takes a user's current skill set and predicts the most likely and most achievable career paths using a Logistic Regression classifier over sentence-transformer embeddings (`all-MiniLM-L6-v2`). Trained on 184 canonical IT roles (27,600 synthetic records derived from 493 real job postings). Returns top-K role predictions with beam-search career ladders, per-step skill gates, ETA estimates, and readiness scores. **Integrated** (FastAPI, port 8002; standalone dashboard UI at `/`). |
 | **C** | CV Analyser | Parses uploaded CVs/resumes (PDF/DOCX/TXT), extracts skills via keyword matching, scores the CV against 24 job-role profiles with a pre-trained scikit-learn model, computes an ATS-quality score, and returns ranked role matches with missing-skill gaps and learning recommendations. **Integrated** (Flask, port 8003). |
-| **D** | Interview Simulator | Generates tailored interview questions using GitHub Models (GPT-4o mini). Accepts an uploaded document (job description, resume, notes) — EasyOCR extracts the text and the questions are generated around that context. Tracks **real-time facial emotion** via webcam using a TensorFlow/Keras model (7 emotion classes mapped to interview states: Confident, Nervous, Confused, Stressed). Analyses responses in real time. Includes a standalone emotion detector UI at `/interview`. |
+| **D** | Interview Simulator | Generates tailored interview questions using a local Ollama model (`gemma4:e2b` by default). Accepts an uploaded document (job description, resume, notes) — EasyOCR extracts the text and the questions are generated around that context. Tracks **real-time facial emotion** via webcam using a TensorFlow/Keras model (7 emotion classes mapped to interview states: Confident, Nervous, Confused, Stressed). Analyses responses in real time. Includes a standalone emotion detector UI at `/interview`. |
 
 **Per-component documentation** (all features + how each component works):
 
@@ -91,8 +91,8 @@ The backend acts as the **orchestration layer** — it handles auth, data persis
 | Python AI (Module A) | FastAPI, Uvicorn, pandas, statsmodels (ARIMA/ES), scikit-learn, joblib, APScheduler |
 | Python AI (Module B) | FastAPI, Uvicorn, scikit-learn, sentence-transformers (`all-MiniLM-L6-v2`), PyTorch, NumPy, pandas, joblib, networkx |
 | Python AI (Module C) | Flask, flask-cors, pandas, scikit-learn (**pinned 1.6.1**), joblib, PyPDF2, python-docx, dateparser, requests |
-| Python AI (Module D) | FastAPI, Uvicorn, EasyOCR, pypdf, pdf2image, Pillow, OpenCV, NumPy, TensorFlow/Keras, OpenAI SDK (GitHub Models endpoint), Jinja2 |
-| AI Models | GitHub Models — GPT-4o mini via `https://models.inference.ai.azure.com`; pre-trained Keras emotion model (7-class facial expression recognition); pre-trained scikit-learn CV-scoring regressor; ARIMA/Exponential-Smoothing skill-demand forecasts |
+| Python AI (Module D) | FastAPI, Uvicorn, EasyOCR, pypdf, pdf2image, Pillow, OpenCV, NumPy, TensorFlow/Keras, httpx (local Ollama API), Jinja2 |
+| AI Models | Local Ollama — `gemma4:e2b` by default via `http://127.0.0.1:11434`; pre-trained Keras emotion model (7-class facial expression recognition); pre-trained scikit-learn CV-scoring regressor; ARIMA/Exponential-Smoothing skill-demand forecasts |
 
 ---
 
@@ -230,16 +230,17 @@ PYTHON_MODULE_D_URL=http://localhost:8004
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8081/api
 ```
 
-### Python Module D — environment variable (shell)
+### Python Module D — environment variables (shell, optional)
 
 ```bash
-export GITHUB_TOKEN=your_github_personal_access_token
+export OLLAMA_BASE_URL=http://127.0.0.1:11434   # default, override if Ollama runs elsewhere
+export OLLAMA_MODEL=gemma4:e2b                  # default, override to use a different local model
 ```
 
-> **Getting a GitHub Token for Models:**
-> 1. Go to [github.com/settings/tokens](https://github.com/settings/tokens)
-> 2. Create a new token (classic) with no special scopes needed
-> 3. GitHub Models (free tier) gives you access to GPT-4o mini, Llama 3, Mistral, and more
+> **Getting Ollama:**
+> 1. Install from [ollama.com](https://ollama.com) and make sure it's running (`ollama serve`)
+> 2. Pull the default model: `ollama pull gemma4:e2b`
+> 3. No token or account needed — everything runs locally and CV data never leaves the machine
 
 ---
 
@@ -440,17 +441,19 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-**What gets installed:** FastAPI, Uvicorn, TensorFlow 2.x, EasyOCR (+ PyTorch), OpenCV, NumPy, pypdf, pdf2image, Pillow, OpenAI SDK, Pydantic, Jinja2, certifi. Total download is approximately 1–2 GB on first install.
+**What gets installed:** FastAPI, Uvicorn, TensorFlow 2.x, EasyOCR (+ PyTorch), OpenCV, NumPy, pypdf, pdf2image, Pillow, httpx, Pydantic, Jinja2, certifi. Total download is approximately 1–2 GB on first install.
 
 > **Note on EasyOCR first run:** The first time you call `/extract-ocr`, EasyOCR downloads its language model (~100MB). This is automatic.
 
-### Step 3 — Set your GitHub token
+### Step 3 — Install and start Ollama
 
 ```bash
-export GITHUB_TOKEN=your_github_personal_access_token
+# install from https://ollama.com, then:
+ollama serve                 # if not already running
+ollama pull gemma4:e2b       # default model — pull once
 ```
 
-> **Getting a token:** Go to github.com/settings/tokens → create a classic token with no special scopes. GitHub Models (free tier) provides GPT-4o mini access.
+> Everything runs locally — no token, no account, no data leaves the machine. Override `OLLAMA_BASE_URL`/`OLLAMA_MODEL` env vars to point at a different host or model.
 
 ### Step 4 — Start the service
 
@@ -472,9 +475,9 @@ If you see `Emotion model loaded: 7 classes`, the Keras emotion detection model 
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/generate-questions` | POST | Generate 5 interview questions via GitHub Models (GPT-4o mini); falls back to hardcoded questions if `GITHUB_TOKEN` is unset |
+| `/generate-questions` | POST | Generate 5 interview questions via local Ollama; falls back to hardcoded questions if Ollama is unreachable or the model is missing |
 | `/extract-ocr` | POST | Extract text from a base64-encoded PDF, PNG, JPG, or TXT file using EasyOCR with pypdf fallback |
-| `/extract-cv` | POST | Extract and structure CV sections (experience, education, skills, projects) via OCR + GPT-4o mini |
+| `/extract-cv` | POST | Extract and structure CV sections (experience, education, skills, projects) via OCR + local Ollama |
 | `/analyze-response` | POST | Score a candidate's answer (0–100), return feedback, engagement score, and emotion summary |
 | `/interview` | GET | Serves the standalone real-time emotion detector HTML UI |
 | `/predict` | POST | Accept a base64 JPEG frame, detect face (Haar Cascade), run Keras emotion model, return emotion label + interview state + per-class probabilities + bounding box |
@@ -496,7 +499,7 @@ The `/predict` endpoint uses a pre-trained Keras model (`models/emotion_model.h5
 
 Module D has CORS fully open (`allow_origins=["*"]`) so the Next.js frontend can call `/predict` directly from the browser without proxying through the backend (necessary to keep video frame latency low).
 
-> **No GitHub token?** The service still starts and serves all endpoints. `/generate-questions` and `/analyze-response` return sensible fallback data. Emotion detection via `/predict` works entirely offline — it does not use the GitHub Models API.
+> **Ollama not running or model missing?** The service still starts and serves all endpoints. `/generate-questions` and `/analyze-response` return sensible fallback data. Emotion detection via `/predict` works entirely offline — it does not call Ollama at all.
 
 ---
 
@@ -661,7 +664,7 @@ The interview simulator supports uploading a document before starting a session.
 7. User clicks "Start Interview"
 8. Frontend sends createSession with document_text included
 9. Backend passes document_text to Module D /generate-questions
-10. Module D uses GitHub Models (GPT-4o mini) to generate 5 questions tailored to the document
+10. Module D uses local Ollama (`gemma4:e2b`) to generate 5 questions tailored to the document
 11. Questions are stored in the database and returned to the frontend
 ```
 
@@ -736,8 +739,8 @@ cd python-module-b && source venv/bin/activate && python dashboard.py
 cd python-module-c/backend && source venv/bin/activate && python app.py
 
 # Terminal 4 — Module D (Interview AI, :8004)
+ollama serve                      # if not already running (separate terminal)
 cd python-module-d && source venv/bin/activate
-export GITHUB_TOKEN=your_token    # optional — enables full AI responses
 python main.py
 # Expected: "Emotion model loaded: 7 classes" then "Uvicorn running on http://0.0.0.0:8004"
 
@@ -795,7 +798,7 @@ cd frontend && npm run type-check
 | Backend crashes on start | Check all required env vars are set in `backend/.env` |
 | `Missing required environment variable` error | Ensure `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_ISSUER`, `SUPABASE_JWKS_URL` are all in `.env` |
 | Frontend API calls fail with 404 / no response | Ensure `NEXT_PUBLIC_API_BASE_URL=http://localhost:8081/api` in `frontend/.env.local` (port 8081, not 8080) |
-| Interview questions are generic (not AI-generated) | Set `GITHUB_TOKEN` env var before starting Module D |
+| Interview questions are generic (not AI-generated) | Make sure Ollama is running (`ollama serve`) and the model is pulled (`ollama pull gemma4:e2b`) before starting Module D |
 | PDF upload returns empty text | The PDF is likely scanned — ensure `poppler` is installed for `pdf2image` to work |
 | EasyOCR model download hangs | Allow it to complete on first run (~100MB download). Subsequent runs are instant. |
 | 401 on all API requests | JWT has expired — log out and log back in |

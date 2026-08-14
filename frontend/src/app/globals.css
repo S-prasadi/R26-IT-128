@@ -7,12 +7,13 @@
 /* ─── PathwayIQ Design Tokens — LIGHT (default) ───────────────────────────── */
 :root {
   /* PIQ palette */
-  --bg:        oklch(96% 0.006 245);
-  --surf:      oklch(100% 0 0);
-  --surf2:     oklch(94% 0.006 245);
-  --surf3:     oklch(89% 0.006 245);
-  --border:    oklch(0% 0 0 / 8%);
-  --border2:   oklch(0% 0 0 / 14%);
+  --bg:        oklch(95% 0.010 245);
+  --surf:      oklch(100% 0.002 245);
+  --surf2:     oklch(99% 0.006 245);
+  --surf3:     oklch(96% 0.010 245);
+  --border:    oklch(0% 0 0 / 12%);
+  --border2:   oklch(0% 0 0 / 18%);
+  --shadow-card: 0 1px 2px oklch(0% 0 0 / 3%), 0 2px 6px oklch(0% 0 0 / 5%);
   --accent:    oklch(55% 0.19 232);
   --accentH:   oklch(60% 0.19 232);
   --accentD:   oklch(55% 0.19 232 / 12%);
@@ -36,27 +37,27 @@
   --header:    60px;
 
   /* shadcn/Tailwind tokens */
-  --background: oklch(96% 0.006 245);
+  --background: oklch(95% 0.010 245);
   --foreground: oklch(14% 0.008 245);
-  --card: oklch(100% 0 0);
+  --card: oklch(100% 0.002 245);
   --card-foreground: oklch(14% 0.008 245);
-  --popover: oklch(100% 0 0);
+  --popover: oklch(100% 0.002 245);
   --popover-foreground: oklch(14% 0.008 245);
   --primary: oklch(55% 0.19 232);
   --primary-foreground: oklch(98% 0 0);
-  --secondary: oklch(94% 0.006 245);
+  --secondary: oklch(99% 0.006 245);
   --secondary-foreground: oklch(14% 0.008 245);
-  --muted: oklch(94% 0.006 245);
+  --muted: oklch(99% 0.006 245);
   --muted-foreground: oklch(58% 0.008 245);
   --destructive: oklch(55% 0.18 25);
-  --input: oklch(0% 0 0 / 10%);
+  --input: oklch(0% 0 0 / 12%);
   --ring: oklch(55% 0.19 232);
   --sidebar-foreground: oklch(14% 0.008 245);
   --sidebar-primary: oklch(55% 0.19 232);
   --sidebar-primary-foreground: oklch(98% 0 0);
-  --sidebar-accent: oklch(94% 0.006 245);
+  --sidebar-accent: oklch(99% 0.006 245);
   --sidebar-accent-foreground: oklch(14% 0.008 245);
-  --sidebar-border: oklch(0% 0 0 / 8%);
+  --sidebar-border: oklch(0% 0 0 / 12%);
   --sidebar-ring: oklch(55% 0.19 232);
 }
 
@@ -69,6 +70,7 @@
   --surf3:     oklch(21% 0.010 245);
   --border:    oklch(100% 0 0 / 7%);
   --border2:   oklch(100% 0 0 / 13%);
+  --shadow-card: none;
   --accent:    oklch(63% 0.19 232);
   --accentH:   oklch(68% 0.19 232);
   --accentD:   oklch(63% 0.19 232 / 18%);

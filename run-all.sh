@@ -179,11 +179,25 @@ set -m
 ok "Launching project services... (logs in $LOG_DIR/)"
 echo
 
-# Module D reads GITHUB_TOKEN from its environment for LLM features —
-# reuse the backend/.env value when the shell doesn't already export one.
-if [ -z "${GITHUB_TOKEN:-}" ] && [ -f "$ROOT/backend/.env" ]; then
-  GITHUB_TOKEN="$(grep '^GITHUB_TOKEN=' "$ROOT/backend/.env" | head -1 | cut -d= -f2-)"
-  [ -n "$GITHUB_TOKEN" ] && export GITHUB_TOKEN
+# Module D uses local Ollama. Override these variables only when using a
+# non-default Ollama host or a different locally installed model.
+export OLLAMA_BASE_URL="${OLLAMA_BASE_URL:-http://127.0.0.1:11434}"
+export OLLAMA_MODEL="${OLLAMA_MODEL:-gemma4:e2b}"
+if ! curl -fsS --max-time 2 "${OLLAMA_BASE_URL}/api/tags" >/dev/null 2>&1; then
+  if command -v ollama >/dev/null 2>&1; then
+    log "starting local Ollama -> $LOG_DIR/ollama.log"
+    ollama serve >>"$LOG_DIR/ollama.log" 2>&1 &
+    PIDS+=($!); NAMES+=("ollama")
+    for _ in {1..20}; do
+      curl -fsS --max-time 1 "${OLLAMA_BASE_URL}/api/tags" >/dev/null 2>&1 && break
+      sleep 0.5
+    done
+  else
+    warn "Ollama is not installed; Module D will use deterministic fallbacks"
+  fi
+fi
+if command -v ollama >/dev/null 2>&1 && ! ollama list 2>/dev/null | awk 'NR>1 {print $1}' | grep -qx "$OLLAMA_MODEL"; then
+  warn "Ollama model '$OLLAMA_MODEL' is not installed; run: ollama pull $OLLAMA_MODEL"
 fi
 
 # --- Python modules (start first so heavy ML imports warm up) -----------------

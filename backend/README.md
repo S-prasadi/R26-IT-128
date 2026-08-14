@@ -57,7 +57,7 @@ Frontend (:3000) ──JWT──▶ Express (:8081) ──▶ Supabase (Postgres
 | Group | Variables |
 |---|---|
 | Supabase | `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_ISSUER`, `SUPABASE_JWKS_URL` |
-| GitHub | `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` (OAuth app — callback `http://localhost:8081/api/github/callback`), `GITHUB_TOKEN` (GitHub Models token, shared with Module D via `run-all.sh`) |
+| GitHub | `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` (OAuth app — callback `http://localhost:8081/api/github/callback`) |
 | Python services | `PYTHON_MODULE_A_URL` … `PYTHON_MODULE_D_URL` (default `http://localhost:800{1,3,4}`) |
 | Misc | `PORT`, `CORS_ORIGIN`, `FRONTEND_URL`, `NODE_ENV` |
 
