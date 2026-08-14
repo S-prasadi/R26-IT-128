@@ -73,7 +73,7 @@ export const cvService = {
   async listCVs(userId: string) {
     const { data, error } = await supabaseAdmin
       .from("cvs")
-      .select("*")
+      .select("id, title, match_score, github_url, linkedin_url, created_at, updated_at")
       .eq("user_id", userId)
       .order("created_at", { ascending: false });
     if (error) throw new AppError(error.message, HTTP_STATUS.INTERNAL_SERVER_ERROR);
@@ -120,7 +120,7 @@ export const cvService = {
     const { data, error } = await supabaseAdmin
       .from("cvs")
       .insert({ user_id: userId, ...dto })
-      .select("*")
+      .select("id, title, match_score, github_url, linkedin_url, created_at")
       .single();
     if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
     progressService.updateProgress(userId, "cv", 10).catch(() => {});
@@ -133,7 +133,7 @@ export const cvService = {
       .update(dto)
       .eq("id", cvId)
       .eq("user_id", userId)
-      .select("*")
+      .select("id, title, match_score, updated_at")
       .single();
     if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
     if (!data) throw new AppError("CV not found", HTTP_STATUS.NOT_FOUND);
@@ -163,7 +163,7 @@ export const cvService = {
     return data ?? [];
   },
 
-  async uploadCV(cvId: string, userId: string, file: Express.Multer.File): Promise<{ file_url: string; extracted_text: string; sections: Record<string, unknown>; links: Record<string, string> }> {
+  async uploadCV(cvId: string, userId: string, file: Express.Multer.File): Promise<{ file_url: string; extracted_text: string; sections: Record<string, unknown>; links: Record<string, string>; extraction: Record<string, unknown> }> {
     const { data: cv } = await supabaseAdmin
       .from("cvs").select("id").eq("id", cvId).eq("user_id", userId).single();
     if (!cv) throw new AppError("CV not found", HTTP_STATUS.NOT_FOUND);
@@ -171,6 +171,7 @@ export const cvService = {
     const ext = file.mimetype === "application/pdf" ? "pdf"
                : file.mimetype === "image/png"      ? "png"
                : file.mimetype === "image/jpeg"     ? "jpg"
+               : file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ? "docx"
                : "txt";
     const storagePath = `${userId}/${cvId}.${ext}`;
 
@@ -180,16 +181,17 @@ export const cvService = {
     if (uploadError) throw new AppError(`Storage upload failed: ${uploadError.message}`, HTTP_STATUS.INTERNAL_SERVER_ERROR);
 
     const emptySkills = { languages: [], frameworks: [], tools: [], other: [] };
-    const emptyResult = { raw_text: "", sections: { summary: "", experience: [], education: [], skills: emptySkills, projects: [] } };
+    const emptyResult = { raw_text: "", sections: { summary: "", experience: [], education: [], skills: emptySkills, projects: [] }, extraction: { quality: 0, pages: [], unavailable: true } };
 
     const file_b64 = file.buffer.toString("base64");
-    let cvResult: { raw_text: string; sections: Record<string, unknown> };
+    let cvResult: { raw_text: string; sections: Record<string, unknown>; extraction?: Record<string, unknown> };
     try {
       cvResult = await callPython(
         `${pythonUrls.moduleD()}/extract-cv`,
         { file_b64, mimetype: file.mimetype },
-        emptyResult
-      ) as { raw_text: string; sections: Record<string, unknown> };
+        emptyResult,
+        { timeoutMs: 180000 }
+      ) as { raw_text: string; sections: Record<string, unknown>; extraction?: Record<string, unknown> };
     } catch (extractErr: any) {
       // Module D returned an HTTP error (e.g. 422 — could not extract text).
       // Still save the file; just return empty sections so the user can fill manually.
@@ -229,7 +231,7 @@ export const cvService = {
       .createSignedUrl(storagePath, 3600);
     const file_url = signedData?.signedUrl ?? storagePath;
 
-    return { file_url, extracted_text: cvResult.raw_text ?? "", sections, links };
+    return { file_url, extracted_text: cvResult.raw_text ?? "", sections, links, extraction: cvResult.extraction ?? {} };
   },
 
   /** Text for analysis: the CURRENT saved sections (so edits affect the score),

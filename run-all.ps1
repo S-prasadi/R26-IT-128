@@ -88,37 +88,6 @@ if ($PYTHON313) {
 # --- Install mode ---
 $MODE = if ($Install) { "force" } elseif ($NoInstall) { "skip" } else { "auto" }
 
-function Get-EnvValueFromFile([string]$envFile, [string]$key) {
-    if (-not (Test-Path $envFile)) { return $null }
-    $line = Get-Content $envFile | Where-Object { $_ -match "^$([regex]::Escape($key))=" } | Select-Object -First 1
-    if (-not $line) { return $null }
-    return ($line -split "=", 2)[1].Trim().Trim('"').Trim("'")
-}
-
-# --- GITHUB_TOKEN from backend/.env or python-module-d/.env ---
-$githubToken = $env:GITHUB_TOKEN
-$githubTokenSource = "process environment"
-if (-not $githubToken) {
-    foreach ($candidate in @(
-        (Join-Path $ROOT "backend\.env"),
-        (Join-Path $ROOT "python-module-d\.env")
-    )) {
-        $value = Get-EnvValueFromFile $candidate "GITHUB_TOKEN"
-        if ($value) {
-            $githubToken = $value
-            $githubTokenSource = $candidate
-            break
-        }
-    }
-}
-
-if ($githubToken) {
-    $env:GITHUB_TOKEN = $githubToken
-    Write-Host "[run-all] GITHUB_TOKEN loaded from $githubTokenSource" -ForegroundColor Green
-} else {
-    Write-Host "[run-all] WARNING: GITHUB_TOKEN not found in backend/.env or python-module-d/.env" -ForegroundColor Yellow
-}
-
 # --- Job tracking ---
 $JOBS = [System.Collections.Generic.List[System.Management.Automation.Job]]::new()
 
@@ -138,7 +107,7 @@ function Free-Port([int]$port, [string]$name) {
         }
 }
 
-function Start-Py([string]$name, [string]$relDir, [string]$venvRel, [string]$script, [int]$port, [string]$pyExeOverride = "") {
+function Start-Py([string]$name, [string]$relDir, [string]$venvRel, [string]$script, [int]$port, [string]$pyExeOverride = "", [hashtable]$extraEnv = @{}) {
     $dir   = Join-Path $ROOT $relDir
     if (-not (Test-Path $dir)) { clog "skip $name - $relDir not found" "Yellow"; return }
 
@@ -170,16 +139,17 @@ function Start-Py([string]$name, [string]$relDir, [string]$venvRel, [string]$scr
     Free-Port $port $name
     clog "starting $name  ->  http://localhost:$port"
 
-    $tok = $env:GITHUB_TOKEN
     $j = Start-Job -Name $name -ScriptBlock {
-        param($exe, $wd, $sc, $lf, $tok)
-        if ($tok) { $env:GITHUB_TOKEN = $tok }
+        param($exe, $wd, $sc, $lf, $extraEnv)
+        foreach ($key in $extraEnv.Keys) {
+            Set-Item -Path "env:$key" -Value $extraEnv[$key]
+        }
         # Force UTF-8 so any Unicode output (e.g. EasyOCR progress bar) doesn't crash on cp1252
         $env:PYTHONUTF8 = "1"
         $env:PYTHONIOENCODING = "utf-8"
         Set-Location $wd
         & $exe $sc *>> $lf
-    } -ArgumentList $pyExe, $dir, $script, $log, $tok
+    } -ArgumentList $pyExe, $dir, $script, $log, $extraEnv
 
     $JOBS.Add($j)
 }
@@ -206,6 +176,46 @@ function Start-Node([string]$name, [string]$relDir, [int]$port, [string]$cmdStr 
     $JOBS.Add($j)
 }
 
+# --- Ollama (Module D) ---
+# Module D uses local Ollama. Override these variables only when using a
+# non-default Ollama host or a different locally installed model.
+if (-not $env:OLLAMA_BASE_URL) { $env:OLLAMA_BASE_URL = "http://127.0.0.1:11434" }
+if (-not $env:OLLAMA_MODEL)    { $env:OLLAMA_MODEL    = "gemma4:e2b" }
+
+function Test-OllamaUp {
+    try {
+        Invoke-RestMethod -Uri "$($env:OLLAMA_BASE_URL)/api/tags" -TimeoutSec 2 -ErrorAction Stop | Out-Null
+        return $true
+    } catch { return $false }
+}
+
+if (-not (Test-OllamaUp)) {
+    $ollamaCmd = Get-Command ollama -ErrorAction SilentlyContinue
+    if ($ollamaCmd) {
+        $ollamaLog = Join-Path $LOGDIR "ollama.log"
+        clog "starting local Ollama  ->  $ollamaLog"
+        $ollamaJob = Start-Job -Name "ollama" -ScriptBlock {
+            param($exe, $lf)
+            & $exe serve *>> $lf
+        } -ArgumentList $ollamaCmd.Source, $ollamaLog
+        $JOBS.Add($ollamaJob)
+
+        for ($i = 0; $i -lt 20; $i++) {
+            if (Test-OllamaUp) { break }
+            Start-Sleep -Milliseconds 500
+        }
+    } else {
+        clog "Ollama is not installed; Module D will use deterministic fallbacks" "Yellow"
+    }
+}
+
+if (Get-Command ollama -ErrorAction SilentlyContinue) {
+    $installedModels = & ollama list 2>$null | Select-Object -Skip 1 | ForEach-Object { ($_ -split '\s+')[0] }
+    if ($installedModels -notcontains $env:OLLAMA_MODEL) {
+        clog "Ollama model '$($env:OLLAMA_MODEL)' is not installed; run: ollama pull $($env:OLLAMA_MODEL)" "Yellow"
+    }
+}
+
 # --- Launch services ---
 Write-Host ""
 clog "Launching all services...  (logs -> $LOGDIR\)" "Green"
@@ -217,7 +227,8 @@ Write-Host ""
 Start-Py  "module-a"          "python-module-a"         "venv" "api\app.py"    8001 $PYTHON
 Start-Py  "module-b"          "python-module-b"         "venv" "dashboard.py"  8002 $PYTHON313
 Start-Py  "module-c-backend"  "python-module-c\backend" "venv" "app.py"        8003 $PYTHON313
-Start-Py  "module-d"          "python-module-d"         "venv" "main.py"       8004 $PYTHON313
+Start-Py  "module-d"          "python-module-d"         "venv" "main.py"       8004 $PYTHON313 `
+    @{ OLLAMA_BASE_URL = $env:OLLAMA_BASE_URL; OLLAMA_MODEL = $env:OLLAMA_MODEL }
 
 # Node services
 Start-Node "backend"           "backend"                  8081
@@ -237,17 +248,27 @@ Write-Host "  Module C backend (Flask)  http://localhost:8003"
 Write-Host "  Module C frontend (Vite)  http://localhost:5173"
 Write-Host "  Module D (FastAPI)        http://localhost:8004"
 Write-Host ""
-Write-Host "  Live logs:  Get-Content '$LOGDIR\*.log' -Wait"
-Write-Host "  Stop all:   press Ctrl+C"
+Write-Host "  Live logs streaming below.  Stop all:  press Ctrl+C"
+Write-Host "  (or manually:  Get-Content '$LOGDIR\*.log' -Wait)"
 Write-Host ""
 
+# --- Stream all logs so boot output is visible in one place ---
+$logTailJob = Start-Job -Name "log-tail" -ScriptBlock {
+    param($logDir)
+    Get-Content -Path (Join-Path $logDir "*.log") -Wait -Tail 0
+} -ArgumentList $LOGDIR
+$JOBS.Add($logTailJob)
+
 # --- Keep alive + monitor jobs ---
+$reportedCrashes = @{}
 try {
     while ($true) {
-        Start-Sleep -Seconds 3
+        Start-Sleep -Milliseconds 500
+        Receive-Job $logTailJob -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_ }
         foreach ($j in @($JOBS)) {
-            if ($j.State -eq "Failed") {
+            if ($j.Name -ne "log-tail" -and $j.State -eq "Failed" -and -not $reportedCrashes.ContainsKey($j.Id)) {
                 clog "job '$($j.Name)' crashed - check $LOGDIR\$($j.Name).log" "Red"
+                $reportedCrashes[$j.Id] = $true
             }
         }
     }

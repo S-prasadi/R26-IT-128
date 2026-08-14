@@ -330,6 +330,7 @@ export function PiqStatCard({ label, value, sub, icon, color = "var(--accent)", 
         display: "flex",
         flexDirection: "column",
         gap: 12,
+        boxShadow: "var(--shadow-card)",
       }}
     >
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>

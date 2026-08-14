@@ -19,6 +19,68 @@ const mockQuestions = (topic: string, difficulty: number) => ({
   ],
 });
 
+// Curated questions for the "Try Demo" flow — real, specific interview questions
+// (not templated boilerplate) so a demo session showcases the product properly.
+// Kept deliberately short-answer (one sentence, factual/definitional) rather than the
+// open-ended behavioral/situational style used elsewhere: those require long spoken
+// answers, which are the ones most likely to get mangled by browser speech-to-text
+// and unfairly tank the demo score. Each topic still ramps easy (1) to hard (5) by
+// concept difficulty — so the form's difficulty slider is ignored here.
+// Used only when the client explicitly opts into demo mode; never a fallback.
+const DEMO_QUESTIONS: Record<string, Array<{ text: string; type: "technical" | "behavioral" | "situational"; difficulty: number }>> = {
+  "Frontend Development": [
+    { text: "What does CSS stand for?", type: "technical", difficulty: 1 },
+    { text: "What's the difference between `let` and `var` in JavaScript?", type: "technical", difficulty: 2 },
+    { text: "What is the CSS Box Model?", type: "technical", difficulty: 3 },
+    { text: "What is the Virtual DOM?", type: "technical", difficulty: 4 },
+    { text: "What is CSS specificity?", type: "technical", difficulty: 5 },
+  ],
+  "Backend Development": [
+    { text: "What does API stand for?", type: "technical", difficulty: 1 },
+    { text: "What's the difference between a `GET` and a `POST` request?", type: "technical", difficulty: 2 },
+    { text: "What is a REST API?", type: "technical", difficulty: 3 },
+    { text: "What is database indexing used for?", type: "technical", difficulty: 4 },
+    { text: "What does it mean for an API endpoint to be idempotent?", type: "technical", difficulty: 5 },
+  ],
+  "DevOps": [
+    { text: "What does CI/CD stand for?", type: "technical", difficulty: 1 },
+    { text: "What's the difference between a Docker image and a Docker container?", type: "technical", difficulty: 2 },
+    { text: "What is a load balancer?", type: "technical", difficulty: 3 },
+    { text: "What's the difference between horizontal and vertical scaling?", type: "technical", difficulty: 4 },
+    { text: "What is Infrastructure as Code?", type: "technical", difficulty: 5 },
+  ],
+  "Data Science": [
+    { text: "What does ML stand for?", type: "technical", difficulty: 1 },
+    { text: "What's the difference between supervised and unsupervised learning?", type: "technical", difficulty: 2 },
+    { text: "What is overfitting in a machine learning model?", type: "technical", difficulty: 3 },
+    { text: "What's the difference between precision and recall?", type: "technical", difficulty: 4 },
+    { text: "What is a confusion matrix used for?", type: "technical", difficulty: 5 },
+  ],
+  "System Design": [
+    { text: "What is a database?", type: "technical", difficulty: 1 },
+    { text: "What's the difference between a SQL and a NoSQL database?", type: "technical", difficulty: 2 },
+    { text: "What is caching used for in a system?", type: "technical", difficulty: 3 },
+    { text: "What is database sharding?", type: "technical", difficulty: 4 },
+    { text: "What is eventual consistency?", type: "technical", difficulty: 5 },
+  ],
+  "Full-Stack Development": [
+    { text: "What's the difference between the frontend and the backend of a web application?", type: "technical", difficulty: 1 },
+    { text: "What's the difference between authentication and authorization?", type: "technical", difficulty: 2 },
+    { text: "What is an API endpoint?", type: "technical", difficulty: 3 },
+    { text: "What is CORS?", type: "technical", difficulty: 4 },
+    { text: "What is server-side rendering?", type: "technical", difficulty: 5 },
+  ],
+};
+
+const demoQuestions = (topic: string) => ({
+  questions: (DEMO_QUESTIONS[topic] ?? DEMO_QUESTIONS["Full-Stack Development"]!).map((q, i) => ({
+    id: `demo-${i}`,
+    text: q.text,
+    type: q.type,
+    difficulty: q.difficulty,
+  })),
+});
+
 const MOCK_RESPONSE_ANALYSIS = {
   score: 72,
   feedback: "Good understanding demonstrated. Try to be more specific with concrete examples and measurable outcomes.",
@@ -34,7 +96,7 @@ export const interviewService = {
   async listSessions(userId: string) {
     const { data, error } = await supabaseAdmin
       .from("interview_sessions")
-      .select("id, topic, difficulty, status, duration_seconds, overall_score, engagement_score, started_at, ended_at, created_at")
+      .select("id, topic, difficulty, status, duration_seconds, overall_score, engagement_score, started_at, ended_at, created_at, is_demo, emotion_sensitivity")
       .eq("user_id", userId)
       .order("created_at", { ascending: false });
     if (error) throw new AppError(error.message, HTTP_STATUS.INTERNAL_SERVER_ERROR);
@@ -77,21 +139,25 @@ export const interviewService = {
     const { data: session, error } = await supabaseAdmin
       .from("interview_sessions")
       .insert({
-        user_id:    userId,
-        topic:      dto.topic,
-        difficulty: dto.difficulty,
-        status:     "in_progress",
-        started_at: new Date().toISOString(),
+        user_id:             userId,
+        topic:               dto.topic,
+        difficulty:          dto.difficulty,
+        status:              "in_progress",
+        started_at:          new Date().toISOString(),
+        is_demo:             dto.demo ?? false,
+        emotion_sensitivity: dto.emotion_sensitivity ?? 50,
       })
-      .select("id, topic, difficulty, status, started_at, created_at")
+      .select("id, topic, difficulty, status, started_at, created_at, is_demo, emotion_sensitivity")
       .single();
     if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
 
-    const generated = await callPython(
-      `${pythonUrls.moduleD()}/generate-questions`,
-      { session_id: session.id, topic: dto.topic, difficulty: dto.difficulty, skills: dto.skills ?? [], document_text: dto.document_text ?? "" },
-      mockQuestions(dto.topic, dto.difficulty)
-    ) as { questions: Array<{ id: string; text: string; type: string; difficulty: number }> };
+    const generated = dto.demo
+      ? demoQuestions(dto.topic)
+      : await callPython(
+          `${pythonUrls.moduleD()}/generate-questions`,
+          { session_id: session.id, topic: dto.topic, difficulty: dto.difficulty, skills: dto.skills ?? [], document_text: dto.document_text ?? "" },
+          mockQuestions(dto.topic, dto.difficulty)
+        ) as { questions: Array<{ id: string; text: string; type: string; difficulty: number }> };
 
     const questionRows = generated.questions.map((q, i) => ({
       session_id:    session.id,
@@ -151,11 +217,11 @@ export const interviewService = {
     return data;
   },
 
-  async predictEmotion(frame: string) {
+  async predictEmotion(frame: string, sensitivity: number) {
     // Proxy a single webcam frame to Module D so the browser never talks to Python directly.
     return callPython(
       `${pythonUrls.moduleD()}/predict`,
-      { frame },
+      { frame, sensitivity },
       { face: false, interview_state: "Neutral", confidence: 0, probs: {}, bbox: null }
     );
   },

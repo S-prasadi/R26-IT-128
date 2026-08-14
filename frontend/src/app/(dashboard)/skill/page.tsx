@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { PiqBtn, PiqSpinner, PiqStatCard } from "@/components/piq/primitives";
-import { Icon } from "@/components/piq/icon";
 import { PageHeader } from "@/components/common/PageHeader";
 import { skillService } from "@/services/skill.service";
 import { githubService } from "@/services/github.service";
@@ -34,6 +33,10 @@ export default function SkillPage() {
   const [showAddModal, setShowAddModal]       = useState(false);
   const [addSkillId, setAddSkillId]           = useState("");
   const [addProf, setAddProf]                 = useState<"Beginner" | "Intermediate" | "Advanced">("Beginner");
+  const [assessmentSkillId, setAssessmentSkillId] = useState("");
+  const [assessmentScore, setAssessmentScore] = useState("");
+  const [assessmentNotes, setAssessmentNotes] = useState("");
+  const [assessmentSaving, setAssessmentSaving] = useState(false);
   const [githubStatus, setGithubStatus]       = useState<{ connected: boolean; github_username?: string } | null>(null);
   const [githubVerifying, setGithubVerifying] = useState(false);
 
@@ -116,8 +119,9 @@ export default function SkillPage() {
       setShowAddModal(false);
       setAddSkillId("");
       toast.success("Skill added");
-    } catch (e: any) {
-      toast.error(e?.response?.data?.message ?? "Failed to add skill");
+    } catch (error: unknown) {
+      const apiError = error as { response?: { data?: { message?: string } } };
+      toast.error(apiError.response?.data?.message ?? "Failed to add skill");
     }
   }
 
@@ -153,6 +157,46 @@ export default function SkillPage() {
       toast.error("Failed to run forecast");
     } finally {
       setForecastLoading(false);
+    }
+  }
+
+  async function handleLogAssessment(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const score = Number(assessmentScore);
+    if (!assessmentSkillId) {
+      toast.error("Select a skill to assess");
+      return;
+    }
+    if (assessmentScore.trim() === "" || !Number.isFinite(score) || score < 0 || score > 100) {
+      toast.error("Score must be between 0 and 100");
+      return;
+    }
+
+    setAssessmentSaving(true);
+    try {
+      const res = await skillService.logAssessment(assessmentSkillId, {
+        score,
+        ...(assessmentNotes.trim() ? { notes: assessmentNotes.trim() } : {}),
+      });
+      const selectedSkill = masterSkills.find((skill) => skill.id === assessmentSkillId);
+      const saved = res.data.data;
+      setAssessments((prev) => [
+        {
+          ...saved,
+          skills: selectedSkill
+            ? { name: selectedSkill.name, category: selectedSkill.category }
+            : undefined,
+        },
+        ...prev,
+      ]);
+      setAssessmentScore("");
+      setAssessmentNotes("");
+      toast.success("Assessment logged");
+    } catch (error: unknown) {
+      const apiError = error as { response?: { data?: { message?: string } } };
+      toast.error(apiError.response?.data?.message ?? "Failed to log assessment");
+    } finally {
+      setAssessmentSaving(false);
     }
   }
 
@@ -423,8 +467,67 @@ export default function SkillPage() {
           {/* Tab 3: Assessments */}
           {tab === "Assessments" && (
             <div>
+              <form
+                onSubmit={handleLogAssessment}
+                style={{ background: "var(--surf2)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: 16, marginBottom: 20 }}
+              >
+                <SectionLabel>Log a Self-Assessment</SectionLabel>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 10, alignItems: "end" }}>
+                  <label style={{ display: "flex", flexDirection: "column", gap: 5, fontSize: 12, color: "var(--text2)" }}>
+                    Skill
+                    <select
+                      value={assessmentSkillId}
+                      onChange={(e) => setAssessmentSkillId(e.target.value)}
+                      required
+                      disabled={assessmentSaving || userSkills.length === 0}
+                      style={{ padding: "8px 10px", minHeight: 36, borderRadius: "var(--radius)", border: "1px solid var(--border2)", background: "var(--surf)", color: "var(--text)", fontSize: 14 }}
+                    >
+                      <option value="">Select a tracked skill…</option>
+                      {userSkills.map((userSkill) => (
+                        <option key={userSkill.skill_id} value={userSkill.skill_id}>
+                          {userSkill.skills?.name ?? "Unknown skill"}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label style={{ display: "flex", flexDirection: "column", gap: 5, fontSize: 12, color: "var(--text2)" }}>
+                    Score (0–100)
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      step="0.1"
+                      value={assessmentScore}
+                      onChange={(e) => setAssessmentScore(e.target.value)}
+                      required
+                      disabled={assessmentSaving || userSkills.length === 0}
+                      placeholder="85"
+                      style={{ padding: "8px 10px", minHeight: 36, borderRadius: "var(--radius)", border: "1px solid var(--border2)", background: "var(--surf)", color: "var(--text)", fontSize: 14 }}
+                    />
+                  </label>
+                  <label style={{ display: "flex", flexDirection: "column", gap: 5, fontSize: 12, color: "var(--text2)" }}>
+                    Notes (optional)
+                    <input
+                      type="text"
+                      value={assessmentNotes}
+                      onChange={(e) => setAssessmentNotes(e.target.value)}
+                      disabled={assessmentSaving || userSkills.length === 0}
+                      placeholder="What did you assess?"
+                      style={{ padding: "8px 10px", minHeight: 36, borderRadius: "var(--radius)", border: "1px solid var(--border2)", background: "var(--surf)", color: "var(--text)", fontSize: 14 }}
+                    />
+                  </label>
+                  <PiqBtn type="submit" disabled={assessmentSaving || userSkills.length === 0}>
+                    {assessmentSaving ? "Saving…" : "Log Assessment"}
+                  </PiqBtn>
+                </div>
+                {userSkills.length === 0 && (
+                  <p style={{ margin: "10px 0 0", fontSize: 12, color: "var(--amber)" }}>
+                    Add a skill to your profile before logging an assessment.
+                  </p>
+                )}
+              </form>
               {assessments.length === 0 ? (
-                <EmptyState text="No assessments yet. These are logged automatically after CV analysis or skill tests." />
+                <EmptyState text="No assessments yet. Use the form above to log your first score." />
               ) : (
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
                   <thead>

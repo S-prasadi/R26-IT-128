@@ -8,7 +8,7 @@ export const interviewService = {
   getSession: (id: string) =>
     apiClient.get<ApiResponse<InterviewSession>>(`/interviews/${id}`),
 
-  createSession: (data: { topic: string; difficulty: number; skills?: string[]; document_text?: string }) =>
+  createSession: (data: { topic: string; difficulty: number; skills?: string[]; document_text?: string; demo?: boolean; emotion_sensitivity?: number }) =>
     apiClient.post<ApiResponse<InterviewSession>>("/interviews", data),
 
   endSession: (id: string, data: { overall_score?: number; engagement_score?: number; duration_seconds?: number }) =>
@@ -17,10 +17,10 @@ export const interviewService = {
   submitResponse: (sessionId: string, data: { question_id: string; response_text?: string; emotion_data?: object }) =>
     apiClient.post<ApiResponse<InterviewResponse>>(`/interviews/${sessionId}/responses`, data),
 
-  predictEmotion: (frame: string) =>
+  predictEmotion: (frame: string, sensitivity: number) =>
     apiClient.post<ApiResponse<{ face: boolean; interview_state: string; confidence: number; probs: Record<string, number>; bbox: number[] | null }>>(
       "/interviews/predict-emotion",
-      { frame }
+      { frame, sensitivity }
     ),
 
   extractDocument: async (file: File): Promise<{ extracted_text: string }> => {

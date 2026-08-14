@@ -33,7 +33,7 @@ New here? Read [the project overview](00-project-overview.md) first. This docume
 
 The user starts a practice interview on a topic (say "React") at a chosen difficulty. Module D then:
 
-- **generates 5 interview questions** using an AI model (GPT-4o mini via GitHub Models),
+- **generates 5 interview questions** using a local Ollama model (`gemma4:e2b` by default),
 - can **read an uploaded document** (a job description or resume) and build the questions around it,
 - **scores each answer against the actual question** out of 100 — with written feedback, a **five-criterion rubric** (relevance, technical accuracy, depth, structure, communication), strengths/improvements, and a model answer, and
 - watches the **webcam** to detect the user's emotion live, mapping facial expressions to interview states (Confident, Nervous, Confused, Stressed, Engaged, Neutral), then computes an **engagement score deterministically from those real emotions**.
@@ -292,7 +292,7 @@ All errors return `{ success: false, message }`.
 - **Authorization:** `interviews:read` to view, `interviews:write` to create/answer/end.
 - **Data isolation:** sessions and responses are filtered by `user_id`; `submitResponse()` double-checks the question belongs to *your* session before saving.
 - **The webcam call is authenticated:** frames go through `POST /api/interviews/predict-emotion` (login + `interviews:write`), not a hardcoded `localhost:8004` URL in the browser. They are forwarded to Module D, classified, and **not stored** — used purely for the live chip and the engagement timeline.
-- **No hardcoded AI token:** Module D reads `GITHUB_TOKEN` from `python-module-d/.env` (via `load_dotenv`) or the environment — the previously committed token has been removed, and `.env` is gitignored (see `.env.example`).
+- **No cloud AI token:** Module D calls a local Ollama instance (`OLLAMA_BASE_URL`, default `http://127.0.0.1:11434`) — CV/interview data never leaves the machine, and there's no API key to leak. `python-module-d/.env` (gitignored) can override `OLLAMA_BASE_URL`/`OLLAMA_MODEL` if needed.
 - **Document size guard:** `document_text` is capped at 10,000 characters before being sent to the AI, and uploads are capped at 10 MB.
 - **Input safety:** Zod validation + parameterised Supabase queries; AI-returned scores are clamped to 0–100 server-side (in Module D) so a bad reply can't skew totals.
 
@@ -304,13 +304,13 @@ Module D is unusually robust:
 
 - If **Module D is off** when starting, the backend returns **mock questions** built from your topic (e.g. *"Explain your experience with React development."*).
 - If **Module D is unreachable** when scoring, the backend uses its `MOCK_RESPONSE_ANALYSIS` fallback so you still get a score + feedback.
-- If **Module D is reachable but the LLM fails or no token is set**, Module D itself returns a **deterministic heuristic score** (length-based) with an "AI unavailable" note — it does **not** return a 500. Either way the engagement number stays real (it comes from your webcam, not the LLM).
+- If **Module D is reachable but Ollama is stopped or the model isn't pulled**, Module D itself returns a **deterministic heuristic score** (length-based) with an "AI unavailable" note — it does **not** return a 500. Either way the engagement number stays real (it comes from your webcam, not the LLM).
 - The **live emotion** goes through the backend proxy — if Module D is off or the camera is blocked, the proxy returns a neutral fallback and the chip keeps its last value.
-- **No GitHub token?** Module D still boots (it no longer crashes on a missing token) and every LLM endpoint degrades to a fallback. Emotion detection works fully offline (it doesn't use the GitHub Models API at all).
+- **Ollama not running?** Module D still boots (it never depended on a token) and every LLM endpoint degrades to a fallback. Emotion detection works fully offline (it doesn't call Ollama at all).
 
 The mock data lives in `mockQuestions()` / `MOCK_RESPONSE_ANALYSIS` (backend service) and `_scoring_fallback()` / `_heuristic_score()` (Module D `main.py`).
 
-> Tip: to enable real AI scoring, copy `python-module-d/.env.example` to `.env` and set a valid `GITHUB_TOKEN`. If questions look generic (not tailored) or feedback says "AI unavailable", the token is missing or invalid. If the webcam chip never changes, check the browser gave camera permission.
+> Tip: to enable real AI scoring, install [Ollama](https://ollama.com), run `ollama serve`, and pull the default model with `ollama pull gemma4:e2b`. If questions look generic (not tailored) or feedback says "AI unavailable", Ollama isn't running or the model isn't pulled. If the webcam chip never changes, check the browser gave camera permission.
 
 ---
 
@@ -396,5 +396,5 @@ User      Interview Page     Backend           Module D (:8004)    Database
 - **Backend logic (session, questions, scoring):** [backend/src/services/interview.service.ts](../../backend/src/services/interview.service.ts) — see `createSession()`, `submitResponse()` (forwards question context + stores `analysis`), `predictEmotion()` (proxy), `endSession()` (computes totals)
 - **Validation rules:** [backend/src/validations/interview.validation.ts](../../backend/src/validations/interview.validation.ts) — incl. `predictEmotionSchema`
 - **The AI brain:** [python-module-d/main.py](../../python-module-d/main.py) — `/generate-questions`, `/analyze-response` (rubric + JSON mode + `_engagement_summary()`), `/extract-ocr`, `/extract-cv`, `/predict`, `/interview`
-- **AI token config:** [python-module-d/.env.example](../../python-module-d/.env.example) (copy to `.env`, set `GITHUB_TOKEN`)
+- **AI config:** `python-module-d/.env` (gitignored, optional) — override `OLLAMA_BASE_URL` / `OLLAMA_MODEL` there or in the shell environment
 - **Database tables:** [0014_interviews.sql](../../backend/supabase/migrations/0014_interviews.sql), [0021_interview_response_analysis.sql](../../backend/supabase/migrations/0021_interview_response_analysis.sql)

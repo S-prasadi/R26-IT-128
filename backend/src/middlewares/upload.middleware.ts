@@ -8,6 +8,7 @@ const ALLOWED_MIMETYPES = [
   "image/png",
   "image/jpeg",
   "text/plain",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 
 const storage = multer.memoryStorage();
@@ -18,7 +19,7 @@ const fileFilter: multer.Options["fileFilter"] = (_req, file, cb) => {
     file.mimetype = normalizedMime;
     cb(null, true);
   } else {
-    cb(new AppError("Unsupported file type. Upload a PDF, PNG, JPG, or TXT file.", HTTP_STATUS.BAD_REQUEST));
+    cb(new AppError("Unsupported file type. Upload a PDF, DOCX, PNG, JPG, or TXT file.", HTTP_STATUS.BAD_REQUEST));
   }
 };
 

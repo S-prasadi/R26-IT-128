@@ -28,7 +28,7 @@ export const cvService = {
   uploadCV: (id: string, file: File) => {
     const form = new FormData();
     form.append("file", file);
-    return apiClient.post<ApiResponse<{ file_url: string; extracted_text: string; sections: Partial<CVSectionContent>; links: { github?: string; linkedin?: string; portfolio?: string; email?: string; phone?: string } }>>(
+    return apiClient.post<ApiResponse<{ file_url: string; extracted_text: string; sections: Partial<CVSectionContent>; links: { github?: string; linkedin?: string; portfolio?: string; email?: string; phone?: string }; extraction?: { quality?: number; characters?: number; pages?: Array<{ page: number; method: string; confidence: number; quality: number }> } }>>(
       `/cv/${id}/upload`,
       form,
       { headers: { "Content-Type": "multipart/form-data" } }
