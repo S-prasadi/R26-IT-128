@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { PiqBtn, PiqSpinner, PiqStatCard } from "@/components/piq/primitives";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -41,7 +42,7 @@ export default function CVPage() {
   const [lastUploadedFile, setLastUploadedFile] = useState<File | null>(null);
   const [extractionPreview, setExtractionPreview] = useState<{
     show: boolean; warning: boolean;
-    stats: { experience: number; education: number; skills: number; projects: number; hasSummary: boolean; github: string; linkedin: string; email: string; phone: string; portfolio: string };
+    stats: { experience: number; education: number; skills: number; projects: number; hasSummary: boolean; github: string; linkedin: string; email: string; phone: string; portfolio: string; extractionQuality: number; extractionMethod: string };
   } | null>(null);
 
   const [projVerification, setProjVerification] = useState<CVProjectVerification | null>(null);
@@ -164,7 +165,7 @@ export default function CVPage() {
     setUploading(true);
     try {
       const res = await cvService.uploadCV(selected.id, file);
-      const { file_url, sections: parsedSections, links } = res.data.data;
+      const { file_url, sections: parsedSections, links, extraction } = res.data.data;
       setSelected((prev) => prev ? { ...prev, file_url } : prev);
 
       // Auto-fill links extracted from the CV
@@ -197,6 +198,8 @@ export default function CVPage() {
         email:      links?.email    ?? "",
         phone:      links?.phone    ?? "",
         portfolio:  links?.portfolio ?? "",
+        extractionQuality: extraction?.quality ?? 0,
+        extractionMethod: Array.from(new Set((extraction?.pages ?? []).map((p) => p.method))).join(", "),
       };
       const isEmpty = stats.experience === 0 && stats.education === 0 && stats.skills === 0 && stats.projects === 0 && !stats.hasSummary;
       setExtractionPreview({ show: true, warning: isEmpty, stats });
@@ -260,8 +263,8 @@ export default function CVPage() {
       const res = await cvService.verifyProjects(selected.id);
       setProjVerification(res.data.data);
       toast.success("Projects checked against your GitHub");
-    } catch (e: any) {
-      toast.error(e?.response?.data?.message ?? "Project verification failed");
+    } catch (e: unknown) {
+      toast.error((e as AxiosError<{ message?: string }>)?.response?.data?.message ?? "Project verification failed");
     } finally {
       setVerifying(false);
     }
@@ -283,8 +286,8 @@ export default function CVPage() {
       setJobText("");
       setJobTitle("");
       toast.success("Job post compared against your CV");
-    } catch (e: any) {
-      toast.error(e?.response?.data?.message ?? "Job post comparison failed");
+    } catch (e: unknown) {
+      toast.error((e as AxiosError<{ message?: string }>)?.response?.data?.message ?? "Job post comparison failed");
     } finally {
       setComparing(false);
     }
@@ -340,14 +343,18 @@ export default function CVPage() {
     summary:    structuredSections.summary.trim().length > 0,
   };
 
+  const bestMatch      = cvList.length > 0 ? Math.max(...cvList.map((c) => c.match_score ?? 0)) : 0;
+  const analysedCount = cvList.filter((c) => c.match_score != null).length;
+
   return (
     <div style={{ maxWidth: 1000, margin: "0 auto" }}>
       <PageHeader title="CV & Proficiency" description="Build, optimise, and analyse your CV against real job postings" />
 
       {!loading && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 14, marginBottom: 24 }}>
-          <PiqStatCard label="CVs Created" value={cvList.length} icon="cv" color="var(--accent)" sub="Total CVs" />
-          <PiqStatCard label="With Insights" value={cvList.filter((c) => c.match_score != null || c.bert_skills?.length || c.github_verified_skills?.length).length} icon="check" color="var(--amber)" sub="Ready for review" />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 24 }}>
+          <PiqStatCard label="CVs Created"   value={cvList.length}                    icon="cv"    color="var(--accent)" sub="Total CVs" />
+          <PiqStatCard label="Best Match Score" value={bestMatch > 0 ? bestMatch : "—"} icon="trend" color="var(--teal)" sub="Top role match" />
+          <PiqStatCard label="Analysed CVs"   value={analysedCount}                   icon="check" color="var(--amber)"  sub="With feedback" />
         </div>
       )}
 
@@ -407,7 +414,7 @@ export default function CVPage() {
                     <PiqBtn variant="outline" size="sm" disabled={uploading} onClick={() => (document.getElementById("cv-file-input") as HTMLInputElement | null)?.click()}>
                       {uploading ? "Uploading…" : "Upload CV"}
                     </PiqBtn>
-                    <input id="cv-file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.txt" style={{ display: "none" }} onChange={handleUploadCV} />
+                    <input id="cv-file-input" type="file" accept=".pdf,.docx,.png,.jpg,.jpeg,.txt" style={{ display: "none" }} onChange={handleUploadCV} />
                   </label>
                   <PiqBtn variant="secondary" size="sm" onClick={handleSaveCV} disabled={saving}>{saving ? "Saving…" : "Save"}</PiqBtn>
                   <PiqBtn size="sm" onClick={handleAnalyse} disabled={analysing}>{analysing ? "Analysing…" : "Analyse CV"}</PiqBtn>
@@ -432,7 +439,9 @@ export default function CVPage() {
                           {extractionPreview.stats.skills     > 0 && ` · ${extractionPreview.stats.skills} skills`}
                           {extractionPreview.stats.projects   > 0 && ` · ${extractionPreview.stats.projects} project${extractionPreview.stats.projects === 1 ? "" : "s"}`}
                           {extractionPreview.stats.hasSummary  && " · summary"}
+                          {extractionPreview.stats.extractionQuality > 0 && ` · extraction quality ${Math.round(extractionPreview.stats.extractionQuality)}%`}
                         </span>
+                        {extractionPreview.stats.extractionMethod && <span style={{ color: "var(--text3)", fontSize: 11, marginTop: 4, display: "block" }}>Method: {extractionPreview.stats.extractionMethod}</span>}
                         {(extractionPreview.stats.github || extractionPreview.stats.linkedin || extractionPreview.stats.email || extractionPreview.stats.phone || extractionPreview.stats.portfolio) && (
                           <div style={{ marginTop: 6, display: "flex", gap: 10, flexWrap: "wrap" }}>
                             {extractionPreview.stats.github    && <span style={{ fontSize: 12, color: "var(--teal)" }}>GitHub ✓</span>}
@@ -553,7 +562,7 @@ export default function CVPage() {
 
               {!analysing && !analysis && (
                 <div style={{ textAlign: "center", padding: "24px", color: "var(--text2)", marginBottom: 16 }}>
-                  <p style={{ fontSize: 14, margin: 0 }}>Go to CV Editor and click "Analyse CV" to run Module C analysis.</p>
+                  <p style={{ fontSize: 14, margin: 0 }}>Go to CV Editor and select Analyse CV to run Module C analysis.</p>
                   <div style={{ marginTop: 16 }}><PiqBtn variant="secondary" onClick={() => setStep("CV Editor")}>← Back to Editor</PiqBtn></div>
                 </div>
               )}
@@ -727,7 +736,7 @@ export default function CVPage() {
                       </PiqBtn>
                       <label style={{ fontSize: 13, color: "var(--accent)", cursor: "pointer" }}>
                         📎 or upload job post file
-                        <input type="file" accept=".pdf,.png,.jpg,.jpeg,.txt" style={{ display: "none" }}
+                        <input type="file" accept=".pdf,.docx,.png,.jpg,.jpeg,.txt" style={{ display: "none" }}
                           onChange={(e) => { const f = e.target.files?.[0]; if (f) handleAttachJobPost(f); e.target.value = ""; }} />
                       </label>
                     </div>

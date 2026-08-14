@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Project** | PathwayIQ (R26-IT-128) |
-| **Stack** | Python · FastAPI · OpenAI SDK (GitHub Models, gpt-4o-mini) · TensorFlow/Keras · OpenCV · EasyOCR |
+| **Stack** | Python · FastAPI · local Ollama (`gemma4:e2b`) · TensorFlow/Keras · OpenCV · EasyOCR |
 | **Port** | `8004` |
 | **Entry point** | `main.py` |
 
@@ -15,13 +15,14 @@ Module D is the AI workhorse of the platform. It powers the **Interview Simulato
 
 | Variable | Purpose | Default |
 |---|---|---|
-| `GITHUB_TOKEN` | GitHub Models API token for all LLM features. **Never hardcode it** — without it, every LLM endpoint degrades to a deterministic fallback instead of failing. | *(unset → fallbacks)* |
+| `OLLAMA_BASE_URL` | Local Ollama native API endpoint. | `http://127.0.0.1:11434` |
+| `OLLAMA_MODEL` | Locally installed model used for JSON extraction and interview features. | `gemma4:e2b` |
 | `FACE_SCALE_FACTOR` | Haar-cascade pyramid step; lower = finds more faces | `1.1` |
 | `FACE_MIN_NEIGHBORS` | Detection strictness; lower = more sensitive | `4` |
 | `FACE_MIN_SIZE` | Minimum face size in px (rejects noise) | `48` |
 | `NEUTRAL_DAMPING` | Multiplier on the "neutral" emotion probability before argmax; lower = more sensitive to real expressions, `1.0` = off | `0.6` |
 
-`run-all.sh` exports `GITHUB_TOKEN` from `backend/.env` automatically.
+`run-all.sh` configures the local Ollama endpoint and model automatically. CV text stays on the local machine.
 
 ## Endpoints
 
@@ -53,22 +54,26 @@ The main app calls this through the Express backend (`POST /api/interviews/predi
 
 ## How CV extraction works (`/extract-cv`)
 
-1. **Layered text extraction**: pypdf (`layout` + `plain` modes) → if too little text, pdf2image+EasyOCR at 300 dpi (requires poppler) → finally OCR of images embedded in the PDF pages. Small images are upscaled before OCR.
-2. **Text cleanup**: de-hyphenation, OCR-spacing fixes, URL repair ("github .com/x" → "github.com/x").
-3. **Regex pre-extraction** of GitHub/LinkedIn/portfolio/email/phone (more reliable than the LLM for these).
-4. **Chunked LLM parsing** (8 000-char chunks with overlap) into a strict JSON schema, with per-chunk retry and case-insensitive dedup on merge.
+1. **Per-page hybrid extraction**: high-quality embedded PDF text is retained; weak or scanned pages are rendered at 300 DPI and OCR'd independently.
+2. **Scan recovery**: EXIF orientation correction, upscaling, denoising, CLAHE contrast enhancement, adaptive thresholding, and 90/180/270-degree rotation handling.
+3. **Layout recovery**: OCR bounding boxes are reordered into lines and common two-column CV layouts before parsing.
+4. **Quality selection**: original, contrast-enhanced, and thresholded candidates are scored using OCR confidence, readable text, and recognised CV headings; the strongest result wins.
+5. **Text cleanup**: de-hyphenation, OCR-spacing fixes, URL repair ("github .com/x" → "github.com/x").
+6. **Structured parsing**: regex contact extraction followed by chunked LLM parsing. If the model is unavailable, a deterministic heading/skills parser still returns usable sections.
+7. **Diagnostics**: `/extract-cv` and `/extract-ocr` return per-page method, confidence, quality, and character counts.
 
 The extracted `raw_text` is stored by the backend (`cvs.extracted_text`) and reused by **Module C** for analysis — Module C cannot OCR on its own.
 
 ## Fallback philosophy
 
-Every endpoint must keep the product flow alive: missing token or an LLM/HTTP failure returns a deterministic fallback (static questions, heuristic score, generic tailoring tip) and logs a warning — never a 500 mid-session. The service even boots without `GITHUB_TOKEN` (LLM features disabled, OCR and emotion detection still work).
+Every endpoint keeps the product flow alive: if Ollama is stopped or the selected model is missing, deterministic extraction/questions/scoring fallbacks are returned and the problem is logged.
 
 ## Running
 
 ```bash
 cd python-module-d
-GITHUB_TOKEN=... ./venv/bin/python main.py    # uvicorn on :8004
+ollama serve                                  # if Ollama is not already running
+OLLAMA_MODEL=gemma4:e2b ./venv/bin/python main.py
 # or via the repo root: ./run-all.sh
 ```
 

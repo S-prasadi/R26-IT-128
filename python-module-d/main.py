@@ -35,10 +35,11 @@ from dotenv import dotenv_values, load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-from openai import OpenAI
+import httpx
 from PIL import Image
 from pydantic import BaseModel
 from pypdf import PdfReader
+from docx import Document
 
 app = FastAPI(title="Module D - Interview Service")
 
@@ -69,7 +70,9 @@ _EMOTION_TO_STATE = {
 # reads neutral → the live state felt stuck on one value and looked insensitive.
 # Instead of taking the single top class, `_emotion_state` aggregates the whole
 # probability vector into interview states and DISCOUNTS the dominant neutral class
-# so subtle expressions surface. Tune these to dial detection sensitivity:
+# so subtle expressions surface. Callers dial this via a 0-100 `sensitivity` value
+# (see `_sensitivity_to_thresholds`); these are the legacy fixed defaults, still
+# used by the standalone /interview demo UI which has no per-session value:
 #   NEUTRAL_WEIGHT     fraction of the neutral probability that counts toward
 #                      "Neutral" — LOWER = MORE sensitive to other emotions.
 #   NEUTRAL_DOMINANCE  if neutral is at least this strong, stay "Neutral" unless an
@@ -80,19 +83,32 @@ NEUTRAL_DOMINANCE = 0.70
 MIN_EXPRESSIVE    = 0.12
 
 
-def _emotion_state(preds) -> tuple[str, float]:
+def _sensitivity_to_thresholds(sensitivity: float) -> tuple[float, float, float]:
+    """Map a 0-100 UI sensitivity value to (neutral_weight, neutral_dominance, min_expressive).
+
+    50 reproduces the legacy hardcoded defaults exactly. neutral_dominance is kept
+    fixed since it only guards against flicker/noise, not "how easily flagged".
+    """
+    t = max(0.0, min(100.0, sensitivity)) / 100.0
+    neutral_weight = 0.70 - 0.50 * t
+    min_expressive = 0.20 - 0.16 * t
+    return neutral_weight, NEUTRAL_DOMINANCE, min_expressive
+
+
+def _emotion_state(preds, sensitivity: float = 50.0) -> tuple[str, float]:
     """Map a 7-class emotion probability vector to an interview state.
 
     Aggregates probability per interview state and discounts the over-dominant
     neutral class so the result tracks subtle expressions instead of always reading
     neutral. Returns (interview_state, confidence_for_that_state).
     """
+    neutral_weight, neutral_dominance, min_expressive = _sensitivity_to_thresholds(sensitivity)
     neutral_p = float(preds[_EMOTION_LABELS.index("neutral")])
 
     scores: dict[str, float] = {}
     for i, p in enumerate(preds):
         emo    = _EMOTION_LABELS[i]
-        weight = NEUTRAL_WEIGHT if emo == "neutral" else 1.0
+        weight = neutral_weight if emo == "neutral" else 1.0
         state  = _EMOTION_TO_STATE[emo]
         scores[state] = scores.get(state, 0.0) + float(p) * weight
 
@@ -102,10 +118,10 @@ def _emotion_state(preds) -> tuple[str, float]:
                             if expressive else ("Neutral", 0.0))
 
     # Stay Neutral when neutral clearly dominates and nothing expressive crosses the bar.
-    if neutral_p >= NEUTRAL_DOMINANCE and top_score < MIN_EXPRESSIVE:
+    if neutral_p >= neutral_dominance and top_score < min_expressive:
         return "Neutral", neutral_p
     # Otherwise the strongest expressive state wins once it clears the noise floor.
-    if top_score >= MIN_EXPRESSIVE:
+    if top_score >= min_expressive:
         return top_state, top_score
     return "Neutral", neutral_p
 
@@ -164,42 +180,26 @@ def _get_ocr_reader() -> easyocr.Reader:
         raise
 
 
-def _resolve_github_token() -> tuple[str, str]:
-    """Load GITHUB_TOKEN from the module env file, backend env file, or the process environment."""
-    env_files = [
-        Path(__file__).resolve().parent / ".env",
-        Path(__file__).resolve().parent.parent / "backend" / ".env",
-    ]
-
-    for env_path in env_files:
-        if env_path.exists():
-            load_dotenv(env_path, override=False)
-            values = dotenv_values(env_path)
-            token = (values.get("GITHUB_TOKEN") or "").strip()
-            if token:
-                os.environ["GITHUB_TOKEN"] = token
-                return token, str(env_path)
-
-    token = (os.environ.get("GITHUB_TOKEN") or "").strip()
-    if token:
-        return token, "environment"
-    return "", "unset"
+# Local Ollama endpoint. No cloud token or CV data leaves the machine.
+load_dotenv(Path(__file__).parent / ".env")
+OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434").rstrip("/").removesuffix("/v1")
+OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "gemma4:e2b")
 
 
-# GitHub Models endpoint — set GITHUB_TOKEN in python-module-d/.env, backend/.env,
-# or the shell environment. Without one, every LLM feature degrades to a deterministic fallback.
-GITHUB_TOKEN, GITHUB_TOKEN_SOURCE = _resolve_github_token()
-GITHUB_MODELS_BASE_URL = "https://models.inference.ai.azure.com"
-GITHUB_MODEL = "gpt-4o-mini"
-
-if GITHUB_TOKEN:
-    _log.info("GitHub token loaded from %s", GITHUB_TOKEN_SOURCE)
-else:
-    _log.warning("GITHUB_TOKEN not set - LLM features disabled, using fallbacks")
-
-# Construct the client even without a token (placeholder key) so the service still boots;
-# every LLM route guards on `if not GITHUB_TOKEN` and returns a fallback before calling it.
-github_client = OpenAI(base_url=GITHUB_MODELS_BASE_URL, api_key=GITHUB_TOKEN or "unset")
+def _ollama_json(prompt: str, max_tokens: int, temperature: float = 0.0) -> dict:
+    """Call Ollama's native API so thinking can be disabled reliably."""
+    response = httpx.post(
+        f"{OLLAMA_BASE_URL}/api/chat",
+        json={"model": OLLAMA_MODEL, "messages": [{"role": "user", "content": prompt}],
+              "format": "json", "think": False, "stream": False,
+              "options": {"temperature": temperature, "num_predict": max_tokens}},
+        timeout=120.0,
+    )
+    response.raise_for_status()
+    content = response.json().get("message", {}).get("content", "").strip()
+    if not content:
+        raise ValueError("Ollama returned empty JSON content")
+    return json.loads(content)
 
 DIFFICULTY_LABELS = {1: "very easy", 2: "easy",
                      3: "medium", 4: "hard", 5: "expert"}
@@ -300,7 +300,7 @@ def _ocr_images(images: list[Image.Image]) -> str:
     return "\n".join(texts)
 
 
-def _generate_questions_with_github_models(topic: str, difficulty: int, skills: list[str], document_text: str) -> list[dict]:
+def _generate_questions_with_ollama(topic: str, difficulty: int, skills: list[str], document_text: str) -> list[dict]:
     difficulty_label = DIFFICULTY_LABELS.get(difficulty, "medium")
     skills_note = f" The candidate has these skills: {', '.join(skills)}." if skills else ""
     doc_context = (
@@ -317,51 +317,28 @@ def _generate_questions_with_github_models(topic: str, difficulty: int, skills: 
         '{"questions": [{"text": "...", "type": "behavioral|technical|situational", "difficulty": 1-5}]}'
     )
 
-    response = github_client.chat.completions.create(
-        model=GITHUB_MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7,
-        max_tokens=1024,
-    )
-
-    raw = response.choices[0].message.content.strip()
-    # Strip markdown code fences if present
-    if raw.startswith("```"):
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-    return json.loads(raw)["questions"]
+    return _ollama_json(prompt, max_tokens=1024, temperature=0.7)["questions"]
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
 @app.post("/generate-questions")
 def generate_questions(req: GenerateQuestionsRequest):
-    if not GITHUB_TOKEN:
-        # Fallback when no GitHub token is configured
-        difficulty = req.difficulty
-        return {
-            "questions": [
-                {"text": f"Explain your experience with {req.topic} development.",
-                    "type": "behavioral", "difficulty": difficulty},
-                {"text": f"Describe the most complex {req.topic} project you have built.",
-                    "type": "situational", "difficulty": difficulty},
-                {"text": f"What design patterns do you commonly use in {req.topic}?",
-                    "type": "technical", "difficulty": difficulty},
-                {"text": f"How do you handle performance optimisation in {req.topic}?",
-                    "type": "technical", "difficulty": difficulty},
-                {"text": f"Describe a time you had to debug a critical issue in {req.topic}.",
-                    "type": "behavioral", "difficulty": difficulty},
-            ]
-        }
-
     try:
-        questions = _generate_questions_with_github_models(
+        questions = _generate_questions_with_ollama(
             req.topic, req.difficulty, req.skills, req.document_text
         )
         return {"questions": questions}
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+        _log.warning("Ollama question generation unavailable, using fallback: %s", exc)
+        difficulty = req.difficulty
+        return {"questions": [
+            {"text": f"Explain your experience with {req.topic} development.", "type": "behavioral", "difficulty": difficulty},
+            {"text": f"Describe the most complex {req.topic} project you have built.", "type": "situational", "difficulty": difficulty},
+            {"text": f"What design patterns do you commonly use in {req.topic}?", "type": "technical", "difficulty": difficulty},
+            {"text": f"How do you handle performance optimisation in {req.topic}?", "type": "technical", "difficulty": difficulty},
+            {"text": f"Describe a time you debugged a critical issue in {req.topic}.", "type": "behavioral", "difficulty": difficulty},
+        ], "generation_mode": "deterministic", "ollama_unavailable": True}
 
 
 @app.post("/extract-ocr")
@@ -371,42 +348,11 @@ def extract_ocr(req: ExtractOcrRequest):
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid base64 payload.")
 
-    mimetype = req.mimetype.lower()
-
-    if mimetype == "text/plain":
-        return {"text": file_bytes.decode("utf-8", errors="replace")}
-
-    if mimetype == "application/pdf":
-        # First try pypdf for text-based PDFs (fast, no OCR needed)
-        try:
-            reader = PdfReader(io.BytesIO(file_bytes))
-            pages_text = [page.extract_text() or "" for page in reader.pages]
-            combined = "\n".join(pages_text).strip()
-            if combined:
-                return {"text": combined}
-        except Exception:
-            pass
-        # Scanned PDF — convert pages to images then OCR
-        images = _pdf_to_images(file_bytes)
-        return {"text": _ocr_images(images)}
-
-    if mimetype in ("image/png", "image/jpeg", "image/jpg"):
-        try:
-            image = Image.open(io.BytesIO(file_bytes))
-            reader = _get_ocr_reader()
-            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-                image.save(tmp.name)
-                try:
-                    results = reader.readtext(tmp.name, detail=0)
-                finally:
-                    os.unlink(tmp.name)
-            return {"text": " ".join(results)}
-        except Exception as exc:
-            _log.warning("Image OCR failed for %s: %s", mimetype, exc)
-            return {"text": ""}
-
-    raise HTTPException(
-        status_code=400, detail=f"Unsupported mimetype: {req.mimetype}")
+    diagnostics = {"mimetype": req.mimetype, "pages": []}
+    text = _extract_raw_text(file_bytes, req.mimetype, diagnostics)
+    diagnostics["characters"] = len(text)
+    diagnostics["quality"] = _text_quality(text)
+    return {"text": text, "extraction": diagnostics}
 
 
 class ExtractCvRequest(BaseModel):
@@ -444,6 +390,108 @@ def _clean_extracted_text(text: str) -> str:
             blank_count = 0
             cleaned.append(ln)
     return "\n".join(cleaned).strip()
+
+
+def _text_quality(text: str) -> float:
+    """Score OCR usefulness, penalising garbage while rewarding CV-like text."""
+    text = (text or "").strip()
+    if not text:
+        return 0.0
+    chars = len(text)
+    printable = sum(ch.isalnum() or ch.isspace() or ch in "@.,:/+#&()-•" for ch in text) / chars
+    words = _re.findall(r"[A-Za-z][A-Za-z0-9+#.-]{1,}", text)
+    alpha_words = sum(any(c.isalpha() for c in word) for word in words)
+    headings = sum(bool(_re.search(rf"\b{h}\b", text, _re.I)) for h in
+                   ("experience", "education", "skills", "projects", "summary", "profile"))
+    return round(printable * 45 + min(alpha_words, 250) / 250 * 35 + min(headings, 4) / 4 * 20, 2)
+
+
+def _prepare_ocr_variants(image: Image.Image) -> list[tuple[str, Image.Image]]:
+    """Create high-resolution and contrast-enhanced variants for difficult scans."""
+    import cv2
+    from PIL import ImageOps
+
+    image = ImageOps.exif_transpose(image).convert("RGB")
+    w, h = image.size
+    target_width = min(2600, max(1600, w))
+    if w < target_width:
+        scale = target_width / max(1, w)
+        image = image.resize((target_width, int(h * scale)), Image.Resampling.LANCZOS)
+    rgb = np.array(image)
+    gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+    gray = cv2.fastNlMeansDenoising(gray, None, 8, 7, 21)
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8)).apply(gray)
+    adaptive = cv2.adaptiveThreshold(clahe, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                     cv2.THRESH_BINARY, 31, 12)
+    return [("original", image), ("contrast", Image.fromarray(clahe)),
+            ("adaptive", Image.fromarray(adaptive))]
+
+
+def _order_ocr_results(results: list) -> tuple[str, float]:
+    """Restore reading order from EasyOCR boxes, including common two-column CVs."""
+    items = []
+    confidences = []
+    for box, text, confidence in results:
+        if not str(text).strip():
+            continue
+        x = min(point[0] for point in box)
+        y = min(point[1] for point in box)
+        height = max(point[1] for point in box) - y
+        items.append((float(x), float(y), max(float(height), 1.0), str(text).strip()))
+        confidences.append(float(confidence))
+    if not items:
+        return "", 0.0
+    max_x = max(x for x, _, _, _ in items)
+    min_x = min(x for x, _, _, _ in items)
+    midpoint = min_x + (max_x - min_x) / 2
+    left = [item for item in items if item[0] <= midpoint]
+    right = [item for item in items if item[0] > midpoint]
+    # Treat as columns only when both sides contain substantial content.
+    groups = [items]
+    if len(left) >= 4 and len(right) >= 4:
+        groups = [left, right]
+    lines = []
+    for group in groups:
+        group.sort(key=lambda item: (round(item[1] / max(item[2], 10)), item[0]))
+        current_y = None
+        current = []
+        current_h = 12.0
+        for x, y, height, value in group:
+            if current_y is None or abs(y - current_y) <= max(current_h, height) * .65:
+                current.append((x, value)); current_y = y if current_y is None else (current_y + y) / 2
+                current_h = max(current_h, height)
+            else:
+                lines.append(" ".join(v for _, v in sorted(current)))
+                current, current_y, current_h = [(x, value)], y, height
+        if current:
+            lines.append(" ".join(v for _, v in sorted(current)))
+        if group is not groups[-1]:
+            lines.append("")
+    return "\n".join(lines), sum(confidences) / len(confidences)
+
+
+def _ocr_image_advanced(image: Image.Image) -> tuple[str, dict]:
+    reader = _get_ocr_reader()
+    candidates = []
+    for variant_name, variant in _prepare_ocr_variants(image):
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+            try:
+                variant.save(tmp.name)
+                results = reader.readtext(tmp.name, detail=1, paragraph=False,
+                                          rotation_info=[90, 180, 270],
+                                          decoder="beamsearch", beamWidth=5,
+                                          contrast_ths=0.05, adjust_contrast=0.7,
+                                          text_threshold=0.55, low_text=0.3)
+                text, confidence = _order_ocr_results(results)
+                cleaned = _clean_extracted_text(text)
+                score = _text_quality(cleaned) * .8 + confidence * 20
+                candidates.append((score, cleaned, variant_name, confidence))
+            finally:
+                try: os.unlink(tmp.name)
+                except OSError: pass
+    score, text, variant, confidence = max(candidates, default=(0, "", "none", 0), key=lambda x: x[0])
+    return text, {"method": f"easyocr-{variant}", "confidence": round(confidence, 3),
+                  "quality": round(_text_quality(text), 2), "characters": len(text)}
 
 
 def _normalise_for_links(text: str) -> str:
@@ -509,22 +557,20 @@ def _pre_extract_links(text: str) -> dict:
     return links
 
 
-def _pypdf_extract(file_bytes: bytes) -> str:
+def _pypdf_extract_pages(file_bytes: bytes) -> list[str]:
     """Extract text from a text-based PDF using pypdf.
     Tries both 'layout' and 'plain' modes and returns whichever gives more text."""
     reader = PdfReader(io.BytesIO(file_bytes))
-    best = ""
-    for mode in ("layout", "plain"):
-        pages: list[str] = []
-        for page in reader.pages:
+    pages: list[str] = []
+    for page in reader.pages:
+        candidates = []
+        for mode in ("layout", "plain"):
             try:
-                pages.append(page.extract_text(extraction_mode=mode) or "")  # type: ignore[call-arg]
+                candidates.append(page.extract_text(extraction_mode=mode) or "")  # type: ignore[call-arg]
             except Exception:
-                pages.append(page.extract_text() or "")
-        combined = "\n\n".join(pages).strip()
-        if len(combined) > len(best):
-            best = combined
-    return best
+                candidates.append(page.extract_text() or "")
+        pages.append(max(candidates, key=_text_quality, default=""))
+    return pages
 
 
 def _pdf2image_ocr(file_bytes: bytes) -> str:
@@ -532,6 +578,12 @@ def _pdf2image_ocr(file_bytes: bytes) -> str:
     from pdf2image import convert_from_bytes  # requires poppler
     images = convert_from_bytes(file_bytes, dpi=300)
     return _ocr_images(images)
+
+
+def _render_pdf_pages(file_bytes: bytes) -> list[Image.Image]:
+    from pdf2image import convert_from_bytes
+    return convert_from_bytes(file_bytes, dpi=300, fmt="png", thread_count=2,
+                              grayscale=False, use_pdftocairo=True)
 
 
 def _extract_embedded_images(file_bytes: bytes) -> list[Image.Image]:
@@ -553,87 +605,71 @@ def _extract_embedded_images(file_bytes: bytes) -> list[Image.Image]:
     return images
 
 
-def _extract_pdf_text(file_bytes: bytes) -> str:
+def _extract_pdf_text(file_bytes: bytes, diagnostics: dict | None = None) -> str:
     """Extract text from a PDF with layered fallbacks and detailed logging."""
     # Path 1: pypdf direct text extraction (works for text-based PDFs)
+    direct_pages = []
     try:
-        text = _pypdf_extract(file_bytes)
-        if len(text) > 150:
-            _log.info("pypdf extracted %d chars", len(text))
-            return _clean_extracted_text(text)
-        _log.info("pypdf returned %d chars — trying OCR", len(text))
+        direct_pages = _pypdf_extract_pages(file_bytes)
     except Exception as exc:
         _log.warning("pypdf failed: %s", exc)
-
-    # Path 2: pdf2image + EasyOCR (scanned PDFs — requires poppler)
+    page_results = []
     try:
-        text = _pdf2image_ocr(file_bytes)
-        if text.strip():
-            _log.info("pdf2image+OCR extracted %d chars", len(text))
-            return _clean_extracted_text(text)
-        _log.warning("pdf2image+OCR returned empty text")
-    except ImportError:
-        _log.warning("pdf2image unavailable — poppler not installed, skipping")
+        rendered = _render_pdf_pages(file_bytes)
+        page_count = max(len(rendered), len(direct_pages))
+        for index in range(page_count):
+            direct = _clean_extracted_text(direct_pages[index]) if index < len(direct_pages) else ""
+            direct_quality = _text_quality(direct)
+            # Good embedded text is more accurate; OCR only weak/missing pages.
+            if direct_quality >= 55 and len(direct) >= 120:
+                selected, meta = direct, {"method": "pypdf", "quality": direct_quality,
+                                           "confidence": 1.0, "characters": len(direct)}
+            else:
+                ocr, ocr_meta = _ocr_image_advanced(rendered[index])
+                selected, meta = (ocr, ocr_meta) if _text_quality(ocr) > direct_quality else (
+                    direct, {"method": "pypdf", "quality": direct_quality,
+                             "confidence": 1.0, "characters": len(direct)})
+            page_results.append(selected)
+            meta["page"] = index + 1
+            diagnostics.setdefault("pages", []).append(meta) if diagnostics is not None else None
     except Exception as exc:
-        _log.warning("pdf2image+OCR failed: %s", exc)
-
-    # Path 3: OCR any images embedded directly in the PDF pages
-    try:
-        page_images = _extract_embedded_images(file_bytes)
-        if page_images:
-            text = _ocr_images(page_images)
-            if text.strip():
-                _log.info("embedded-image OCR extracted %d chars", len(text))
-                return _clean_extracted_text(text)
-        _log.warning("no usable embedded images found in PDF")
-    except Exception as exc:
-        _log.warning("embedded-image OCR failed: %s", exc)
-
-    _log.error("all PDF extraction paths failed")
-    return ""
+        _log.warning("hybrid PDF OCR failed: %s", exc)
+        page_results = [_clean_extracted_text(page) for page in direct_pages]
+    text = _clean_extracted_text("\n\n".join(page_results))
+    _log.info("hybrid PDF extraction produced %d chars across %d pages", len(text), len(page_results))
+    return text
 
 
-def _extract_image_text(file_bytes: bytes) -> str:
+def _extract_image_text(file_bytes: bytes, diagnostics: dict | None = None) -> str:
     """OCR an image, upscaling first if it is too small for accurate recognition."""
-    image = Image.open(io.BytesIO(file_bytes))
-    w, h = image.size
-    if w < 1200:
-        scale = 1200 / w
-        image = image.resize((int(w * scale), int(h * scale)), Image.LANCZOS)
-    reader_ocr = _get_ocr_reader()
-    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-        image.save(tmp.name)
-        results = reader_ocr.readtext(tmp.name, detail=0, paragraph=True)
-        os.unlink(tmp.name)
-    return _clean_extracted_text("\n".join(results))
+    text, meta = _ocr_image_advanced(Image.open(io.BytesIO(file_bytes)))
+    if diagnostics is not None:
+        diagnostics.setdefault("pages", []).append({"page": 1, **meta})
+    return text
 
 
-def _extract_raw_text(file_bytes: bytes, mimetype: str) -> str:
+def _extract_raw_text(file_bytes: bytes, mimetype: str, diagnostics: dict | None = None) -> str:
     """Dispatch to the correct extractor based on MIME type."""
     mimetype = mimetype.lower()
     if mimetype == "text/plain":
         return file_bytes.decode("utf-8", errors="replace")
     if mimetype == "application/pdf":
-        return _extract_pdf_text(file_bytes)
+        return _extract_pdf_text(file_bytes, diagnostics)
+    if mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+        document = Document(io.BytesIO(file_bytes))
+        text = "\n".join(paragraph.text for paragraph in document.paragraphs)
+        if diagnostics is not None:
+            diagnostics.setdefault("pages", []).append({"page": 1, "method": "python-docx", "confidence": 1.0,
+                                                         "quality": _text_quality(text), "characters": len(text)})
+        return _clean_extracted_text(text)
     if mimetype in ("image/png", "image/jpeg", "image/jpg"):
-        return _extract_image_text(file_bytes)
+        return _extract_image_text(file_bytes, diagnostics)
     raise HTTPException(status_code=400, detail=f"Unsupported mimetype: {mimetype}")
 
 
 def _llm_call(prompt: str, max_tokens: int = 4000) -> str:
-    """Call GPT-4o-mini and strip markdown fences from the response."""
-    response = github_client.chat.completions.create(
-        model=GITHUB_MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.0,
-        max_tokens=max_tokens,
-    )
-    raw = response.choices[0].message.content.strip()
-    if raw.startswith("```"):
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-    return raw.strip()
+    """Call local Ollama and strip markdown fences from the response."""
+    return json.dumps(_ollama_json(prompt, max_tokens=max_tokens, temperature=0.0))
 
 
 _CV_SCHEMA = (
@@ -677,6 +713,72 @@ _CV_RULES = (
 _CHUNK_MAX  = 8000
 _CHUNK_OVERLAP = 500
 
+_FALLBACK_HEADERS = {
+    "summary": "summary", "profile": "summary", "professional summary": "summary", "objective": "summary",
+    "experience": "experience", "work experience": "experience", "professional experience": "experience",
+    "employment history": "experience", "education": "education", "academic background": "education",
+    "skills": "skills", "technical skills": "skills", "core competencies": "skills",
+    "projects": "projects", "personal projects": "projects", "key projects": "projects",
+}
+_KNOWN_LANGUAGES = {"python", "java", "javascript", "typescript", "c", "c++", "c#", "go", "rust", "ruby", "php", "swift", "kotlin", "dart", "sql", "r"}
+_KNOWN_FRAMEWORKS = {"react", "angular", "vue", "next.js", "node.js", "express", "django", "flask", "fastapi", "spring", "spring boot", "tensorflow", "pytorch", "scikit-learn", "laravel", ".net"}
+_KNOWN_TOOLS = {"git", "github", "docker", "kubernetes", "aws", "azure", "gcp", "jira", "linux", "postman", "figma", "tableau", "power bi", "mongodb", "postgresql", "mysql"}
+
+
+def _normalise_heading(line: str) -> str:
+    return _re.sub(r"[^a-z ]", "", line.lower()).strip()
+
+
+def _split_skill_values(text: str) -> list[str]:
+    values = _re.split(r"[,|•·;/]+|\s{2,}", text)
+    return [value.strip(" :-\t") for value in values if 1 < len(value.strip(" :-\t")) < 60]
+
+
+def _parse_cv_sections_fallback(raw_text: str, links: dict) -> dict:
+    """Conservative section parser used when the LLM is missing or rejects auth."""
+    buckets: dict[str, list[str]] = {name: [] for name in ("summary", "experience", "education", "skills", "projects")}
+    current = "summary"
+    for raw_line in raw_text.splitlines():
+        line = raw_line.strip(" \t•*-–—")
+        if not line:
+            continue
+        heading = _normalise_heading(line.rstrip(":"))
+        matched = _FALLBACK_HEADERS.get(heading)
+        if matched:
+            current = matched
+            continue
+        buckets[current].append(line)
+
+    skill_values = _split_skill_values("\n".join(buckets["skills"]))
+    skills = {"languages": [], "frameworks": [], "tools": [], "other": []}
+    for value in skill_values:
+        low = value.lower()
+        category = "languages" if low in _KNOWN_LANGUAGES else "frameworks" if low in _KNOWN_FRAMEWORKS else "tools" if low in _KNOWN_TOOLS else "other"
+        if value.lower() not in {v.lower() for v in skills[category]}:
+            skills[category].append(value)
+
+    date_range = _re.compile(r"(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)?[a-z]*\s*\d{4}\s*(?:-|–|—|to)\s*(?:present|current|(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)?[a-z]*\s*\d{4})", _re.I)
+    experience = []
+    pending: list[str] = []
+    for line in buckets["experience"]:
+        if date_range.search(line) and pending:
+            header = pending.pop(0)
+            experience.append({"company": "", "role": header, "start_date": "", "end_date": "",
+                               "location": "", "bullets": pending})
+            pending = [line]
+        else:
+            pending.append(line)
+    if pending:
+        experience.append({"company": "", "role": pending[0], "start_date": "", "end_date": "",
+                           "location": "", "bullets": pending[1:]})
+
+    education = [{"institution": line, "degree": "", "field": "", "start_date": "", "end_date": "", "grade": ""}
+                 for line in buckets["education"][:8]]
+    projects = [{"name": line[:100], "description": line, "tech_stack": [], "url": "", "start_date": "", "end_date": ""}
+                for line in buckets["projects"][:10]]
+    return {"links": links, "summary": " ".join(buckets["summary"])[:1200], "experience": experience,
+            "education": education, "skills": skills, "projects": projects}
+
 
 def _split_into_chunks(text: str) -> list[str]:
     """Split text into overlapping chunks that break on newline boundaries."""
@@ -711,7 +813,8 @@ def _parse_cv_sections_with_llm(raw_text: str, pre_links: dict) -> dict:
         if r
     ]
     if not chunk_results:
-        return {**empty, "summary": raw_text[:500]}
+        _log.warning("LLM CV parsing unavailable; using deterministic section parser")
+        return _parse_cv_sections_fallback(raw_text, pre_links)
     return _merge_chunk_results(chunk_results, pre_links)
 
 
@@ -810,15 +913,23 @@ def extract_cv(req: ExtractCvRequest):
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid base64 payload.")
 
-    raw_text = _extract_raw_text(file_bytes, req.mimetype)
+    diagnostics = {"mimetype": req.mimetype, "pages": []}
+    raw_text = _extract_raw_text(file_bytes, req.mimetype, diagnostics)
     if not raw_text.strip():
         raise HTTPException(status_code=422, detail="Could not extract any text from the file.")
 
     pre_links = _pre_extract_links(raw_text)
     sections = _parse_cv_sections_with_llm(raw_text, pre_links)
+    diagnostics["characters"] = len(raw_text)
+    diagnostics["quality"] = _text_quality(raw_text)
+    diagnostics["structured_counts"] = {
+        "experience": len(sections.get("experience", [])), "education": len(sections.get("education", [])),
+        "skills": sum(len(v) for v in sections.get("skills", {}).values()), "projects": len(sections.get("projects", [])),
+    }
     return {
         "raw_text": raw_text,
         "sections": sections,
+        "extraction": diagnostics,
     }
 
 
@@ -844,12 +955,6 @@ def analyze_response(req: AnalyseResponseRequest):
     # Engagement is computed from the real webcam timeline — the LLM never invents it.
     engagement_score, emotion_summary = _engagement_summary(req.emotion_data)
 
-    if not GITHUB_TOKEN:
-        return _scoring_fallback(
-            req, engagement_score, emotion_summary,
-            "AI scoring is disabled (no GITHUB_TOKEN). Add concrete examples and measurable outcomes to strengthen this answer.",
-        )
-
     try:
         difficulty_label = DIFFICULTY_LABELS.get(int(req.difficulty or 3), "medium")
         prompt = (
@@ -870,14 +975,7 @@ def analyze_response(req: AnalyseResponseRequest):
             '"strengths": ["<short point>"], "improvements": ["<short point>"], '
             '"model_answer": "<a strong, concise example answer>"}'
         )
-        response = github_client.chat.completions.create(
-            model=GITHUB_MODEL,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.3,
-            max_tokens=700,
-            response_format={"type": "json_object"},  # JSON mode — no markdown fences to strip
-        )
-        data = json.loads(response.choices[0].message.content)
+        data = _ollama_json(prompt, max_tokens=700, temperature=0.3)
 
         # Clamp the overall score and every criterion to 0–100.
         if isinstance(data.get("score"), (int, float)):
@@ -906,6 +1004,7 @@ def analyze_response(req: AnalyseResponseRequest):
 
 class PredictRequest(BaseModel):
     frame: str  # base64-encoded JPEG from the browser webcam
+    sensitivity: float = 50.0  # 0-100 UI slider value; 50 = legacy hardcoded defaults
 
 
 @app.post("/predict")
@@ -941,7 +1040,7 @@ def predict(req: PredictRequest):
 
         preds             = _emotion_model.predict(roi, verbose=0)[0]
         probs             = {_EMOTION_LABELS[i]: round(float(preds[i]), 4) for i in range(len(_EMOTION_LABELS))}
-        state, confidence = _emotion_state(preds)
+        state, confidence = _emotion_state(preds, req.sensitivity)
 
         return {
             "face":            True,

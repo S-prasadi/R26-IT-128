@@ -15,10 +15,10 @@ export async function callPython(
   url: string,
   body: object,
   fallback: object,
-  opts?: { throwOnUnreachable?: boolean }
+  opts?: { throwOnUnreachable?: boolean; timeoutMs?: number }
 ): Promise<object> {
   try {
-    const response = await axios.post(url, body, { timeout: 60000 });
+    const response = await axios.post(url, body, { timeout: opts?.timeoutMs ?? 60000 });
     return response.data;
   } catch (err) {
     const axiosErr = err as AxiosError;
