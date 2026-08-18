@@ -20,7 +20,12 @@ export function errorHandler(
   const statusCode = err instanceof AppError ? err.statusCode : 500;
   const message = err instanceof AppError ? err.message : "Internal server error";
 
-  if (env.nodeEnv === "development") console.error(err);
+  // Always log unexpected (non-AppError) failures — these are bugs/outages, not
+  // routine 4xx client errors, so they need a diagnostic trail in every
+  // environment, not only development (where everything is logged anyway).
+  if (env.nodeEnv === "development" || !(err instanceof AppError)) {
+    console.error(err);
+  }
 
   res.status(statusCode).json({
     success: false,

@@ -17,6 +17,11 @@ export const careerController = {
     sendSuccess(res, data, "Career goal saved");
   },
 
+  async deleteGoal(req: AuthRequest, res: Response): Promise<void> {
+    const data = await careerService.deleteGoal(req.user!.id);
+    sendSuccess(res, data, "Career goal removed");
+  },
+
   async getRoadmap(req: AuthRequest, res: Response): Promise<void> {
     const data = await careerService.getRoadmap(req.user!.id);
     sendSuccess(res, data, "Roadmap fetched");
@@ -59,7 +64,7 @@ export const careerController = {
   },
 
   async generateRoadmap(req: AuthRequest, res: Response): Promise<void> {
-    const data = await careerService.generateRoadmap(req.user!.id, req.body.path_id);
+    const data = await careerService.generateRoadmap(req.user!.id, req.body.path_id, req.body.prediction_id);
     sendSuccess(res, data, "Roadmap generated from skill gaps", 201);
   },
 };

@@ -23,6 +23,9 @@ router.post("/goal", requirePermission("career:write"),
   validate(upsertGoalSchema),
   (req, res) => careerController.upsertGoal(req as AuthRequest, res as Response));
 
+router.delete("/goal", requirePermission("career:write"),
+  (req, res) => careerController.deleteGoal(req as AuthRequest, res as Response));
+
 router.get("/roadmap", requirePermission("career:read"),
   (req, res) => careerController.getRoadmap(req as AuthRequest, res as Response));
 
@@ -41,7 +44,9 @@ router.patch("/roadmap/:id", requirePermission("career:write"),
 router.delete("/roadmap/:id", requirePermission("career:write"),
   (req, res) => careerController.deleteRoadmapItem(req as AuthRequest, res as Response));
 
-router.post("/predict", requirePermission("career:read"),
+// Writes a career_predictions row and sends a notification on every call, so
+// this needs write access despite being conceptually a "read" (predict) action.
+router.post("/predict", requirePermission("career:write"),
   validate(predictPathSchema),
   (req, res) => careerController.predictPath(req as AuthRequest, res as Response));
 
