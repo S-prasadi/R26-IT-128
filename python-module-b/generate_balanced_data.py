@@ -1,5 +1,20 @@
 """
-Balanced dataset generator for Component 2 - Career Pathway Predictor.
+Balanced dataset generator — EXPERIMENTAL / NOT WIRED INTO THE MAIN PIPELINE.
+
+WARNING: this uses its own hand-curated set of ~33 role names (e.g. "Ai Ml",
+"Devops Engineer") that do NOT go through train_all.py's _canonical_role() /
+_normalise_title() pipeline. If you run this and then run
+`train_all.py --step train`, the model silently drops from 184 canonical
+roles to however many of these ~33 survive, and career-ladder generation
+(get_career_steps/_domain) will misclassify titles like "Ai Ml" into
+"General IT" since they don't match any of _domain()'s substring checks —
+degrading career-path quality with no error or warning.
+
+It intentionally does NOT write to cleaned_data/training_data.csv (the file
+the real pipeline reads) so running it can't silently corrupt the live
+dataset. If you want to actually use this, first reconcile ROLE_PROFILES'
+role names through _canonical_role() and merge the results into
+training_data.csv deliberately — don't just point OUTPUT_CSV back at it.
 
 Adds 15 new IT roles and balances all classes to TARGET_PER_CLASS samples.
 
@@ -7,7 +22,7 @@ Run:
     python generate_balanced_data.py
 
 Output:
-    cleaned_data/training_data.csv   (overwritten with expanded dataset)
+    cleaned_data/experimental_balanced_data.csv   (NOT read by train_all.py)
 """
 
 import csv
@@ -20,7 +35,7 @@ random.seed(42)
 
 TARGET_PER_CLASS = 300
 DATA_DIR = Path(__file__).parent / "cleaned_data"
-OUTPUT_CSV = DATA_DIR / "training_data.csv"
+OUTPUT_CSV = DATA_DIR / "experimental_balanced_data.csv"
 
 # ---------------------------------------------------------------------------
 # Role profiles: (core_skills, framework_skills, tools, soft_skills)

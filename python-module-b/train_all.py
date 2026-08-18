@@ -29,7 +29,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
 
-from sklearn.preprocessing import LabelEncoder, MultiLabelBinarizer
+from sklearn.preprocessing import LabelEncoder, MultiLabelBinarizer, StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier
 from sklearn.svm import SVC
@@ -145,6 +145,13 @@ _DEVOPS_TOOLS = {
     "confluence", "consul", "coverage.py", "datadog", "grafana", "jenkins",
     "jira", "kibana", "logstash", "nagios", "prometheus", "puppet", "splunk",
     "terraform", "vault", "nexus", "sonarqube", "octopus",
+    # Extended so single-tool "X Engineer" titles (Zabbix, Istio, JUnit, ...)
+    # collapse into "DevOps Engineer" instead of fragmenting the label space
+    # into ~25 near-keyword-matched classes with almost no real signal.
+    "docker", "kubernetes", "elk", "falco", "fluentd", "envoy", "gerrit",
+    "git", "github", "gitlab", "gradle", "groovy", "jacoco", "junit", "maven",
+    "relic", "nomad", "notary", "packer", "powershell", "pytest", "selenium",
+    "teamcity", "udeploy", "deploy", "zabbix", "istio",
 }
 
 
@@ -539,6 +546,14 @@ class CareerPathwayModel:
         self.use_transformer      = use_transformer and _HAS_ST
         self.label_encoder        = LabelEncoder()
         self.mlb                  = MultiLabelBinarizer()
+        # Scales [experience_months, num_skills, num_projects] before
+        # concatenating with the embedding — unscaled, these numeric columns
+        # are 60-250x larger in magnitude than any single embedding dimension
+        # (std dev ~12/~8/~3 vs ~0.05), which can badly distort a linear
+        # classifier's learned weights. None until fit (see _encode_train);
+        # load() leaves this None for older artifacts saved before scaling
+        # existed, so they keep working unscaled exactly as before.
+        self.scaler                = StandardScaler()
         self.tfidf                = None
         self.classifier           = None
         self.best_model_name: str = ""
@@ -559,6 +574,7 @@ class CareerPathwayModel:
 
     def _encode_train(self, df):
         numeric = self._numeric(df)
+        numeric = self.scaler.fit_transform(numeric) if self.scaler is not None else numeric
         if self.use_transformer:
             text = self.encoder.encode(
                 df["skills_text"].fillna("").tolist(),
@@ -574,6 +590,7 @@ class CareerPathwayModel:
                        n_skills: int, n_projects: int):
         text_str = " ".join(skills)
         numeric  = np.array([[exp_months, n_skills, n_projects]], dtype=float)
+        numeric  = self.scaler.transform(numeric) if self.scaler is not None else numeric
         if self.use_transformer:
             text = self.encoder.encode([text_str])
         elif self.tfidf is not None:
@@ -670,7 +687,13 @@ class CareerPathwayModel:
 
         y_pred = best_clf.predict(X_test)
         print(f"\n  Classification report - {best_name}:")
+        # Explicit `labels` covers every class the encoder knows about, not
+        # just whatever happens to appear in y_test/y_pred — without it,
+        # classification_report infers labels from the data alone and errors
+        # out as soon as any class (typically an ultra-thin one post-dedup)
+        # ends up with zero test examples, which crashes before model.save().
         print(classification_report(y_test, y_pred,
+                                    labels=np.arange(len(self.label_encoder.classes_)),
                                     target_names=self.label_encoder.classes_,
                                     zero_division=0))
         return best_acc
@@ -734,6 +757,8 @@ class CareerPathwayModel:
         joblib.dump(self.label_encoder,       d / "label_encoder.pkl")
         joblib.dump(self.mlb,                 d / "mlb.pkl")
         joblib.dump(self.role_skill_profiles, d / "role_skill_profiles.pkl")
+        if self.scaler is not None:
+            joblib.dump(self.scaler, d / "scaler.pkl")
         if self.tfidf is not None:
             joblib.dump(self.tfidf, d / "tfidf.pkl")
 
@@ -764,6 +789,12 @@ class CareerPathwayModel:
         obj.role_skill_profiles = joblib.load(d / "role_skill_profiles.pkl")
         obj.best_model_name     = meta.get("best_model", "")
         obj.model_scores        = meta.get("model_scores", {})
+
+        # Older saved artifacts (trained before feature scaling was added)
+        # won't have this file — leave scaling off for them so they keep
+        # working exactly as before instead of crashing on an unfit scaler.
+        scaler_path = d / "scaler.pkl"
+        obj.scaler = joblib.load(scaler_path) if scaler_path.exists() else None
 
         tfidf_path = d / "tfidf.pkl"
         if tfidf_path.exists():
@@ -1019,6 +1050,34 @@ def _load_training_df() -> pd.DataFrame:
     if removed:
         print(f"  Removed rare classes (< {MIN_CLASS_SAMPLES} samples): {removed}")
     df = df[df["target_role"].isin(valid)].copy()
+
+    # Dedupe on (target_role, skills) so the train/test split can't put
+    # exact-duplicate rows on both sides. The synthetic generator independently
+    # resamples a skill subset per row, and for roles with a small skill pool
+    # that collides constantly — many "150 records" are really only a handful
+    # of unique skill combinations copied dozens of times. Left in, a random
+    # split is near-guaranteed to test the model on rows it already memorized
+    # during training, inflating reported accuracy well above what it would
+    # score on genuinely unseen input.
+    before = len(df)
+    skills_key = df["skills"].apply(lambda s: "|".join(sorted(s)))
+    df = df.assign(_skills_key=skills_key).drop_duplicates(subset=["target_role", "_skills_key"]).drop(columns=["_skills_key"]).reset_index(drop=True)
+    deduped = before - len(df)
+    if deduped:
+        print(f"  Deduplicated {deduped:,} exact-duplicate (target_role, skills) rows "
+              f"({deduped / before:.1%} of the pre-dedup data)")
+
+    # A class needs at least 2 unique skill combinations for a stratified
+    # train/test split to even be possible. Anything below that has too little
+    # real signal to evaluate honestly — surfaced here (rather than silently
+    # dropped) since it's exactly the list worth adding real skill variety to.
+    post_counts = df["target_role"].value_counts()
+    too_thin = post_counts[post_counts < 2].index.tolist()
+    if too_thin:
+        print(f"  Dropping {len(too_thin)} classes with < 2 unique skill combinations "
+              f"after dedup (add more skill variety to these in the source data): {too_thin}")
+        df = df[~df["target_role"].isin(too_thin)].reset_index(drop=True)
+
     print(f"  {len(df):,} records  |  {df['target_role'].nunique()} target roles")
     return df
 
@@ -1200,7 +1259,10 @@ def step_evaluate():
         print("  Saved -> charts/3_confusion_matrix.png")
 
     # ── Chart 4: Per-class F1 (top-30 by F1) ─────────────────────────────────
+    # Same explicit-labels fix as in train() — otherwise this errors as soon
+    # as any thin class has zero test examples.
     report  = classification_report(y_test, y_pred,
+                                    labels=np.arange(len(class_names)),
                                     target_names=class_names,
                                     output_dict=True, zero_division=0)
     f1_data = {c: report[c]["f1-score"] * 100
