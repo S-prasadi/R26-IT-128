@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
-import { PiqBtn, PiqSpinner, PiqStatCard } from "@/components/piq/primitives";
+import { PiqBtn, PiqSpinner, PiqStatCard, PiqModal, PiqInput } from "@/components/piq/primitives";
 import { PageHeader } from "@/components/common/PageHeader";
 import { careerService } from "@/services/career.service";
 import { skillService } from "@/services/skill.service";
@@ -11,6 +11,7 @@ import type { CareerGoal, GoalSkillSnapshot, RoadmapItem, CareerPrediction, Care
 import CareerFlowGraph from "./CareerFlowGraph";
 import { BarChart, Bar, LineChart, Line, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { PiqChartContainer, PiqTooltip, PIQ_COLORS } from "@/components/piq/charts";
+import { readinessColor, VELOCITY_META } from "@/lib/career-ui";
 
 const STEPS = ["Career Goal", "Career Path", "Roadmap"] as const;
 type Step = (typeof STEPS)[number];
@@ -21,28 +22,26 @@ const STATUS_COLORS: Record<string, string> = {
   done:        "var(--teal)",
 };
 
-// ─── Node Tree Component ────────────────────────────────────────────────────
-
-function readinessColor(score: number | undefined) {
-  if (score === undefined) return "var(--surf3)";
-  if (score >= 0.7) return "#14b8a6";
-  if (score >= 0.4) return "#f59e0b";
-  return "#f43f5e";
-}
-
 // ─── Gap-skill market badge ───────────────────────────────────────────────
 
-const VELOCITY_META: Record<SkillInsight["velocity"], { arrow: string; color: string; label: string }> = {
-  rising:  { arrow: "▲", color: "#10b981", label: "rising" },
-  stable:  { arrow: "▬", color: "#f59e0b", label: "stable" },
-  falling: { arrow: "▼", color: "#ef4444", label: "falling" },
-  unknown: { arrow: "•", color: "var(--text3)", label: "no data" },
-};
+// Small uppercase tag showing a skill's catalog category (e.g. "Languages",
+// "Frontend", "DevOps") next to its name — renders nothing for free-typed
+// skills that aren't in the catalog.
+function CategoryTag({ skill, categoryByName }: { skill: string; categoryByName: Map<string, string> }) {
+  const cat = categoryByName.get(skill.toLowerCase().trim());
+  if (!cat) return null;
+  return (
+    <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.4, opacity: 0.6 }}>
+      {cat}
+    </span>
+  );
+}
 
-function SkillInsightChip({ insight }: { insight: SkillInsight }) {
+function SkillInsightChip({ insight, categoryByName }: { insight: SkillInsight; categoryByName: Map<string, string> }) {
   const meta = VELOCITY_META[insight.velocity];
   return (
     <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 10px", borderRadius: 999, border: "1px solid var(--border)", background: "var(--surf2)", fontSize: 12 }}>
+      <CategoryTag skill={insight.skill} categoryByName={categoryByName} />
       <span style={{ fontWeight: 600 }}>{insight.skill}</span>
       <span style={{ color: meta.color, fontWeight: 600 }}>
         {meta.arrow} {meta.label}
@@ -60,7 +59,7 @@ function SkillInsightChip({ insight }: { insight: SkillInsight }) {
 // (timeframe_months), gate skills (skill_gaps), readiness, and the per-role
 // market trend (from the graph nodes), as a readable list alongside the graph.
 
-function CareerStepList({ prediction, paths, goal = false }: { prediction: CareerPrediction; paths?: CareerPath[]; goal?: boolean }) {
+function CareerStepList({ prediction, paths, goal = false, categoryByName }: { prediction: CareerPrediction; paths?: CareerPath[]; goal?: boolean; categoryByName: Map<string, string> }) {
   const marketByRole = new Map((prediction.graph_nodes ?? []).map((n) => [n.label, n.meta?.market]));
   const readyByRole  = new Map((prediction.graph_nodes ?? []).map((n) => [n.label, n.meta?.readiness]));
   const list = paths ?? prediction.paths;
@@ -72,11 +71,17 @@ function CareerStepList({ prediction, paths, goal = false }: { prediction: Caree
         const current = steps[0] ?? "Current";
         const target = steps[steps.length - 1] ?? "?";
         const confPct = Math.round((p.confidence_relative ?? p.probability) * 100);
+        // A goal-directed path's "confidence" is the model's raw recognition of the
+        // typed target title — niche/uncommon titles the classifier has never seen
+        // score 0% even though the ladder itself is still valid. Fall back to
+        // readiness (how ready they are today) instead of showing a bare "0%".
+        const readyPct = p.readiness_score != null ? Math.round(p.readiness_score * 100) : null;
+        const goalBadge = confPct > 0 ? `languages point here ${confPct}%` : readyPct != null ? `${readyPct}% ready today` : "your stated goal";
         return (
           <div key={p.id ?? pi} style={{ background: "var(--surf)", borderRadius: "var(--radius)", padding: 16, border: goal ? "1px solid #f59e0b66" : "1px solid var(--border)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 12 }}>
               <div style={{ fontWeight: 700, fontSize: 14 }}>{goal ? <>🎯 Goal · {target}</> : <>Path {pi + 1} · {target}</>}</div>
-              <span style={{ fontSize: 12, color: "var(--text2)", whiteSpace: "nowrap" }}>{goal ? `skills point here ${confPct}%` : `${confPct}% confidence`}</span>
+              <span style={{ fontSize: 12, color: "var(--text2)", whiteSpace: "nowrap" }}>{goal ? goalBadge : `${confPct}% confidence`}</span>
             </div>
 
             {/* Starting point */}
@@ -85,7 +90,14 @@ function CareerStepList({ prediction, paths, goal = false }: { prediction: Caree
               <span style={{ fontSize: 13 }}><span style={{ color: "var(--text3)" }}>You are here · </span><b>{current}</b></span>
             </div>
 
-            {(p.transitions ?? []).map((t, i) => {
+            {(() => {
+              // Each transition's timeframe_months is the incremental cost of that
+              // one hop (e.g. Junior→Mid), not the time from today — track a
+              // running total so "how long until I actually reach this stage" is
+              // never left for the reader to add up themselves.
+              let cumulativeMonths = 0;
+              return (p.transitions ?? []).map((t, i) => {
+              cumulativeMonths += t.timeframe_months ?? 0;
               const isFinal = i === (p.transitions?.length ?? 0) - 1;
               const ready = isFinal ? p.readiness_score : readyByRole.get(t.role);
               const rc = readinessColor(ready);
@@ -100,7 +112,11 @@ function CareerStepList({ prediction, paths, goal = false }: { prediction: Caree
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                       <b style={{ fontSize: 13 }}>{t.role}</b>
-                      <span style={{ fontSize: 11, color: "var(--text2)" }}>~{t.timeframe_months} months to reach</span>
+                      {t.timeframe_months > 0 && (
+                        <span style={{ fontSize: 11, color: "var(--text2)" }}>
+                          ~{t.timeframe_months} months for this stage · ~{cumulativeMonths} months from now{cumulativeMonths >= 12 ? ` (${(cumulativeMonths / 12).toFixed(1)} yrs)` : ""}
+                        </span>
+                      )}
                       {ready != null && (
                         <span style={{ fontSize: 11, fontWeight: 600, color: rc }}>{Math.round(ready * 100)}% ready</span>
                       )}
@@ -112,16 +128,20 @@ function CareerStepList({ prediction, paths, goal = false }: { prediction: Caree
                     </div>
                     {(t.skill_gaps?.length ?? 0) > 0 && (
                       <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 5 }}>
-                        <span style={{ fontSize: 10, color: "var(--text3)", marginRight: 2 }}>Skills to unlock:</span>
+                        <span style={{ fontSize: 10, color: "var(--text3)", marginRight: 2 }}>Languages to unlock:</span>
                         {t.skill_gaps.map((s) => (
-                          <span key={s} style={{ fontSize: 10, padding: "2px 7px", borderRadius: 10, background: "var(--surf2)", border: "1px solid var(--border)", color: "var(--text2)" }}>{s}</span>
+                          <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, padding: "2px 7px", borderRadius: 10, background: "var(--surf2)", border: "1px solid var(--border)", color: "var(--text2)" }}>
+                            <CategoryTag skill={s} categoryByName={categoryByName} />
+                            {s}
+                          </span>
                         ))}
                       </div>
                     )}
                   </div>
                 </div>
               );
-            })}
+            });
+            })()}
           </div>
         );
       })}
@@ -138,6 +158,9 @@ export default function CareerPage() {
   const [prediction, setPrediction] = useState<CareerPrediction | null>(null);
   const [history, setHistory]     = useState<CareerPredictionSnapshot[]>([]);
   const [userSkills, setUserSkills] = useState<UserSkill[]>([]);
+  // Full skills catalog, lower-cased name → category, so any skill shown on this
+  // page (typed, model-returned, or tracked) can carry its category tag.
+  const [categoryByName, setCategoryByName] = useState<Map<string, string>>(new Map());
   const [loading, setLoading]     = useState(true);
   const [saving, setSaving]       = useState(false);
   const [predicting, setPredicting] = useState(false);
@@ -158,6 +181,10 @@ export default function CareerPage() {
   const [form, setForm] = useState({ target_role: "", target_industry: "", target_date: "", notes: "" });
   const [newItem, setNewItem] = useState({ title: "", description: "", due_date: "" });
   const [showAddItem, setShowAddItem] = useState(false);
+  const [confirmDeleteItem, setConfirmDeleteItem] = useState<RoadmapItem | null>(null);
+  const [confirmDeletePrediction, setConfirmDeletePrediction] = useState<CareerPredictionSnapshot | null>(null);
+  const [confirmDeleteGoal, setConfirmDeleteGoal] = useState(false);
+  const [deletingGoal, setDeletingGoal] = useState(false);
   const [currentRole, setCurrentRole] = useState("");
   const [expMonths, setExpMonths] = useState(0);
   const [numProjects, setNumProjects] = useState(0);
@@ -185,12 +212,13 @@ export default function CareerPage() {
     async function load() {
       setLoading(true);
       try {
-        const [goalRes, roadmapRes, skillsRes, cvsRes, historyRes] = await Promise.all([
+        const [goalRes, roadmapRes, skillsRes, cvsRes, historyRes, catalogRes] = await Promise.all([
           careerService.getGoal(),
           careerService.getRoadmap(),
           skillService.getUserSkills(),
           cvService.listCVs(),
           careerService.getPredictions(),
+          skillService.listMaster(),
         ]);
         const g = goalRes.data.data;
         setGoal(g);
@@ -207,6 +235,7 @@ export default function CareerPage() {
         setPredictSkills(trackedNames);
         setCvs(cvsRes.data.data ?? []);
         setHistory(historyRes.data.data ?? []);
+        setCategoryByName(new Map((catalogRes.data.data ?? []).map((s) => [s.name.toLowerCase().trim(), s.category])));
         // Model health is non-critical to the page load — fetch best-effort.
         careerService.getModelStatus()
           .then((r) => setModelStatus(r.data.data))
@@ -219,6 +248,29 @@ export default function CareerPage() {
     }
     load();
   }, []);
+
+  // Once the goal + tracked skills have loaded, silently preview the path to
+  // the saved goal so the ladder is visible without an extra click. Guarded on
+  // !predicting too — handleSaveGoal also triggers its own explicit refresh (it
+  // needs to fire even when a prediction already exists, e.g. after editing an
+  // existing goal), and without this guard both fire nearly simultaneously on
+  // save, each persisting its own duplicate row to the prediction history.
+  useEffect(() => {
+    if (!loading && goal && predictSkills.length > 0 && !prediction && !predicting) {
+      runPrediction(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, goal, predictSkills.length, predicting]);
+
+  // Node detail drawer: dismiss on Escape, mirroring PiqModal's behavior
+  // (this drawer predates PiqModal and isn't built on it, so it needs its own
+  // listener rather than inheriting one).
+  useEffect(() => {
+    if (!selectedNode) return;
+    const handler = (e: KeyboardEvent) => e.key === "Escape" && setSelectedNode(null);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [selectedNode]);
 
   async function handleSaveGoal() {
     if (!form.target_role.trim()) { toast.error("Target role is required"); return; }
@@ -238,6 +290,9 @@ export default function CareerPage() {
       setGoal(res.data.data);
       setEditGoal(false);
       toast.success("Career goal saved");
+      // Preview the step-by-step path to this goal right away — silently, so a
+      // student sees the ladder to their goal instead of just a saved string.
+      runPrediction(true);
     } catch {
       toast.error("Failed to save goal");
     } finally {
@@ -245,8 +300,31 @@ export default function CareerPage() {
     }
   }
 
-  async function handlePredict() {
-    if (predictSkills.length === 0) { toast.error("Add at least one skill to predict your path"); return; }
+  async function handleDeleteGoal() {
+    setDeletingGoal(true);
+    try {
+      await careerService.deleteGoal();
+      setGoal(null);
+      setForm({ target_role: "", target_industry: "", target_date: "", notes: "" });
+      setSelectedSkills(new Set());
+      setSelectedCvId(null);
+      setPrediction(null);
+      toast.success("Career goal removed");
+    } catch {
+      toast.error("Failed to remove goal");
+    } finally {
+      setDeletingGoal(false);
+      setConfirmDeleteGoal(false);
+    }
+  }
+
+  // silent = true suppresses toasts/errors (used for the automatic goal-path
+  // preview triggered on save/load, as opposed to the user-initiated button).
+  async function runPrediction(silent = false) {
+    if (predictSkills.length === 0) {
+      if (!silent) toast.error("Add at least one language to predict your path");
+      return;
+    }
     setPredicting(true);
     try {
       const res = await careerService.predictPath({
@@ -259,7 +337,7 @@ export default function CareerPage() {
       setSimResult(null);
       // Reset the what-if simulator to the same skill set this prediction used.
       setWhatIfSkills(predictSkills);
-      toast.success("Career path generated");
+      if (!silent) toast.success("Career path generated");
       try {
         const h = await careerService.getPredictions();
         setHistory(h.data.data ?? []);
@@ -268,8 +346,8 @@ export default function CareerPage() {
       // 503 = career model offline — reflect it in the badge and pause predictions.
       if ((err as { response?: { status?: number } })?.response?.status === 503) {
         setModelStatus((s) => ({ module_a: s?.module_a ?? { online: false }, module_b: { ...(s?.module_b ?? {}), online: false } }));
-        toast.error("The career model is offline — predictions are paused");
-      } else {
+        if (!silent) toast.error("The career model is offline — predictions are paused");
+      } else if (!silent) {
         toast.error("Failed to generate path");
       }
     } finally {
@@ -277,20 +355,26 @@ export default function CareerPage() {
     }
   }
 
+  async function handlePredict() {
+    await runPrediction(false);
+  }
+
   async function handleGenerateRoadmap() {
-    const pathId = prediction?.paths[0]?.id;
+    // Prefer the goal-directed ladder (if a goal is set) over the model's free
+    // best-skill-match guess, so the roadmap reflects the actual stated goal.
+    const pathId = prediction?.goal_path?.id ?? prediction?.paths[0]?.id;
     if (!pathId) return;
     setGeneratingRoadmap(true);
     try {
-      const res = await careerService.generateRoadmap(pathId);
+      const res = await careerService.generateRoadmap(pathId, prediction?.id);
       const created = res.data.data.created;
       if (created > 0) {
         const r = await careerService.getRoadmap();
         setRoadmap(r.data.data ?? []);
-        toast.success(`Added ${created} skill${created === 1 ? "" : "s"} to your roadmap`);
+        toast.success(`Added ${created} language${created === 1 ? "" : "s"} to your roadmap`);
         setStep("Roadmap");
       } else {
-        toast.success("Roadmap already covers these skills");
+        toast.success("Roadmap already covers these languages");
       }
     } catch {
       toast.error("Failed to generate roadmap");
@@ -357,6 +441,20 @@ export default function CareerPage() {
       toast.success("Item removed");
     } catch {
       toast.error("Failed to remove item");
+    } finally {
+      setConfirmDeleteItem(null);
+    }
+  }
+
+  async function handleDeletePrediction(id: string) {
+    try {
+      await careerService.deletePrediction(id);
+      setHistory((prev) => prev.filter((h) => h.id !== id));
+      toast.success("Prediction removed from history");
+    } catch {
+      toast.error("Failed to remove prediction");
+    } finally {
+      setConfirmDeletePrediction(null);
     }
   }
 
@@ -476,7 +574,10 @@ export default function CareerPage() {
                         <div style={{ fontWeight: 700, fontSize: 20 }}>{goal.target_role}</div>
                         {goal.target_industry && <div style={{ fontSize: 13, color: "var(--text2)", marginTop: 2 }}>{goal.target_industry}</div>}
                       </div>
-                      <PiqBtn variant="secondary" size="sm" onClick={() => setEditGoal(true)}>Edit</PiqBtn>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <PiqBtn variant="secondary" size="sm" onClick={() => setEditGoal(true)}>Edit</PiqBtn>
+                        <PiqBtn variant="danger" size="sm" onClick={() => setConfirmDeleteGoal(true)}>Remove</PiqBtn>
+                      </div>
                     </div>
                     <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
                       {goal.target_date && <Field label="Target Date" value={new Date(goal.target_date).toLocaleDateString()} />}
@@ -492,10 +593,11 @@ export default function CareerPage() {
                     ) : null; })()}
                     {goal.skills_snapshot && goal.skills_snapshot.length > 0 && (
                       <div style={{ marginTop: 14 }}>
-                        <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 6 }}>Skills attached to this goal</div>
+                        <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 6 }}>Languages attached to this goal</div>
                         <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                           {goal.skills_snapshot.map((s) => (
-                            <span key={s.skill_id} style={{ fontSize: 12, padding: "3px 10px", borderRadius: 12, background: "var(--accentD)", color: "var(--accent)", fontWeight: 500 }}>
+                            <span key={s.skill_id} style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, padding: "3px 10px", borderRadius: 12, background: "var(--accentD)", color: "var(--accent)", fontWeight: 500 }}>
+                              <CategoryTag skill={s.name} categoryByName={categoryByName} />
                               {s.name} · {s.proficiency_label}
                             </span>
                           ))}
@@ -506,12 +608,53 @@ export default function CareerPage() {
                       <PiqBtn onClick={() => setStep("Career Path")}>Generate Career Path →</PiqBtn>
                     </div>
                   </div>
+
+                  <PiqModal
+                    open={confirmDeleteGoal}
+                    onClose={() => setConfirmDeleteGoal(false)}
+                    title="Remove your career goal?"
+                    footer={<>
+                      <PiqBtn variant="secondary" onClick={() => setConfirmDeleteGoal(false)}>Cancel</PiqBtn>
+                      <PiqBtn variant="danger" disabled={deletingGoal} onClick={handleDeleteGoal}>{deletingGoal ? "Removing…" : "Remove goal"}</PiqBtn>
+                    </>}
+                  >
+                    <div style={{ fontSize: 15, color: "var(--text2)", lineHeight: 1.6 }}>
+                      Remove <strong style={{ color: "var(--text)" }}>{goal?.target_role}</strong> as your career goal?
+                      Your roadmap and prediction history stay intact — you can set a new goal any time.
+                    </div>
+                  </PiqModal>
+
+                  {(() => {
+                    const goalPath = prediction?.goal_path;
+                    if (!goalPath) return null;
+                    return (
+                      <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 24, border: "1px solid var(--border)" }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 14, padding: "10px 12px", borderRadius: "var(--radius)", background: "#f59e0b15", border: "1px solid #f59e0b40" }}>
+                          <span style={{ fontSize: 15 }}>🪜</span>
+                          <span style={{ fontSize: 13, color: "var(--text2)" }}>
+                            <b style={{ color: "var(--text)" }}>Recommended path</b> — build the languages for each stage before moving to the next. Don&rsquo;t skip levels.
+                          </span>
+                        </div>
+                        <CareerStepList prediction={prediction!} paths={[goalPath]} goal categoryByName={categoryByName} />
+                      </div>
+                    );
+                  })()}
+                  {predicting && !prediction && (
+                    <div style={{ display: "flex", justifyContent: "center", padding: 16 }}><PiqSpinner /></div>
+                  )}
+                  {!predicting && !prediction && predictSkills.length === 0 && (
+                    <p style={{ fontSize: 12, color: "var(--text3)", textAlign: "center", margin: 0 }}>Add languages in your profile to preview the step-by-step path to this goal.</p>
+                  )}
                 </div>
               ) : (
                 <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 24, border: "1px solid var(--border)" }}>
                   <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 20 }}>{goal ? "Edit Goal" : "Set Your Career Goal"}</div>
                   <FormRow label="Target Role *">
                     <input value={form.target_role} onChange={(e) => setForm({ ...form, target_role: e.target.value })} placeholder="e.g. Senior Software Engineer" style={inputStyle} />
+                  </FormRow>
+                  <FormRow label="Your Current Level">
+                    <input value={currentRole} onChange={(e) => setCurrentRole(e.target.value)} placeholder="e.g. Student, Intern" style={inputStyle} />
+                    <p style={{ fontSize: 11, color: "var(--text3)", margin: "4px 0 0" }}>Used to build the step-by-step path to your goal — defaults to &ldquo;Student&rdquo;.</p>
                   </FormRow>
                   <FormRow label="Target Industry">
                     <input value={form.target_industry} onChange={(e) => setForm({ ...form, target_industry: e.target.value })} placeholder="e.g. FinTech" style={inputStyle} />
@@ -541,9 +684,9 @@ export default function CareerPage() {
                       </div>
                     )}
                   </FormRow>
-                  <FormRow label={`Select Skills from Your Profile${selectedSkills.size ? ` (${selectedSkills.size} selected)` : ""}`}>
+                  <FormRow label={`Select Languages from Your Profile${selectedSkills.size ? ` (${selectedSkills.size} selected)` : ""}`}>
                     {userSkills.length === 0 ? (
-                      <p style={{ fontSize: 13, color: "var(--text3)", margin: 0 }}>No skills found — add skills in the Skills section first.</p>
+                      <p style={{ fontSize: 13, color: "var(--text3)", margin: 0 }}>No languages found — add languages in the Languages section first.</p>
                     ) : (
                       <div style={{ display: "flex", flexWrap: "wrap", gap: 6, maxHeight: 180, overflowY: "auto", padding: 4 }}>
                         {userSkills.map((us) => {
@@ -566,6 +709,11 @@ export default function CareerPage() {
                                 display: "flex", alignItems: "center", gap: 4,
                               }}
                             >
+                              {us.skills?.category && (
+                                <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.4, opacity: 0.6 }}>
+                                  {us.skills.category}
+                                </span>
+                              )}
                               {us.skills?.name ?? us.skill_id}
                               {us.github_verified && <span title="GitHub verified" style={{ fontSize: 10 }}>✓</span>}
                               <span style={{ opacity: 0.6 }}>· {us.proficiency_label}</span>
@@ -606,14 +754,14 @@ export default function CareerPage() {
                 {modelStatus?.module_b.online === false && (
                   <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", borderRadius: "var(--radius)", background: "#ef444415", border: "1px solid #ef444455", color: "#ef4444", fontSize: 13, marginBottom: 14 }}>
                     <span style={{ fontSize: 15 }}>⚠️</span>
-                    <span>The career model is offline — predictions are paused. Start Module B (port 8002) and reload.</span>
+                    <span>The career model is temporarily offline — predictions are paused. Please try again shortly.</span>
                   </div>
                 )}
 
                 {/* Skills tag-box (fed to the model, pre-filled from your tracked skills) */}
                 <div style={{ marginBottom: 14 }}>
                   <label style={{ fontSize: 12, color: "var(--text2)", display: "block", marginBottom: 4 }}>
-                    Skills <span style={{ color: "var(--text3)" }}>· edit the list the model uses to predict</span>
+                    Languages <span style={{ color: "var(--text3)" }}>· edit the list the model uses to predict</span>
                   </label>
                   <div
                     onClick={() => document.getElementById("predict-skill-input")?.focus()}
@@ -621,6 +769,7 @@ export default function CareerPage() {
                   >
                     {predictSkills.map((s) => (
                       <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 8px", borderRadius: 999, background: "var(--accentD)", color: "var(--accent)", fontSize: 12, fontWeight: 500 }}>
+                        <CategoryTag skill={s} categoryByName={categoryByName} />
                         {s}
                         <button onClick={(e) => { e.stopPropagation(); setPredictSkills((prev) => prev.filter((x) => x !== s)); }} style={{ border: "none", background: "transparent", cursor: "pointer", color: "var(--accent)", fontSize: 13, lineHeight: 1, padding: 0 }}>✕</button>
                       </span>
@@ -639,7 +788,7 @@ export default function CareerPage() {
                           setPredictSkills((prev) => prev.slice(0, -1));
                         }
                       }}
-                      placeholder={predictSkills.length ? "Add a skill…" : "Type a skill and press Enter (e.g. react, python, docker)…"}
+                      placeholder={predictSkills.length ? "Add a language…" : "Type a language and press Enter (e.g. react, python, docker)…"}
                       style={{ flex: "1 1 160px", minWidth: 140, border: "none", outline: "none", background: "transparent", color: "var(--text)", fontSize: 13 }}
                     />
                   </div>
@@ -679,89 +828,148 @@ export default function CareerPage() {
                     />
                   </div>
                   <PiqBtn onClick={handlePredict} disabled={predicting || modelStatus?.module_b.online === false}>
-                    {predicting ? "Analysing 347 IT roles…" : "Generate My Path"}
+                    {predicting ? `Analysing${modelStatus?.module_b.num_roles ? ` ${modelStatus.module_b.num_roles}` : ""} IT roles…` : "Generate My Path"}
                   </PiqBtn>
                 </div>
               </div>
 
-              {history.length > 0 && (
-                <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: "12px 16px", border: "1px solid var(--border)", marginBottom: 20 }}>
-                  <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 8 }}>Your prediction history — track how your readiness changes over time</div>
-                  {history.length > 1 && (
-                    <div style={{ height: 120, marginBottom: 10 }}>
-                      <ResponsiveContainer width="100%" height="100%" minHeight={100}>
-                        <LineChart
-                          data={[...history].reverse().map((h) => ({
-                            date: new Date(h.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
-                            readiness: h.top_readiness != null ? Math.round(h.top_readiness * 100) : 0,
-                          }))}
-                          margin={{ top: 4, right: 8, left: -20, bottom: 0 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                          <XAxis dataKey="date" tick={{ fontSize: 11, fill: "var(--text3)" }} axisLine={false} tickLine={false} />
-                          <YAxis unit="%" domain={[0, 100]} tick={{ fontSize: 11, fill: "var(--text3)" }} axisLine={false} tickLine={false} />
-                          <Tooltip content={<PiqTooltip />} />
-                          <Line type="monotone" dataKey="readiness" name="Top-path readiness %" stroke={PIQ_COLORS.teal} strokeWidth={2} dot={{ r: 3 }} />
-                        </LineChart>
-                      </ResponsiveContainer>
+              {/* Goal-aware history: once a goal is set, track progress toward
+                  THAT role over time (fixed target + timeframe) instead of the
+                  model's free best-match, which can drift to an unrelated role
+                  (e.g. "Computer Research Scientist") from one run to the next. */}
+              {history.length > 0 && (() => {
+                const isGoalMode = !!goal;
+                const readinessOf = (h: CareerPredictionSnapshot) => isGoalMode ? h.goal_readiness : h.top_readiness;
+                const roleOf = (h: CareerPredictionSnapshot) => (isGoalMode ? h.goal_target_role : h.top_target_role) ?? (isGoalMode ? goal?.target_role : undefined);
+                return (
+                  <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: "12px 16px", border: "1px solid var(--border)", marginBottom: 20 }}>
+                    <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 8 }}>
+                      {isGoalMode ? `Your progress toward ${goal?.target_role ?? "your goal"} — readiness over time` : "Your prediction history — track how your readiness changes over time"}
                     </div>
-                  )}
-                  <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4 }}>
-                    {history.map((h) => (
-                      <div key={h.id} style={{ flex: "0 0 auto", minWidth: 150, padding: "8px 12px", borderRadius: 10, border: "1px solid var(--border)", background: "var(--surf)" }}>
-                        <div style={{ fontSize: 11, color: "var(--text3)" }}>{new Date(h.created_at).toLocaleDateString()}</div>
-                        <div style={{ fontSize: 13, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 160 }}>{h.top_target_role ?? "—"}</div>
-                        <div style={{ fontSize: 12, color: "var(--teal)" }}>
-                          readiness {h.top_readiness != null ? Math.round(h.top_readiness * 100) : "—"}%
-                        </div>
+                    {history.length > 1 && (
+                      <div style={{ height: 120, marginBottom: 10 }}>
+                        <ResponsiveContainer width="100%" height="100%" minHeight={100}>
+                          <LineChart
+                            data={[...history].reverse().map((h) => ({
+                              date: new Date(h.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
+                              readiness: readinessOf(h) != null ? Math.round(readinessOf(h)! * 100) : 0,
+                            }))}
+                            margin={{ top: 4, right: 8, left: -20, bottom: 0 }}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                            <XAxis dataKey="date" tick={{ fontSize: 11, fill: "var(--text3)" }} axisLine={false} tickLine={false} />
+                            <YAxis unit="%" domain={[0, 100]} tick={{ fontSize: 11, fill: "var(--text3)" }} axisLine={false} tickLine={false} />
+                            <Tooltip content={<PiqTooltip />} />
+                            <Line type="monotone" dataKey="readiness" name={isGoalMode ? "Goal readiness %" : "Top-path readiness %"} stroke={PIQ_COLORS.teal} strokeWidth={2} dot={{ r: 3 }} />
+                          </LineChart>
+                        </ResponsiveContainer>
                       </div>
-                    ))}
+                    )}
+                    <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4 }}>
+                      {history.map((h) => (
+                        <div key={h.id} style={{ flex: "0 0 auto", minWidth: 150, padding: "8px 12px", borderRadius: 10, border: "1px solid var(--border)", background: "var(--surf)" }}>
+                          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 6 }}>
+                            <div style={{ fontSize: 11, color: "var(--text3)" }}>{new Date(h.created_at).toLocaleDateString()}</div>
+                            <button onClick={() => setConfirmDeletePrediction(h)} title="Remove from history" style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 13, lineHeight: 1, padding: 0, flexShrink: 0 }}>×</button>
+                          </div>
+                          <div style={{ fontSize: 13, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 160 }}>{roleOf(h) ?? "—"}</div>
+                          <div style={{ fontSize: 12, color: "var(--teal)" }}>
+                            readiness {readinessOf(h) != null ? Math.round(readinessOf(h)! * 100) : "—"}%
+                            {isGoalMode && h.goal_total_months != null && ` · ~${h.goal_total_months}mo (${(h.goal_total_months / 12).toFixed(1)}y)`}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
+                );
+              })()}
+
+              <PiqModal
+                open={!!confirmDeletePrediction}
+                onClose={() => setConfirmDeletePrediction(null)}
+                title="Remove this prediction?"
+                footer={<>
+                  <PiqBtn variant="secondary" onClick={() => setConfirmDeletePrediction(null)}>Cancel</PiqBtn>
+                  <PiqBtn variant="danger" onClick={() => confirmDeletePrediction && handleDeletePrediction(confirmDeletePrediction.id)}>Remove</PiqBtn>
+                </>}
+              >
+                <div style={{ fontSize: 15, color: "var(--text2)", lineHeight: 1.6 }}>
+                  Remove this run from your history? This won&rsquo;t affect your saved goal or roadmap.
                 </div>
-              )}
+              </PiqModal>
 
               {predicting && <div style={{ display: "flex", justifyContent: "center", padding: 48 }}><PiqSpinner /></div>}
 
               {prediction && !predicting && (
                 <div>
-                  {/* Interactive career graph */}
-                  <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 20, border: "1px solid var(--border)", marginBottom: 20 }}>
-                    <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Career Journey Map</div>
-                    <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 16 }}>
-                      {prediction.paths.length} predicted paths · drag to pan, scroll to zoom · <b>click a role</b> for skills & market · node colour = readiness
-                    </div>
-                    <CareerFlowGraph prediction={prediction} onSelect={setSelectedNode} />
-                  </div>
+                  {/* Interactive career graph — once a goal is set, filter down to
+                      just that goal's own chain so unrelated model guesses (e.g. a
+                      random "Computer Research Scientist" match) never show up. */}
+                  {(() => {
+                    const gp = prediction.goal_path;
+                    let graphSource = prediction;
+                    if (gp) {
+                      const keepLabels = new Set(gp.career_steps ?? []);
+                      const nodes = (prediction.graph_nodes ?? []).filter((n) => keepLabels.has(n.label));
+                      const keepIds = new Set(nodes.map((n) => n.id));
+                      const edges = (prediction.graph_edges ?? []).filter((e) => keepIds.has(e.source) && keepIds.has(e.target));
+                      graphSource = { ...prediction, graph_nodes: nodes, graph_edges: edges };
+                    }
+                    return (
+                      <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 20, border: "1px solid var(--border)", marginBottom: 20 }}>
+                        <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Career Journey Map</div>
+                        <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 16 }}>
+                          {gp ? <>Your path to <b>{goal?.target_role ?? "your goal"}</b></> : `${prediction.paths.length} predicted paths`} · drag to pan, scroll to zoom · <b>click a role</b> for languages & market · node colour = readiness
+                        </div>
+                        <CareerFlowGraph prediction={graphSource} onSelect={setSelectedNode} />
+                      </div>
+                    );
+                  })()}
 
                   {/* Path to your goal */}
                   {prediction.goal_path && (
                     <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 20, border: "1px solid #f59e0b44", marginBottom: 20 }}>
                       <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>🎯 Path to your goal{goal?.target_role ? ` · ${goal.target_role}` : ""}</div>
-                      <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 16 }}>
-                        Your skills-predicted paths above may not end at the goal you set — this is the route that does, with the skills to close the gap.
+                      <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 8 }}>
+                        Only the steps and languages actually required for this target — a realistic, stage-by-stage plan, not a shortcut.
                       </div>
-                      <CareerStepList prediction={prediction} paths={[prediction.goal_path]} goal />
+                      {(() => {
+                        const totalMonths = prediction.goal_path!.transitions.reduce((sum, t) => sum + (t.timeframe_months ?? 0), 0);
+                        const stages = prediction.goal_path!.transitions.length;
+                        if (totalMonths <= 0) return null;
+                        return (
+                          <div style={{ display: "inline-block", fontSize: 12, fontWeight: 600, color: "var(--amber)", background: "#f59e0b15", border: "1px solid #f59e0b40", borderRadius: "var(--radius)", padding: "6px 10px", marginBottom: 16 }}>
+                            ⏱ Realistic timeline: ~{totalMonths} months (~{(totalMonths / 12).toFixed(1)} yrs) across {stages} stage{stages === 1 ? "" : "s"}
+                          </div>
+                        );
+                      })()}
+                      <CareerStepList prediction={prediction} paths={[prediction.goal_path]} goal categoryByName={categoryByName} />
                     </div>
                   )}
 
-                  {/* Step-by-step breakdown */}
-                  <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 20, border: "1px solid var(--border)", marginBottom: 20 }}>
-                    <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Step-by-step path</div>
-                    <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 16 }}>
-                      Each step shows time-to-reach, the skills that unlock it, readiness, and the role's live market trend.
+                  {/* Step-by-step breakdown of the generic (non-goal) predicted
+                      paths — only meaningful in pure exploration mode, before a
+                      goal narrows things down to one target. */}
+                  {!prediction.goal_path && (
+                    <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 20, border: "1px solid var(--border)", marginBottom: 20 }}>
+                      <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Step-by-step path</div>
+                      <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 16 }}>
+                        Each step shows time-to-reach, the languages that unlock it, readiness, and the role's live market trend.
+                      </div>
+                      <CareerStepList prediction={prediction} categoryByName={categoryByName} />
                     </div>
-                    <CareerStepList prediction={prediction} />
-                  </div>
+                  )}
 
                   {/* What-if simulator */}
                   <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 20, border: "1px solid var(--border)", marginBottom: 20 }}>
                     <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>What-if Simulator</div>
                     <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 12 }}>
-                      Add or remove skills to see how your paths and readiness change — nothing is saved.
+                      Add or remove languages to see how your paths and readiness change — nothing is saved.
                     </div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 10 }}>
                       {whatIfSkills.map((s) => (
                         <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 10px", borderRadius: 999, border: "1px solid var(--border)", background: "var(--surf)", fontSize: 12 }}>
+                          <CategoryTag skill={s} categoryByName={categoryByName} />
                           {s}
                           <button onClick={() => setWhatIfSkills((prev) => prev.filter((x) => x !== s))} style={{ border: "none", background: "transparent", cursor: "pointer", color: "var(--text3)", fontSize: 13, lineHeight: 1 }}>✕</button>
                         </span>
@@ -772,7 +980,7 @@ export default function CareerPage() {
                         value={whatIfAdd}
                         onChange={(e) => setWhatIfAdd(e.target.value)}
                         onKeyDown={(e) => { if (e.key === "Enter" && whatIfAdd.trim()) { setWhatIfSkills((prev) => Array.from(new Set([...prev, whatIfAdd.trim()]))); setWhatIfAdd(""); } }}
-                        placeholder="Add a skill (e.g. tensorflow)…"
+                        placeholder="Add a language (e.g. Python)…"
                         style={{ ...inputStyle, flex: "1 1 220px" }}
                       />
                       <PiqBtn onClick={handleSimulate} disabled={simulating}>{simulating ? "Simulating…" : "Simulate"}</PiqBtn>
@@ -797,73 +1005,87 @@ export default function CareerPage() {
                     )}
                   </div>
 
-                  {/* Charts */}
+                  {/* Charts — the confidence-by-path bar chart only makes sense
+                      across the generic (non-goal) paths; the skill-gap views are
+                      re-pointed to the goal path once one is set, so they only ever
+                      show what's actually required for that target. */}
                   <div style={{ marginTop: 24 }}>
-                    <PiqChartContainer
-                      title="Relative Confidence by Path"
-                      subtitle="Share of model confidence across your top predicted paths"
-                      height={220}
-                    >
-                      <ResponsiveContainer width="100%" height="100%" minHeight={180}>
-                        <BarChart
-                          data={prediction.paths.map((p, i) => ({
-                            path:       `Path ${i + 1}`,
-                            confidence: Math.round((p.confidence_relative ?? p.probability) * 100),
-                            role:       p.career_steps?.[p.career_steps.length - 1] ?? "",
-                          }))}
-                          margin={{ top: 4, right: 8, left: -16, bottom: 0 }}
-                          barSize={40}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                          <XAxis dataKey="path" tick={{ fontSize: 12, fill: "var(--text3)" }} axisLine={false} tickLine={false} />
-                          <YAxis unit="%" domain={[0, 100]} tick={{ fontSize: 11, fill: "var(--text3)" }} axisLine={false} tickLine={false} />
-                          <Tooltip content={<PiqTooltip />} cursor={{ fill: "var(--surf2)" }} />
-                          <Bar dataKey="confidence" name="Relative confidence %" fill={PIQ_COLORS.teal} radius={[4, 4, 0, 0]} />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </PiqChartContainer>
-
-                    {prediction.paths[0]?.skills_needed && prediction.paths[0].skills_needed.length > 0 && (
-                      <div style={{ marginTop: 16 }}>
-                        <PiqChartContainer
-                          title="Skill Gap — Top Path"
-                          subtitle="Skills you have vs skills needed for your top predicted role"
-                          height={280}
-                        >
-                          <ResponsiveContainer width="100%" height="100%" minHeight={220}>
-                            <RadarChart
-                              data={[
-                                ...(prediction.paths[0].skills_matched ?? []).map((s) => ({ skill: s.length > 14 ? s.slice(0, 13) + "…" : s, current: profPct(s), needed: 100 })),
-                                ...(prediction.paths[0].skills_needed ?? []).slice(0, 5).map((s) => ({ skill: s.length > 14 ? s.slice(0, 13) + "…" : s, current: 0, needed: 100 })),
-                              ]}
-                              margin={{ top: 8, right: 20, left: 20, bottom: 8 }}
-                            >
-                              <PolarGrid stroke="var(--border)" />
-                              <PolarAngleAxis dataKey="skill" tick={{ fontSize: 10, fill: "var(--text3)" }} />
-                              <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
-                              <Radar name="Required" dataKey="needed"  stroke={PIQ_COLORS.teal}   fill={PIQ_COLORS.teal}   fillOpacity={0.15} />
-                              <Radar name="Current"  dataKey="current" stroke={PIQ_COLORS.accent} fill={PIQ_COLORS.accent} fillOpacity={0.25} />
-                              <Tooltip content={<PiqTooltip />} />
-                            </RadarChart>
-                          </ResponsiveContainer>
-                        </PiqChartContainer>
-                      </div>
+                    {!prediction.goal_path && (
+                      <PiqChartContainer
+                        title="Relative Confidence by Path"
+                        subtitle="Share of model confidence across your top predicted paths"
+                        height={220}
+                      >
+                        <ResponsiveContainer width="100%" height="100%" minHeight={180}>
+                          <BarChart
+                            data={prediction.paths.map((p, i) => ({
+                              path:       `Path ${i + 1}`,
+                              confidence: Math.round((p.confidence_relative ?? p.probability) * 100),
+                              role:       p.career_steps?.[p.career_steps.length - 1] ?? "",
+                            }))}
+                            margin={{ top: 4, right: 8, left: -16, bottom: 0 }}
+                            barSize={40}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                            <XAxis dataKey="path" tick={{ fontSize: 12, fill: "var(--text3)" }} axisLine={false} tickLine={false} />
+                            <YAxis unit="%" domain={[0, 100]} tick={{ fontSize: 11, fill: "var(--text3)" }} axisLine={false} tickLine={false} />
+                            <Tooltip content={<PiqTooltip />} cursor={{ fill: "var(--surf2)" }} />
+                            <Bar dataKey="confidence" name="Relative confidence %" fill={PIQ_COLORS.teal} radius={[4, 4, 0, 0]} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </PiqChartContainer>
                     )}
+
+                    {(() => {
+                      const gp = prediction.goal_path ?? prediction.paths[0];
+                      if (!gp?.skills_needed || gp.skills_needed.length === 0) return null;
+                      const isGoal = !!prediction.goal_path;
+                      return (
+                        <div style={{ marginTop: prediction.goal_path ? 0 : 16 }}>
+                          <PiqChartContainer
+                            title={isGoal ? "Language Gap — Your Goal" : "Language Gap — Top Path"}
+                            subtitle={isGoal ? `Languages you have vs languages needed for ${goal?.target_role ?? "your goal"}` : "Languages you have vs languages needed for your top predicted role"}
+                            height={280}
+                          >
+                            <ResponsiveContainer width="100%" height="100%" minHeight={220}>
+                              <RadarChart
+                                data={[
+                                  ...(gp.skills_matched ?? []).map((s) => ({ skill: s.length > 14 ? s.slice(0, 13) + "…" : s, current: profPct(s), needed: 100 })),
+                                  ...(gp.skills_needed ?? []).slice(0, 5).map((s) => ({ skill: s.length > 14 ? s.slice(0, 13) + "…" : s, current: 0, needed: 100 })),
+                                ]}
+                                margin={{ top: 8, right: 20, left: 20, bottom: 8 }}
+                              >
+                                <PolarGrid stroke="var(--border)" />
+                                <PolarAngleAxis dataKey="skill" tick={{ fontSize: 10, fill: "var(--text3)" }} />
+                                <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
+                                <Radar name="Required" dataKey="needed"  stroke={PIQ_COLORS.teal}   fill={PIQ_COLORS.teal}   fillOpacity={0.15} />
+                                <Radar name="Current"  dataKey="current" stroke={PIQ_COLORS.accent} fill={PIQ_COLORS.accent} fillOpacity={0.25} />
+                                <Tooltip content={<PiqTooltip />} />
+                              </RadarChart>
+                            </ResponsiveContainer>
+                          </PiqChartContainer>
+                        </div>
+                      );
+                    })()}
                   </div>
 
-                  {(prediction.paths[0]?.skill_insights?.length ?? 0) > 0 && (
-                    <div style={{ marginTop: 16, background: "var(--surf2)", borderRadius: "var(--radius)", padding: 20, border: "1px solid var(--border)" }}>
-                      <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Gap Skills — Market Priority</div>
-                      <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 14 }}>
-                        Skills to gain for your top path, ranked by market demand (live forecast). Learn the rising ones first.
+                  {(() => {
+                    const gp = prediction.goal_path ?? prediction.paths[0];
+                    if (!gp?.skill_insights || gp.skill_insights.length === 0) return null;
+                    return (
+                      <div style={{ marginTop: 16, background: "var(--surf2)", borderRadius: "var(--radius)", padding: 20, border: "1px solid var(--border)" }}>
+                        <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Gap Languages — Market Priority</div>
+                        <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 14 }}>
+                          Languages to gain for {prediction.goal_path ? "your goal" : "your top path"}, ranked by market demand (live forecast). Learn the rising ones first.
+                        </div>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                          {gp.skill_insights.map((ins) => (
+                            <SkillInsightChip key={ins.skill} insight={ins} categoryByName={categoryByName} />
+                          ))}
+                        </div>
                       </div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                        {prediction.paths[0]!.skill_insights!.map((ins) => (
-                          <SkillInsightChip key={ins.skill} insight={ins} />
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                    );
+                  })()}
 
                   <div style={{ marginTop: 16, display: "flex", gap: 12, flexWrap: "wrap" }}>
                     <PiqBtn onClick={handleGenerateRoadmap} disabled={generatingRoadmap}>
@@ -944,32 +1166,41 @@ export default function CareerPage() {
                         <option value="in_progress">In Progress</option>
                         <option value="done">Done</option>
                       </select>
-                      <button onClick={() => handleDeleteItem(item.id)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 18, flexShrink: 0 }}>×</button>
+                      <button onClick={() => setConfirmDeleteItem(item)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 18, flexShrink: 0 }}>×</button>
                     </div>
                   ))}
                 </div>
               )}
 
-              {showAddItem && (
-                <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}>
-                  <div style={{ background: "var(--surf)", borderRadius: "var(--radius)", padding: 24, width: 380, border: "1px solid var(--border2)" }}>
-                    <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 16 }}>Add Roadmap Item</div>
-                    <FormRow label="Title *">
-                      <input value={newItem.title} onChange={(e) => setNewItem({ ...newItem, title: e.target.value })} placeholder="e.g. Learn Docker" style={inputStyle} />
-                    </FormRow>
-                    <FormRow label="Description">
-                      <input value={newItem.description} onChange={(e) => setNewItem({ ...newItem, description: e.target.value })} placeholder="Optional details" style={inputStyle} />
-                    </FormRow>
-                    <FormRow label="Due Date">
-                      <input type="date" value={newItem.due_date} onChange={(e) => setNewItem({ ...newItem, due_date: e.target.value })} style={inputStyle} />
-                    </FormRow>
-                    <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 8 }}>
-                      <PiqBtn variant="secondary" onClick={() => setShowAddItem(false)}>Cancel</PiqBtn>
-                      <PiqBtn onClick={handleAddItem} disabled={!newItem.title.trim()}>Add</PiqBtn>
-                    </div>
-                  </div>
+              <PiqModal
+                open={showAddItem}
+                onClose={() => setShowAddItem(false)}
+                title="Add Roadmap Item"
+                footer={<>
+                  <PiqBtn variant="secondary" onClick={() => setShowAddItem(false)}>Cancel</PiqBtn>
+                  <PiqBtn onClick={handleAddItem} disabled={!newItem.title.trim()}>Add</PiqBtn>
+                </>}
+              >
+                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                  <PiqInput label="Title" required value={newItem.title} onChange={(e) => setNewItem({ ...newItem, title: e.target.value })} placeholder="e.g. Learn Docker" />
+                  <PiqInput label="Description" value={newItem.description} onChange={(e) => setNewItem({ ...newItem, description: e.target.value })} placeholder="Optional details" />
+                  <PiqInput label="Due Date" type="date" value={newItem.due_date} onChange={(e) => setNewItem({ ...newItem, due_date: e.target.value })} />
                 </div>
-              )}
+              </PiqModal>
+
+              <PiqModal
+                open={!!confirmDeleteItem}
+                onClose={() => setConfirmDeleteItem(null)}
+                title="Remove roadmap item?"
+                footer={<>
+                  <PiqBtn variant="secondary" onClick={() => setConfirmDeleteItem(null)}>Cancel</PiqBtn>
+                  <PiqBtn variant="danger" onClick={() => confirmDeleteItem && handleDeleteItem(confirmDeleteItem.id)}>Remove</PiqBtn>
+                </>}
+              >
+                <div style={{ fontSize: 15, color: "var(--text2)", lineHeight: 1.6 }}>
+                  Remove <strong style={{ color: "var(--text)" }}>{confirmDeleteItem?.title}</strong> from your roadmap?
+                </div>
+              </PiqModal>
             </div>
           )}
         </>
@@ -1000,10 +1231,13 @@ export default function CareerPage() {
 
             {(selectedNode.meta?.gate_skills?.length ?? 0) > 0 && (
               <div style={{ marginBottom: 16 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Skills to unlock this role</div>
+                <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Languages to unlock this role</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {selectedNode.meta!.gate_skills!.map((s) => (
-                    <span key={s} style={{ padding: "5px 10px", borderRadius: 999, border: "1px solid var(--border)", background: "var(--surf2)", fontSize: 12 }}>{s}</span>
+                    <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "5px 10px", borderRadius: 999, border: "1px solid var(--border)", background: "var(--surf2)", fontSize: 12 }}>
+                      <CategoryTag skill={s} categoryByName={categoryByName} />
+                      {s}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -1021,7 +1255,7 @@ export default function CareerPage() {
                         Demand trend: <span style={{ color: meta.color, fontWeight: 600 }}>{meta.arrow} {meta.label}</span>
                         {m.demand_index ? <span style={{ color: "var(--text2)" }}> · index {m.demand_index}</span> : null}
                       </div>
-                      {m.top_rising.length > 0 && <div style={{ color: "var(--text2)" }}>Rising skills here: <b>{m.top_rising.join(", ")}</b></div>}
+                      {m.top_rising.length > 0 && <div style={{ color: "var(--text2)" }}>Rising languages here: <b>{m.top_rising.join(", ")}</b></div>}
                     </div>
                   );
                 })()}

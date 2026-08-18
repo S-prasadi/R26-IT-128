@@ -13,16 +13,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import type { CareerPrediction, CareerGraphNode } from "@/types";
-
-const readinessColor = (r?: number) =>
-  r == null ? "#64748b" : r >= 0.7 ? "#14b8a6" : r >= 0.4 ? "#f59e0b" : "#ef4444";
-
-const VEL = {
-  rising:  { a: "▲", c: "#10b981" },
-  stable:  { a: "▬", c: "#f59e0b" },
-  falling: { a: "▼", c: "#ef4444" },
-  unknown: { a: "•", c: "#94a3b8" },
-} as const;
+import { readinessColor, VELOCITY_META } from "@/lib/career-ui";
 
 type RoleNodeData = { node: CareerGraphNode };
 
@@ -31,8 +22,8 @@ function RoleNode({ data }: NodeProps<Node<RoleNodeData>>) {
   const isCurrent = n.type === "current";
   const meta = n.meta ?? {};
   const isGoal = !!meta.is_goal;
-  const ring = isGoal ? "#f59e0b" : isCurrent ? "#0ea5e9" : readinessColor(meta.readiness);
-  const vel = VEL[meta.market?.velocity ?? "unknown"];
+  const ring = isGoal ? "#f59e0b" : isCurrent ? "#0ea5e9" : readinessColor(meta.readiness, "#64748b");
+  const vel = VELOCITY_META[meta.market?.velocity ?? "unknown"];
   return (
     <div
       style={{
@@ -57,7 +48,7 @@ function RoleNode({ data }: NodeProps<Node<RoleNodeData>>) {
             <span style={{ color: ring, fontWeight: 600 }}>{Math.round(meta.readiness * 100)}% ready</span>
           )}
           {meta.market && meta.market.velocity !== "unknown" && (
-            <span style={{ color: vel.c, fontWeight: 600 }}>{vel.a} {meta.market.demand_index}</span>
+            <span style={{ color: vel.color, fontWeight: 600 }}>{vel.arrow} {meta.market.demand_index}</span>
           )}
         </div>
       )}

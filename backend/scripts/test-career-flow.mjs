@@ -203,13 +203,43 @@ if (readyOk && hasGraph) ok("Model output well-formed (readiness 0–1, graph pr
 else warn("Model output shape looks off — inspect the payload above");
 
 // ── 7. Generate roadmap from the top path ────────────────────────────────────
-const gen = await api("/career/roadmap/generate", { method: "POST", body: { path_id: top.id } });
+const gen = await api("/career/roadmap/generate", { method: "POST", body: { path_id: top.id, prediction_id: prediction.id } });
 if (gen.res.ok) {
   ok(`Roadmap generated from top path — ${gen.json.data.created} item(s) created`);
 } else if (gen.res.status === 500 && String(gen.json?.message ?? "").includes("career_predictions")) {
   warn("Roadmap/history need the 0024_career_predictions table — apply that migration in Supabase SQL editor.");
 } else {
-  warn(`Roadmap generate: HTTP ${gen.res.status} ${gen.json?.message ?? ""}`);
+  fail("Roadmap generate", gen.res, gen.json);
+}
+
+// ── 7b. Negative cases — these must fail, not silently succeed ─────────────
+{
+  const badGoal = await api("/career/goal", { method: "POST", body: { target_role: "" } });
+  if (badGoal.res.status === 422) ok("Empty target_role correctly rejected (422)");
+  else fail("Expected 422 for empty target_role", badGoal.res, badGoal.json);
+}
+{
+  const badPredict = await api("/career/predict", { method: "POST", body: { experience_months: -5 } });
+  if (badPredict.res.status === 422) ok("Negative experience_months correctly rejected (422)");
+  else fail("Expected 422 for negative experience_months", badPredict.res, badPredict.json);
+}
+{
+  // A path_id that doesn't exist in the snapshot must fail loudly, not
+  // silently substitute an unrelated path's skill gaps into the roadmap.
+  const staleGen = await api("/career/roadmap/generate", {
+    method: "POST",
+    body: { path_id: "path-does-not-exist", prediction_id: prediction.id },
+  });
+  if (staleGen.res.status === 404) ok("Stale/unknown path_id correctly rejected (404), not silently substituted");
+  else fail("Expected 404 for an unknown path_id", staleGen.res, staleGen.json);
+}
+{
+  // A no-op delete (nonexistent/not-ours id) should respond cleanly, not 500 —
+  // Supabase deletes are idempotent (0 rows affected isn't an error), so this
+  // just confirms the route/ownership filter itself doesn't throw.
+  const badDelete = await api("/career/predictions/00000000-0000-0000-0000-000000000000", { method: "DELETE" });
+  if (badDelete.res.ok) ok("Deleting a nonexistent prediction id responds cleanly (no crash)");
+  else fail("Deleting a nonexistent prediction id should not error", badDelete.res, badDelete.json);
 }
 
 // ── 8. Read back history + roadmap ───────────────────────────────────────────
