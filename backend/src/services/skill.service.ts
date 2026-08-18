@@ -10,14 +10,18 @@ import type {
 } from "../validations/skill.validation";
 
 const MOCK_FORECAST = {
-  trending: [
-    { skill: "React",      rank: 1, predicted_weekly_demand: 92, current_weekly_demand: 85, velocity: "rising",  change_pct: 8  },
-    { skill: "TypeScript", rank: 2, predicted_weekly_demand: 89, current_weekly_demand: 79, velocity: "rising",  change_pct: 12 },
-    { skill: "Node.js",    rank: 3, predicted_weekly_demand: 85, current_weekly_demand: 83, velocity: "stable",  change_pct: 2  },
-    { skill: "Python",     rank: 4, predicted_weekly_demand: 88, current_weekly_demand: 83, velocity: "rising",  change_pct: 6  },
-    { skill: "Docker",     rank: 5, predicted_weekly_demand: 80, current_weekly_demand: 78, velocity: "stable",  change_pct: 3  },
-    { skill: "AWS",        rank: 6, predicted_weekly_demand: 78, current_weekly_demand: 81, velocity: "falling", change_pct: -4 },
-  ],
+  trending: {
+    established: [
+      { skill: "React",      rank: 1, predicted_weekly_demand: 92, current_weekly_demand: 85, velocity: "rising",  change_pct: 8,  growth_score: 0.05 },
+      { skill: "TypeScript", rank: 2, predicted_weekly_demand: 89, current_weekly_demand: 79, velocity: "rising",  change_pct: 12, growth_score: 0.07 },
+      { skill: "Node.js",    rank: 3, predicted_weekly_demand: 85, current_weekly_demand: 83, velocity: "stable",  change_pct: 2,  growth_score: 0.01 },
+      { skill: "AWS",        rank: 4, predicted_weekly_demand: 78, current_weekly_demand: 81, velocity: "falling", change_pct: -4, growth_score: -0.03 },
+    ],
+    emerging: [
+      { skill: "Python",     rank: 1, predicted_weekly_demand: 88, current_weekly_demand: 83, velocity: "rising",  change_pct: 6, growth_score: 0.09 },
+      { skill: "Docker",     rank: 2, predicted_weekly_demand: 80, current_weekly_demand: 78, velocity: "stable",  change_pct: 3, growth_score: 0.04 },
+    ],
+  },
   early_warnings: [
     { skill: "Bun.js",    weeks_ahead: 17, correlation: 0.84, interpretation: "Global leads local by 17w" },
     { skill: "LangChain", weeks_ahead: 17, correlation: 0.89, interpretation: "Global leads local by 17w" },
@@ -37,7 +41,8 @@ export const skillService = {
   async listMasterSkills() {
     const { data, error } = await supabaseAdmin
       .from("skills")
-      .select("id, name, category, description")
+      // `type` (technology | tool | competency) comes from migration 0029.
+      .select("id, name, category, description, type")
       .order("category")
       .order("name");
     if (error) throw new AppError(error.message, HTTP_STATUS.INTERNAL_SERVER_ERROR);
@@ -62,7 +67,7 @@ export const skillService = {
       .single();
     if (error) {
       if (error.code === "23505") throw new AppError("Skill already added", HTTP_STATUS.CONFLICT);
-      throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
+      throw new AppError(error.message, HTTP_STATUS.INTERNAL_SERVER_ERROR);
     }
     return data;
   },
@@ -73,20 +78,26 @@ export const skillService = {
       .update(dto)
       .eq("id", userSkillId)
       .eq("user_id", userId)
-      .select("id, skill_id, proficiency_level, proficiency_label, github_verified, confidence_score, updated_at")
-      .single();
-    if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
-    if (!data) throw new AppError("Skill not found", HTTP_STATUS.NOT_FOUND);
-    return data;
+      .select("id, skill_id, proficiency_level, proficiency_label, github_verified, confidence_score, updated_at");
+    if (error) throw new AppError(error.message, HTTP_STATUS.INTERNAL_SERVER_ERROR);
+    // No .single(): a row that doesn't exist (or isn't the caller's) should be a
+    // clean 404, not a Postgrest "no rows returned" error surfaced as a 500.
+    if (!data || data.length === 0) throw new AppError("Skill not found", HTTP_STATUS.NOT_FOUND);
+    return data[0];
   },
 
   async deleteUserSkill(userId: string, userSkillId: string) {
-    const { error } = await supabaseAdmin
+    // .select() is what makes this honest: without it Supabase reports success
+    // for a delete that matched zero rows (wrong owner / already deleted), so
+    // the API would confirm a deletion that never happened.
+    const { data, error } = await supabaseAdmin
       .from("user_skills")
       .delete()
       .eq("id", userSkillId)
-      .eq("user_id", userId);
-    if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
+      .eq("user_id", userId)
+      .select("id");
+    if (error) throw new AppError(error.message, HTTP_STATUS.INTERNAL_SERVER_ERROR);
+    if (!data || data.length === 0) throw new AppError("Skill not found", HTTP_STATUS.NOT_FOUND);
     return { success: true };
   },
 
@@ -103,12 +114,27 @@ export const skillService = {
   },
 
   async logAssessment(userId: string, skillId: string, dto: LogAssessmentDto) {
+    // `skillId` here is a master skills.id. The only DB-level constraint is the
+    // FK to skills(id), which would happily accept any catalog skill the user
+    // has never tracked -- the "must be in your profile" rule previously lived
+    // only in the frontend's dropdown. Enforce it server-side.
+    const { data: tracked, error: trackedError } = await supabaseAdmin
+      .from("user_skills")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("skill_id", skillId)
+      .limit(1);
+    if (trackedError) throw new AppError(trackedError.message, HTTP_STATUS.INTERNAL_SERVER_ERROR);
+    if (!tracked || tracked.length === 0) {
+      throw new AppError("Add this skill to your profile before logging an assessment", HTTP_STATUS.NOT_FOUND);
+    }
+
     const { data, error } = await supabaseAdmin
       .from("skill_assessments")
       .insert({ user_id: userId, skill_id: skillId, ...dto })
       .select("id, skill_id, score, notes, assessed_at")
       .single();
-    if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
+    if (error) throw new AppError(error.message, HTTP_STATUS.INTERNAL_SERVER_ERROR);
     return data;
   },
 

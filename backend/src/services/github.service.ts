@@ -83,8 +83,29 @@ export const githubService = {
     return { connected: true, github_username: data.github_username, connected_at: data.connected_at };
   },
 
+  /**
+   * Clears every GitHub-derived verification claim for a user.
+   * Used by disconnect(), and by verifySkills() to make each run authoritative
+   * rather than purely additive.
+   */
+  async clearVerification(userId: string): Promise<void> {
+    await supabaseAdmin
+      .from("user_skills")
+      .update({ github_verified: false, confidence_score: null })
+      .eq("user_id", userId);
+
+    await supabaseAdmin
+      .from("cvs")
+      .update({ github_api_verified_skills: null })
+      .eq("user_id", userId);
+  },
+
   async disconnect(userId: string): Promise<void> {
     await supabaseAdmin.from("user_github_tokens").delete().eq("user_id", userId);
+    // Without this, skills verified while connected keep their "✓ GitHub"
+    // badge forever after the account is disconnected -- a claim nothing can
+    // still substantiate.
+    await githubService.clearVerification(userId);
   },
 
   /** Repos with language breakdown for CV project verification. */
@@ -170,8 +191,10 @@ export const githubService = {
     );
 
     const totalBytes = Object.values(langBytes).reduce((sum, b) => sum + b, 0);
-    if (totalBytes === 0) return { updated: 0, github_username };
 
+    // No early return on totalBytes === 0: a user whose repos no longer contain
+    // any detectable code should end up with *no* verified skills, which the
+    // reset-then-apply below produces naturally (langConfidence stays empty).
     const langConfidence: Record<string, number> = {};
     for (const [lang, bytes] of Object.entries(langBytes)) {
       langConfidence[lang] = Math.round((bytes / totalBytes) * 10000) / 10000; // 4 decimal places
@@ -183,10 +206,11 @@ export const githubService = {
       .select("id, skills(name)")
       .eq("user_id", userId);
 
-    let updated = 0;
-    const updates: PromiseLike<unknown>[] = [];
-    const verifiedForCV: Array<{ skill: string; verified: boolean; confidence: number; evidence_url: string }> = [];
-
+    // Compute the complete desired verification state BEFORE writing anything.
+    // Everything that can throw (token lookup, repo fetch, language fetch) has
+    // already happened by this point, so the clear-then-apply pair below can't
+    // be interrupted midway and leave the user with everything wiped.
+    const verified: Array<{ id: string; conf: number; skillName: string }> = [];
     for (const us of userSkills ?? []) {
       const skillName = (us.skills as unknown as { name: string } | null)?.name;
       if (!skillName) continue;
@@ -197,32 +221,39 @@ export const githubService = {
 
       const conf = matchedLang ? langConfidence[matchedLang] : undefined;
       if (conf !== undefined && conf > 0) {
-        updates.push(
-          supabaseAdmin
-            .from("user_skills")
-            .update({ github_verified: true, confidence_score: conf })
-            .eq("id", us.id)
-        );
-        verifiedForCV.push({
-          skill: skillName,
-          verified: true,
-          confidence: conf,
-          evidence_url: `https://github.com/${github_username}`,
-        });
-        updated++;
+        verified.push({ id: us.id as string, conf, skillName });
       }
     }
 
-    await Promise.all(updates);
+    // Each run is authoritative, not additive: clear first so a skill that no
+    // longer qualifies (repo deleted, language share dropped to zero) loses its
+    // badge instead of keeping a stale one forever.
+    await githubService.clearVerification(userId);
 
-    // Sync github_verified_skills onto all CVs belonging to this user
-    if (verifiedForCV.length > 0) {
+    await Promise.all(
+      verified.map((v) =>
+        supabaseAdmin
+          .from("user_skills")
+          .update({ github_verified: true, confidence_score: v.conf })
+          .eq("id", v.id)
+      )
+    );
+
+    // Sync onto the GitHub-API-specific CV column (0031). Deliberately NOT
+    // github_verified_skills, which belongs to Module C's CV analysis.
+    if (verified.length > 0) {
+      const verifiedForCV = verified.map((v) => ({
+        skill: v.skillName,
+        verified: true,
+        confidence: v.conf,
+        evidence_url: `https://github.com/${github_username}`,
+      }));
       await supabaseAdmin
         .from("cvs")
-        .update({ github_verified_skills: verifiedForCV })
+        .update({ github_api_verified_skills: verifiedForCV })
         .eq("user_id", userId);
     }
 
-    return { updated, github_username };
+    return { updated: verified.length, github_username };
   },
 };

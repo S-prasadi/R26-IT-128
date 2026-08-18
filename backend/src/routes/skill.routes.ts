@@ -25,11 +25,14 @@ router.post("/user", requirePermission("skills:write"),
   validate(addUserSkillSchema),
   (req, res) => skillController.addUserSkill(req as AuthRequest, res as Response));
 
-router.patch("/user/:skillId", requirePermission("skills:write"),
+// :userSkillId below is a `user_skills` row id, whereas :skillId on the assess
+// route is a master `skills` id. Same URL shape as before -- the param names
+// now say which id each one actually wants.
+router.patch("/user/:userSkillId", requirePermission("skills:write"),
   validate(updateUserSkillSchema),
   (req, res) => skillController.updateUserSkill(req as AuthRequest, res as Response));
 
-router.delete("/user/:skillId", requirePermission("skills:write"),
+router.delete("/user/:userSkillId", requirePermission("skills:write"),
   (req, res) => skillController.deleteUserSkill(req as AuthRequest, res as Response));
 
 router.get("/assessments", requirePermission("skills:read"),

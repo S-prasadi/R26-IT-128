@@ -21,13 +21,15 @@ export const skillController = {
     sendSuccess(res, data, "Skill added", 201);
   },
 
+  // :userSkillId is a user_skills row id -- distinct from :skillId on the
+  // assess route below, which is a master skills.id.
   async updateUserSkill(req: AuthRequest, res: Response): Promise<void> {
-    const data = await skillService.updateUserSkill(req.user!.id, p(req.params["skillId"]), req.body);
+    const data = await skillService.updateUserSkill(req.user!.id, p(req.params["userSkillId"]), req.body);
     sendSuccess(res, data, "Skill updated");
   },
 
   async deleteUserSkill(req: AuthRequest, res: Response): Promise<void> {
-    const data = await skillService.deleteUserSkill(req.user!.id, p(req.params["skillId"]));
+    const data = await skillService.deleteUserSkill(req.user!.id, p(req.params["userSkillId"]));
     sendSuccess(res, data, "Skill removed");
   },
 
