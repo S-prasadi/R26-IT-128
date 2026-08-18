@@ -66,6 +66,16 @@ export interface SkillForecastItem {
   current_weekly_demand: number;
   velocity: "rising" | "stable" | "falling";
   change_pct: number;
+  /** Forecast steps 9-12 vs. the last 4 actual weeks, relative to the historical mean. */
+  growth_score: number;
+}
+
+export interface TrendingTiers {
+  /** Already-large skills, ranked by predicted weekly demand. */
+  established: SkillForecastItem[];
+  /** Smaller-base skills ranked by growth_score, so a fast-growing skill isn't
+   * buried below large flat ones the way a single demand-ranked list would. */
+  emerging: SkillForecastItem[];
 }
 
 export interface EarlyWarning {
@@ -76,7 +86,7 @@ export interface EarlyWarning {
 }
 
 export interface SkillForecast {
-  trending: SkillForecastItem[];
+  trending: TrendingTiers;
   early_warnings: EarlyWarning[];
   forecast_chart: Record<string, string | number>[];
   matched: boolean;
@@ -168,6 +178,10 @@ export interface CareerPredictionSnapshot {
   top_target_role?: string;
   top_confidence?: number;
   top_readiness?: number;
+  goal_target_role?: string;
+  goal_confidence?: number;
+  goal_readiness?: number;
+  goal_total_months?: number;
   created_at: string;
 }
 
@@ -201,6 +215,7 @@ export interface CareerGraphEdge {
 }
 
 export interface CareerPrediction {
+  id?: string | null; // the persisted snapshot's own id (null for what-if simulations); pass to generateRoadmap so it resolves against this exact run, not just "latest"
   paths: CareerPath[];
   graph_nodes: CareerGraphNode[];
   graph_edges: CareerGraphEdge[];

@@ -8,6 +8,9 @@ export const careerService = {
   upsertGoal: (data: { target_role: string; target_industry?: string; target_date?: string; notes?: string; skills_snapshot?: GoalSkillSnapshot[]; cv_id?: string | null }) =>
     apiClient.post<ApiResponse<CareerGoal>>("/career/goal", data),
 
+  deleteGoal: () =>
+    apiClient.delete<ApiResponse<{ success: boolean }>>("/career/goal"),
+
   getRoadmap: () =>
     apiClient.get<ApiResponse<RoadmapItem[]>>("/career/roadmap"),
 
@@ -29,6 +32,9 @@ export const careerService = {
   getPredictions: () =>
     apiClient.get<ApiResponse<CareerPredictionSnapshot[]>>("/career/predictions"),
 
-  generateRoadmap: (path_id: string) =>
-    apiClient.post<ApiResponse<{ created: number; items: RoadmapItem[] }>>("/career/roadmap/generate", { path_id }),
+  deletePrediction: (id: string) =>
+    apiClient.delete<ApiResponse<{ success: boolean }>>(`/career/predictions/${id}`),
+
+  generateRoadmap: (path_id: string, prediction_id?: string | null) =>
+    apiClient.post<ApiResponse<{ created: number; items: RoadmapItem[] }>>("/career/roadmap/generate", { path_id, ...(prediction_id ? { prediction_id } : {}) }),
 };
