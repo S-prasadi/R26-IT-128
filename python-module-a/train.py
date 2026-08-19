@@ -109,6 +109,8 @@ SKILL_ALIASES = {
     "c#":          "csharp",
     "c++":         "cpp",
     "gcp":         "google cloud",
+    "large language models": "llm",
+    "ruby on rails": "ruby",
 }
 
 IT_SKILLS_SET = set(SKILL_ALIASES.get(s.strip().lower(), s.strip().lower()) for s in IT_SKILLS)

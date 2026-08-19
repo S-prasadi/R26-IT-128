@@ -31,6 +31,8 @@ from pydantic import BaseModel
 # ── Paths ─────────────────────────────────────────────────────────────────────
 
 BASE        = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, BASE)
+from train import SKILL_ALIASES  # noqa: E402 -- canonical name-matching table (Phase 4b)
 DATA_OUT    = os.path.join(BASE, "data", "output")
 DATA_MODELS = os.path.join(BASE, "data", "models")
 DATA_DS     = os.path.join(BASE, "data", "dataset")
@@ -44,9 +46,31 @@ log = logging.getLogger("forecasting-engine")
 
 # ── Scheduled job ─────────────────────────────────────────────────────────────
 
+REAL_SCRAPER = os.path.join(BASE, "scraping", "topjobs_scraper.py")
+
+
 def run_weekly_scrape():
-    """Called automatically by APScheduler every Monday at 08:00."""
+    """Called automatically by APScheduler every Monday at 08:00.
+    Refreshes the real TopJobs.lk pilot data first (Phase 3), then the
+    synthetic continuation -- weekly_scraper.py's own rebuild step already
+    merges whatever's in topjobs_lk_real.csv, so running the real scraper
+    first is all that's needed for real data to keep accumulating on its
+    own instead of only growing when someone runs it by hand."""
     log.info("Scheduled weekly scrape starting...")
+    try:
+        real_result = subprocess.run(
+            [sys.executable, REAL_SCRAPER],
+            capture_output=True, text=True, timeout=120
+        )
+        if real_result.returncode == 0:
+            log.info("Real data scrape (TopJobs.lk) completed successfully.")
+        else:
+            # Non-fatal: the synthetic continuation below still runs, and last
+            # week's real data (if any) stays in place for the merge step.
+            log.warning(f"Real data scrape failed, continuing with synthetic only:\n{real_result.stderr[-400:]}")
+    except Exception as e:
+        log.warning(f"Real data scrape exception, continuing with synthetic only: {e}")
+
     try:
         result = subprocess.run(
             [sys.executable, SCRAPER],
@@ -262,9 +286,37 @@ class ForecastRequest(BaseModel):
     skills: list[str] = []
 
 
-def _normalise(name: str) -> str:
-    """Lenient match between frontend display names and forecast skill keys."""
-    return name.lower().replace(".js", "").replace(" ", "").replace(".", "").strip()
+def _canonical_skill_name(name: str) -> str:
+    """Maps a display name (frontend/Supabase) or an internal forecast key to
+    one canonical string for matching. Prefers an explicit alias lookup
+    (train.py's SKILL_ALIASES -- the same table scraping/topjobs_scraper.py
+    already uses) over a blanket string transform, so matching is auditable
+    rather than implicit. Falls back to the old lowercase/strip heuristic
+    only when no explicit alias applies, so nothing that matched before
+    (e.g. "React Native" <-> "react native") stops matching now."""
+    key = name.strip().lower()
+    if key in SKILL_ALIASES:
+        return SKILL_ALIASES[key]
+    return key.replace(".js", "").replace(" ", "").replace(".", "")
+
+
+def _build_trending_tier(pool: pd.DataFrame) -> list:
+    items = []
+    for i, r in pool.reset_index(drop=True).iterrows():
+        actual   = r["avg_actual"] or 1
+        change   = round((r["avg_pred"] - actual) / actual * 100)
+        velocity = r["trend"] if r["trend"] in ("rising", "stable", "falling") else "stable"
+        items.append({
+            "skill":                   r["skill"],
+            "rank":                    i + 1,
+            # avg predicted job-ad mentions per week over the next 4 weeks
+            "predicted_weekly_demand": round(r["avg_pred"]),
+            "current_weekly_demand":   round(r["avg_actual"]),
+            "velocity":                velocity,
+            "change_pct":              int(change),
+            "growth_score":            round(float(r["growth_score"]), 4) if pd.notna(r["growth_score"]) else 0.0,
+        })
+    return items
 
 
 @app.post("/forecast")
@@ -275,12 +327,21 @@ def personalised_forecast(req: ForecastRequest):
     If `skills` is provided, trending is filtered to those skills; otherwise
     (or when none of them have forecast data) the top skills overall are
     returned and `matched` is False so the UI can say so.
+
+    `trending` is split into two tiers rather than one flat ranking (Phase 4a,
+    see docs/skill-forecasting-improvement-plan.md): a flat ranking by raw
+    predicted volume always buries small, fast-growing skills below large,
+    flat ones. `established` ranks by predicted volume among skills already
+    at/above the candidate pool's median demand; `emerging` ranks by
+    growth_score (the forecast's own steps-9-12-vs-recent trajectory, not
+    historical slope) among skills below that median.
     """
     fc = read_csv(os.path.join(DATA_OUT, "forecasts.csv"))
     if fc.empty:
         raise HTTPException(404, "No forecast data. Run train.py first.")
 
-    # ── trending: avg predicted weekly job-ad count over next 4 weeks ──
+    # ── candidate pool: avg predicted weekly job-ad count over next 4 weeks,
+    #    plus the forecast-based growth score computed once per skill ──
     agg = (
         fc[fc["forecast_step"] <= 4]
         .groupby("skill")
@@ -288,38 +349,30 @@ def personalised_forecast(req: ForecastRequest):
             avg_pred=("predicted_count", "mean"),
             trend=("trend", "first"),
             avg_actual=("avg_actual_count", "first"),
+            growth_score=("growth_score", "first"),
         )
         .reset_index()
-        .sort_values("avg_pred", ascending=False)
-        .reset_index(drop=True)
     )
 
-    # optional filter to the user's skills (lenient name match)
+    # optional filter to the user's skills (canonical alias-table match)
     matched = False
     matched_skills: list[str] = []
     if req.skills:
-        wanted = {_normalise(s): s for s in req.skills}
-        filtered = agg[agg["skill"].apply(lambda s: _normalise(s) in wanted)]
+        wanted = {_canonical_skill_name(s): s for s in req.skills}
+        filtered = agg[agg["skill"].apply(lambda s: _canonical_skill_name(s) in wanted)]
         if not filtered.empty:
             matched = True
-            matched_skills = [wanted[_normalise(s)] for s in filtered["skill"]]
+            matched_skills = [wanted[_canonical_skill_name(s)] for s in filtered["skill"]]
             agg = filtered.reset_index(drop=True)
 
-    top = agg.head(8)
-    trending = []
-    for i, r in top.iterrows():
-        actual   = r["avg_actual"] or 1
-        change   = round((r["avg_pred"] - actual) / actual * 100)
-        velocity = r["trend"] if r["trend"] in ("rising", "stable", "falling") else "stable"
-        trending.append({
-            "skill":                   r["skill"],
-            "rank":                    int(i) + 1,
-            # avg predicted job-ad mentions per week over the next 4 weeks
-            "predicted_weekly_demand": round(r["avg_pred"]),
-            "current_weekly_demand":   round(r["avg_actual"]),
-            "velocity":                velocity,
-            "change_pct":              int(change),
-        })
+    median_actual = agg["avg_actual"].median() if not agg.empty else 0
+    established_pool = agg[agg["avg_actual"] >= median_actual].sort_values("avg_pred", ascending=False)
+    emerging_pool     = agg[agg["avg_actual"] <  median_actual].sort_values("growth_score", ascending=False)
+
+    established = _build_trending_tier(established_pool.head(8))
+    emerging    = _build_trending_tier(emerging_pool.head(8))
+
+    trending = {"established": established, "emerging": emerging}
 
     # ── early_warnings: significant global→local leads, straight from the
     #    lead-lag analysis — no fabricated dates. Granger significance alone
@@ -341,9 +394,10 @@ def personalised_forecast(req: ForecastRequest):
                 "interpretation": r.get("interpretation", ""),
             })
 
-    # ── forecast_chart: 12-week predicted series for the top ~3 skills,
-    #    labelled with the real forecast week (e.g. 2026-W27) ──
-    chart_skills = [t["skill"] for t in trending[:3]]
+    # ── forecast_chart: 12-week predicted series for a representative mix
+    #    (top established + top emerging), labelled with the real forecast
+    #    week (e.g. 2026-W27) ──
+    chart_skills = [t["skill"] for t in (established[:2] + emerging[:1])]
     chart = []
     for step in range(1, 13):
         step_df = fc[fc["forecast_step"] == step]
