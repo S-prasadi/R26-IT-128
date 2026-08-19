@@ -344,22 +344,40 @@ def build_feature_row(cv_row, selected_role, job_role_profiles):
     return feature_row, comparison
 
 
-def generate_recommendations(comparison):
+def generate_recommendations_detailed(comparison):
+    """Same recommendations as generate_recommendations(), but each one paired
+    with the specific skill it's about (fix_example) so a caller can act on it
+    directly — e.g. the frontend's "Apply" button, which otherwise has nothing
+    to apply and silently adds a blank entry instead of the missing skill.
+    """
     recommendations = []
 
     missing_required = comparison["missing_required_skills"]
     missing_preferred = comparison["missing_preferred_skills"]
 
     for skill in missing_required[:5]:
-        recommendations.append("Improve " + skill + " because it is important for this role.")
+        recommendations.append({
+            "issue": "Improve " + skill + " because it is important for this role.",
+            "fix_example": skill,
+        })
 
     if len(recommendations) < 5:
         remaining_slots = 5 - len(recommendations)
 
         for skill in missing_preferred[:remaining_slots]:
-            recommendations.append("Learning " + skill + " can strengthen your profile.")
+            recommendations.append({
+                "issue": "Learning " + skill + " can strengthen your profile.",
+                "fix_example": skill,
+            })
 
     if len(recommendations) == 0:
-        recommendations.append("Your CV matches the main skills for this role. Improve your projects and measurable achievements next.")
+        recommendations.append({
+            "issue": "Your CV matches the main skills for this role. Improve your projects and measurable achievements next.",
+            "fix_example": "",
+        })
 
     return recommendations
+
+
+def generate_recommendations(comparison):
+    return [rec["issue"] for rec in generate_recommendations_detailed(comparison)]

@@ -151,6 +151,23 @@ async def _startup():
     except Exception as exc:
         _log.warning("Face cascade not loaded: %s", exc)
 
+    # Warm /extract-cv's two slow, previously-lazy dependencies here instead of
+    # on the first real upload — EasyOCR's Reader() and Ollama's model load
+    # each take tens of seconds on CPU, and stacking both on a real user's
+    # first request reliably exceeded the Node backend's timeout (it fell
+    # back to an empty result while Module D kept working in the background).
+    try:
+        _get_ocr_reader()
+        _log.info("EasyOCR reader warmed up")
+    except Exception as exc:
+        _log.warning("EasyOCR warm-up failed (%s) — first /extract-cv call will be slow", exc)
+
+    try:
+        _ollama_json("Reply with {\"ok\": true} and nothing else.", max_tokens=16)
+        _log.info("Ollama (%s) warmed up", OLLAMA_MODEL)
+    except Exception as exc:
+        _log.warning("Ollama warm-up failed (%s) — first /extract-cv call will be slow", exc)
+
 
 def _configure_ssl_ca_bundle() -> None:
     """Force urllib/ssl to use certifi CA bundle to avoid local trust-store issues."""
@@ -269,6 +286,11 @@ class ExtractOcrRequest(BaseModel):
     mimetype: str  # application/pdf | image/png | image/jpeg | text/plain
 
 
+class TailorCvRequest(BaseModel):
+    sections: dict = {}   # cv_sections rows keyed by section_type, from the Node backend
+    job_text: str = ""
+
+
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _pdf_to_images(pdf_bytes: bytes) -> list[Image.Image]:
@@ -320,6 +342,66 @@ def _generate_questions_with_ollama(topic: str, difficulty: int, skills: list[st
     return _ollama_json(prompt, max_tokens=1024, temperature=0.7)["questions"]
 
 
+def _sections_to_text(sections: dict) -> str:
+    """Flatten cv_sections content (keyed by section_type) into readable text
+    for the tailoring prompt. Mirrors the Node backend's own field-shape
+    assumptions (backend/src/services/cv.service.ts getCvText()) exactly, so
+    Module D sees the same CV content the app itself already renders."""
+    parts: list[str] = []
+
+    summary = sections.get("summary") or {}
+    if summary.get("text"):
+        parts.append(f"Summary\n{summary['text']}")
+
+    for e in (sections.get("experience") or {}).get("entries") or []:
+        bullets = "\n".join(e.get("bullets") or [])
+        parts.append(
+            f"Experience: {e.get('role', '')} at {e.get('company', '')} "
+            f"({e.get('start_date', '')} - {e.get('end_date', '')})\n{bullets}"
+        )
+
+    for e in (sections.get("education") or {}).get("entries") or []:
+        parts.append(
+            f"Education: {e.get('degree', '')} {e.get('field', '')}, {e.get('institution', '')} "
+            f"({e.get('start_date', '')} - {e.get('end_date', '')})"
+        )
+
+    skills = (sections.get("skills") or {}).get("skills") or {}
+    all_skills = [
+        *(skills.get("languages") or []), *(skills.get("frameworks") or []),
+        *(skills.get("tools") or []), *(skills.get("other") or []),
+    ]
+    if all_skills:
+        parts.append(f"Skills: {', '.join(all_skills)}")
+
+    for p in (sections.get("projects") or {}).get("entries") or []:
+        tech = ", ".join(p.get("tech_stack") or [])
+        parts.append(f"Project: {p.get('name', '')} — {p.get('description', '')} ({tech})")
+
+    return "\n\n".join(parts)
+
+
+def _tailor_cv_with_ollama(sections: dict, job_text: str) -> dict:
+    cv_text = _sections_to_text(sections)
+    prompt = (
+        "You are a career coach helping a candidate tailor their CV for a specific job posting. "
+        "Read the candidate CV and the job posting below, then suggest concrete improvements "
+        "that would make the CV a stronger match for this job. Base every suggestion only on "
+        "experience the candidate actually has in the CV below — never invent skills or "
+        "experience they do not have.\n\n"
+        f"Candidate CV:\n---\n{cv_text[:4000]}\n---\n\n"
+        f"Job posting:\n---\n{job_text[:3000]}\n---\n\n"
+        "Return ONLY valid JSON in this exact format — no markdown, no extra text:\n"
+        '{"tailored_summary": "<a rewritten 2-3 sentence professional summary aimed at this job, '
+        'using only real experience from the CV above>", '
+        '"suggestions": [{"section": "summary|experience|skills|projects", '
+        '"issue": "<what is weak or missing for this job>", '
+        '"fix_example": "<a concrete rewritten line using the candidate real experience>"}], '
+        '"keywords_to_add": ["<a real term from the job posting that is missing from the CV>"]}'
+    )
+    return _ollama_json(prompt, max_tokens=800, temperature=0.3)
+
+
 # ── Routes ────────────────────────────────────────────────────────────────────
 
 @app.post("/generate-questions")
@@ -339,6 +421,23 @@ def generate_questions(req: GenerateQuestionsRequest):
             {"text": f"How do you handle performance optimisation in {req.topic}?", "type": "technical", "difficulty": difficulty},
             {"text": f"Describe a time you debugged a critical issue in {req.topic}.", "type": "behavioral", "difficulty": difficulty},
         ], "generation_mode": "deterministic", "ollama_unavailable": True}
+
+
+@app.post("/tailor-cv")
+def tailor_cv(req: TailorCvRequest):
+    try:
+        data = _tailor_cv_with_ollama(req.sections, req.job_text)
+        data.setdefault("tailored_summary", "")
+        data.setdefault("suggestions", [])
+        data.setdefault("keywords_to_add", [])
+        if not isinstance(data["suggestions"], list):
+            data["suggestions"] = []
+        if not isinstance(data["keywords_to_add"], list):
+            data["keywords_to_add"] = []
+        return data
+    except Exception as exc:
+        _log.warning("tailor-cv LLM unavailable, using empty fallback: %s", exc)
+        return {"tailored_summary": "", "suggestions": [], "keywords_to_add": []}
 
 
 @app.post("/extract-ocr")
@@ -557,9 +656,39 @@ def _pre_extract_links(text: str) -> dict:
     return links
 
 
+def _looks_letter_spaced(text: str) -> bool:
+    """Some PDF export pipelines position every glyph individually, which
+    pypdf then extracts as a space between every letter ('D U L I N A')
+    while still using a wider gap at real word boundaries."""
+    tokens = [t for t in text.split(" ") if t]
+    if len(tokens) < 10:
+        return False
+    single_char = sum(1 for t in tokens if len(t) == 1)
+    return single_char / len(tokens) > 0.4
+
+
+def _collapse_letter_spacing(text: str) -> str:
+    """Detect letter-spaced text and collapse it back into words, using
+    runs of 2+ spaces (the real word-boundary signal in this export
+    format) as the split point. Ordinary text is returned unchanged. Must
+    run before _clean_extracted_text, whose whitespace normalization would
+    collapse multi-space runs and destroy that signal."""
+    if not _looks_letter_spaced(text):
+        return text
+
+    lines_out = []
+    for line in text.splitlines():
+        chunks = _re.split(r" {2,}", line)
+        lines_out.append(" ".join(chunk.replace(" ", "") for chunk in chunks))
+
+    return "\n".join(lines_out)
+
+
 def _pypdf_extract_pages(file_bytes: bytes) -> list[str]:
     """Extract text from a text-based PDF using pypdf.
-    Tries both 'layout' and 'plain' modes and returns whichever gives more text."""
+    Tries both 'layout' and 'plain' modes and returns whichever scores
+    higher on _text_quality (after collapsing letter-spacing artifacts, if
+    any, so quality scoring sees real words)."""
     reader = PdfReader(io.BytesIO(file_bytes))
     pages: list[str] = []
     for page in reader.pages:
@@ -569,6 +698,7 @@ def _pypdf_extract_pages(file_bytes: bytes) -> list[str]:
                 candidates.append(page.extract_text(extraction_mode=mode) or "")  # type: ignore[call-arg]
             except Exception:
                 candidates.append(page.extract_text() or "")
+        candidates = [_collapse_letter_spacing(c) for c in candidates]
         pages.append(max(candidates, key=_text_quality, default=""))
     return pages
 

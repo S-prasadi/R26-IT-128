@@ -1,0 +1,235 @@
+[
+  {
+    "candidate_id": "CAND_B208BBBB",
+    "candidate_name": "Peshala Swarnamali Ariyarathna",
+    "target_role": "Data Analyst",
+    "predicted_score": 32.85,
+    "predicted_level": "Beginner",
+    "percentile": 33,
+    "percentile_label": "Scored higher than 33% of candidates for this role",
+    "experience_level": "Junior",
+    "experience_months": 12,
+    "num_projects": 2,
+    "num_certificates": 1,
+    "matched_required_skills": [
+      "Analytical Thinking",
+      "Jupyter Notebook",
+      "Power BI"
+    ],
+    "matched_preferred_skills": [
+      "Python",
+      "SQL"
+    ],
+    "missing_required_skills": [
+      "Attention To Detail",
+      "Communication",
+      "Data Analysis",
+      "Data Visualization",
+      "Excel",
+      "Problem Solving",
+      "Tableau"
+    ],
+    "missing_preferred_skills": [
+      "Dashboard Development",
+      "Google Sheets",
+      "Pandas",
+      "Reporting",
+      "Statistics"
+    ],
+    "recommendations": [
+      "Improve Attention To Detail because it is important for this role.",
+      "Improve Communication because it is important for this role.",
+      "Improve Data Analysis because it is important for this role.",
+      "Improve Data Visualization because it is important for this role.",
+      "Improve Excel because it is important for this role."
+    ]
+  },
+  {
+    "candidate_id": "CAND_DA1DC49C",
+    "candidate_name": "Meera Anderson",
+    "target_role": "Frontend Developer",
+    "predicted_score": 20.09,
+    "predicted_level": "Beginner",
+    "percentile": 22,
+    "percentile_label": "Scored higher than 22% of candidates for this role",
+    "experience_level": "Fresher",
+    "experience_months": 0,
+    "num_projects": 3,
+    "num_certificates": 1,
+    "matched_required_skills": [
+      "Communication",
+      "JavaScript"
+    ],
+    "matched_preferred_skills": [
+      "Git"
+    ],
+    "missing_required_skills": [
+      "Chrome Devtools",
+      "Creativity",
+      "CSS",
+      "Figma",
+      "HTML",
+      "React",
+      "Responsive Design",
+      "Teamwork"
+    ],
+    "missing_preferred_skills": [
+      "Angular",
+      "API Integration",
+      "Attention To Detail",
+      "Nextjs",
+      "Tailwind Css",
+      "TypeScript",
+      "Vs Code",
+      "Vue"
+    ],
+    "recommendations": [
+      "Improve Chrome Devtools because it is important for this role.",
+      "Improve Creativity because it is important for this role.",
+      "Improve CSS because it is important for this role.",
+      "Improve Figma because it is important for this role.",
+      "Improve HTML because it is important for this role."
+    ]
+  },
+  {
+    "candidate_id": "CAND_43907170",
+    "candidate_name": "Ali Wickramasinghe",
+    "target_role": "Full Stack Developer",
+    "predicted_score": 57.45,
+    "predicted_level": "Intermediate",
+    "percentile": 81,
+    "percentile_label": "Scored higher than 81% of candidates for this role",
+    "experience_level": "Junior",
+    "experience_months": 24,
+    "num_projects": 6,
+    "num_certificates": 1,
+    "matched_required_skills": [
+      "Docker",
+      "Git",
+      "JavaScript",
+      "Node.js",
+      "React",
+      "SQL"
+    ],
+    "matched_preferred_skills": [
+      "AWS",
+      "Communication",
+      "Express",
+      "Git",
+      "TypeScript"
+    ],
+    "missing_required_skills": [
+      "Adaptability",
+      "API Integration",
+      "MongoDB",
+      "Teamwork"
+    ],
+    "missing_preferred_skills": [
+      "Authentication",
+      "Postman",
+      "Problem Solving",
+      "Spring Boot"
+    ],
+    "recommendations": [
+      "Improve Adaptability because it is important for this role.",
+      "Improve API Integration because it is important for this role.",
+      "Improve MongoDB because it is important for this role.",
+      "Improve Teamwork because it is important for this role.",
+      "Learning Authentication can strengthen your profile."
+    ]
+  },
+  {
+    "candidate_id": "CAND_99FD4846",
+    "candidate_name": "Sasini Meheshani Lokuvithana",
+    "target_role": "AI ML",
+    "predicted_score": 38.73,
+    "predicted_level": "Beginner",
+    "percentile": 17,
+    "percentile_label": "Scored higher than 17% of candidates for this role",
+    "experience_level": "Fresher",
+    "experience_months": 0,
+    "num_projects": 6,
+    "num_certificates": 8,
+    "matched_required_skills": [
+      "Computer Vision",
+      "Deep Learning",
+      "Machine Learning",
+      "Python"
+    ],
+    "matched_preferred_skills": [
+      "Docker",
+      "Git"
+    ],
+    "missing_required_skills": [
+      "NLP",
+      "NumPy",
+      "Pandas",
+      "PyTorch",
+      "Scikit-learn",
+      "TensorFlow"
+    ],
+    "missing_preferred_skills": [
+      "Agile",
+      "Angular",
+      "Data Engineering",
+      "FastAPI",
+      "Java",
+      "Jira",
+      "Kubernetes",
+      "React",
+      "SQL"
+    ],
+    "recommendations": [
+      "Improve NLP because it is important for this role.",
+      "Improve NumPy because it is important for this role.",
+      "Improve Pandas because it is important for this role.",
+      "Improve PyTorch because it is important for this role.",
+      "Improve Scikit-learn because it is important for this role."
+    ]
+  },
+  {
+    "candidate_id": "CAND_6F5E87E7",
+    "candidate_name": "Abigail Silva",
+    "target_role": "DevOps Engineer",
+    "predicted_score": 15.37,
+    "predicted_level": "Beginner",
+    "percentile": 9,
+    "percentile_label": "Scored higher than 9% of candidates for this role",
+    "experience_level": "Fresher",
+    "experience_months": 0,
+    "num_projects": 1,
+    "num_certificates": 3,
+    "matched_required_skills": [
+      "Problem Solving"
+    ],
+    "matched_preferred_skills": [
+      "Ci/Cd"
+    ],
+    "missing_required_skills": [
+      "Communication",
+      "Deployment Pipelines",
+      "Docker",
+      "Github Actions",
+      "Jenkins",
+      "Kubernetes",
+      "Linux",
+      "Reliability",
+      "Terraform"
+    ],
+    "missing_preferred_skills": [
+      "AWS",
+      "Azure",
+      "Git",
+      "Monitoring",
+      "Scripting",
+      "Teamwork"
+    ],
+    "recommendations": [
+      "Improve Communication because it is important for this role.",
+      "Improve Deployment Pipelines because it is important for this role.",
+      "Improve Docker because it is important for this role.",
+      "Improve Github Actions because it is important for this role.",
+      "Improve Jenkins because it is important for this role."
+    ]
+  }
+]
