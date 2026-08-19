@@ -1,0 +1,5337 @@
+[
+  {
+    "candidate_id": "CAND_290FB434",
+    "candidate_name": "Mohammed Aashik",
+    "email": "aashikdot006@gmail.com",
+    "mobile_number": "0778734430",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "data analytics undergraduate | data-driven problem solver | passionate",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "Scikit-learn"
+        ],
+        "technologies": [
+          "Excel",
+          "Git",
+          "GitHub",
+          "Matplotlib",
+          "NumPy",
+          "Pandas",
+          "Power BI",
+          "Seaborn",
+          "Windows"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Data Analysis",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "• Diploma in Information Technology: BCAS, Kandy Effective Communication & Team",
+      "Collaboration",
+      "• Diploma in English: BCAS, Kandy"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Excel",
+      "Git",
+      "GitHub",
+      "Matplotlib",
+      "NumPy",
+      "Pandas",
+      "Power BI",
+      "Python",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Windows"
+    ],
+    "num_skills": 14,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 21.0,
+    "skill_score": 16.8
+  },
+  {
+    "candidate_id": "CAND_2D78F605",
+    "candidate_name": "Ahamed Shaheer",
+    "email": "ahamedshaheer54@gmail.com",
+    "mobile_number": "+94 77 689 4909",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "GitHub"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "University of Moratuwa",
+      "Web Design for Beginners",
+      "University of Moratuwa",
+      "Tamil | Sinhala | English",
+      "Mrs. Dilini Kumarihami, HOD Department of IT, Mr. D.M.C.L. Dasanayaka, Demonstrator (IT),",
+      "REFERENCES Advanced Technological Institute, Nawalapitiya ATI Nawalapitiya | laxanm@gmail.com |",
+      "|dilinikanchana@sliate.ac.lk | +94 70 788 2155 +94 77 225 8543 / +94 70 625 8543"
+    ],
+    "all_skills": [
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "MySQL",
+      "PHP",
+      "Python"
+    ],
+    "num_skills": 6,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 9.0,
+    "skill_score": 7.199999999999999
+  },
+  {
+    "candidate_id": "CAND_E837FE34",
+    "candidate_name": "AKEEL AHAMED",
+    "email": "akeelthaslim@gmail.com",
+    "mobile_number": "072 3344506",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [],
+        "frameworks": [],
+        "technologies": [],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "interpersonal understanding and",
+      "communication skill and i’m confident",
+      "BA (Hons) International Business and",
+      "team worker with the ability to work",
+      "Finance (Final Year)",
+      "on own initiative to achieve your",
+      "Imperial College of Business Studies",
+      "organizational goals and objectives.",
+      "AAT Sri Lanka",
+      "Successfully completed AAT Sri Lanka at",
+      "Association of Accounting Technicians of Sri Lanka",
+      "Name : Akeel Ahamed G.C.E Advance Level",
+      "DOB : 23rd of June 2004 Al-Azhar National School,",
+      "Age : 20 Hemmathgama (2023)",
+      "Nationality : Sri Lankan G.C.E Ordinary Level",
+      "Gender : Male",
+      "Al-Azhar National School,",
+      "NIC No. : 200417501172 Hemmathgama (2020)"
+    ],
+    "all_skills": [],
+    "num_skills": 0,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 0.0,
+    "skill_score": 0.0
+  },
+  {
+    "candidate_id": "CAND_A268D615",
+    "candidate_name": "Akhiliny Vijeyagumar",
+    "email": "akhilinyv@gmail.com",
+    "mobile_number": "+94 766254606",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "detail-oriented data engineering undergraduate with intern data science developer - aryalabs pvt ltd",
+      "university": "",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Keras",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "Deep Learning",
+          "Excel",
+          "GCP",
+          "Git",
+          "Hugging Face",
+          "Jupyter",
+          "Linux",
+          "Machine Learning",
+          "NLP",
+          "NumPy",
+          "Pandas",
+          "Plotly",
+          "Power BI",
+          "Tableau",
+          "Windows"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL",
+          "Oracle",
+          "PostgreSQL"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Data Analysis",
+          "Data Modeling",
+          "Data Science",
+          "Data Visualization",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "",
+        "project_description": " Regression to identify sonar signals as Rock or Mine based on 60 numerical features from the UCI dataset. Data Engineering on AWS – Foundations (AWS, Achieved 83.42% training accuracy and 76.19% test April 2025) accuracy and Built a real-time prediction system with Data Engineering Foundations Specialization – IBM user input capability.",
+        "duration": "Oracle, April 2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Aws",
+          "Regression"
+        ]
+      },
+      {
+        "project_name": "",
+        "project_description": " Technologies: Python, NumPy, Pandas, scikit learn Fundamentals of Machine Learning and Artificial AtliQ Grands Revenue Analysis - Individual",
+        "duration": "Coursera, April 2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Machine Learning",
+          "Pandas",
+          "Numpy"
+        ]
+      },
+      {
+        "project_name": "Intelligence",
+        "project_description": " Apr 2025 – May 2025 30 Days Data Analytics Masterclass (Navitech, Created a Power BI dashboard for a five-star hotel 2025) chain (AtliQ Grands) to analyze and optimize revenue",
+        "duration": "AWS, April 2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Power Bi"
+        ]
+      },
+      {
+        "project_name": "performance. Created 25+ custom DAX measures to Data Science and Analytics",
+        "project_description": " track key hospitality KPIs such as Revenue, ADR, RevPAR, Occupancy Rate, Cancellation Rate, and Diploma in Using Python for Data Science (Alison,",
+        "duration": "HP Life, 2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Data Science"
+        ]
+      },
+      {
+        "project_name": "No",
+        "project_description": " insights into booking trends, customer behavior, and Master in Data Warehouse and Data Visualization operational efficiency.",
+        "duration": "cid:0)Show %. The dashboard provides actionable April 2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Data Visualization"
+        ]
+      },
+      {
+        "project_name": "",
+        "project_description": " Technologies: Power BI (data modeling, DAX, visualizations), Excel (data cleaning), Star Schema Foundations in Machine Learning (Microsoft Plus, Design July 2024) Machine Learning with Python (Coursera, March IPL Data Analysis - Individual 2024) Mar 2025 – Apr 2025 Designed a complete data pipeline to ingest, transform,",
+        "duration": "Udemy, June 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Machine Learning",
+          "Power Bi",
+          "Excel",
+          "Data Analysis",
+          "Data Modeling"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Apr 2025 – May 2025",
+      "Oracle Data Platform 2025 Foundations Associate",
+      "Developed a binary classification model using Logistic",
+      "(Oracle, April 2025)",
+      "Regression to identify sonar signals as Rock or Mine",
+      "based on 60 numerical features from the UCI dataset. Data Engineering on AWS – Foundations (AWS,",
+      "Achieved 83.42% training accuracy and 76.19% test April 2025)",
+      "accuracy and Built a real-time prediction system with",
+      "Data Engineering Foundations Specialization – IBM",
+      "user input capability.",
+      "(Coursera, April 2025)",
+      "Technologies: Python, NumPy, Pandas, scikit learn",
+      "Fundamentals of Machine Learning and Artificial",
+      "AtliQ Grands Revenue Analysis - Individual",
+      "Intelligence (AWS, April 2025)",
+      "Apr 2025 – May 2025",
+      "30 Days Data Analytics Masterclass (Navitech,",
+      "Created a Power BI dashboard for a five-star hotel",
+      "chain (AtliQ Grands) to analyze and optimize revenue",
+      "performance. Created 25+ custom DAX measures to Data Science and Analytics (HP Life, 2025)",
+      "track key hospitality KPIs such as Revenue, ADR,",
+      "RevPAR, Occupancy Rate, Cancellation Rate, and Diploma in Using Python for Data Science (Alison,",
+      "No(cid:0)Show %. The dashboard provides actionable April 2025)",
+      "insights into booking trends, customer behavior, and",
+      "Master in Data Warehouse and Data Visualization",
+      "operational efficiency.",
+      "(Udemy, June 2024)",
+      "Technologies: Power BI (data modeling, DAX,",
+      "visualizations), Excel (data cleaning), Star Schema Foundations in Machine Learning (Microsoft Plus,",
+      "Design July 2024)",
+      "Machine Learning with Python (Coursera, March",
+      "IPL Data Analysis - Individual",
+      "Mar 2025 – Apr 2025",
+      "Designed a complete data pipeline to ingest, transform,"
+    ],
+    "all_skills": [
+      "AWS",
+      "Airflow",
+      "Azure",
+      "Classification",
+      "Data Analysis",
+      "Data Modeling",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Excel",
+      "Express",
+      "GCP",
+      "Git",
+      "Hadoop",
+      "Hugging Face",
+      "Java",
+      "JavaScript",
+      "Jupyter",
+      "Keras",
+      "Linux",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "NLP",
+      "NumPy",
+      "Oracle",
+      "Pandas",
+      "Plotly",
+      "PostgreSQL",
+      "Power BI",
+      "Python",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Spark",
+      "Tableau",
+      "TensorFlow",
+      "Windows"
+    ],
+    "num_skills": 38,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 6,
+    "evaluation_score": 87.0,
+    "skill_score": 45.6
+  },
+  {
+    "candidate_id": "CAND_AFBA0014",
+    "candidate_name": "AMANDHI SIRIWARDENA",
+    "email": "amandhisiriwardena66@gmail.com",
+    "mobile_number": "0717192341",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "i am a third-year undergraduate student pursuing a bsc (hons) in data science at the sri lanka",
+      "university": "institute of information technology (sliit). with a solid foundation in software development and a",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Kotlin",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React"
+        ],
+        "technologies": [
+          "Excel",
+          "GitHub",
+          "Machine Learning",
+          "Power BI",
+          "Tableau"
+        ],
+        "database": [
+          "MongoDB"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "",
+        "project_description": "",
+        "duration": "0714672084,samadhi.r@sliit.lk",
+        "complexity": "Medium",
+        "technologies_used": []
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Awards/Activities: Dean’s List Academic Excellence Award - SLIIT 1st Year,2nd Semester Of 2023",
+      "Awarded in May 2024",
+      "Ms K.G.M.Lakmali-Senior Lecturer,Department of Mathematics and Statistics,Faculty of Humanities and",
+      "Sciences,SLIIT(0717192341,malika.l@sliit.lk)",
+      "Mr S.C.Rathnayake-Lecturer,Department of Data Science,Faculty of Computing,SLIIT",
+      "(0714672084,samadhi.r@sliit.lk)"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Data Science",
+      "Excel",
+      "Express",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Kotlin",
+      "Machine Learning",
+      "MongoDB",
+      "Node.js",
+      "Power BI",
+      "Python",
+      "R",
+      "React",
+      "SQL",
+      "Tableau"
+    ],
+    "num_skills": 17,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 1,
+    "evaluation_score": 30.5,
+    "skill_score": 20.4
+  },
+  {
+    "candidate_id": "CAND_9DC621BF",
+    "candidate_name": "www.linkedin.com/in/amidu-deshan",
+    "email": "amidudeshan111@gmail.com",
+    "mobile_number": "+94754411124",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc in physics & electonics 2022- 2025 i am a graduate pursuing a bsc in physics and electronics, with a strong",
+      "university": "university of kelaniya focus on ict. passionate about applying my technical knowledge,",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Excel"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Smart Net – Data-Driven Bowling Machine 2024-2025",
+      "Foundations of Project Management",
+      "An AI-powered cricket training system with real-time player analysis,",
+      "University of Moratuwa (Reading)",
+      "ball tracking, and automated speed control. Recognized as the Best",
+      "Project Management Undergraduate Research Project at the University of Kelaniya.",
+      "simplilearn Academy",
+      "Sams Pizza 2024",
+      "Python for Beginners",
+      "Java Software Project",
+      "University of Moratuwa",
+      "Developed a Java application for managing orders, customer data, and",
+      "Web Design for Beginners inventory, using MySQL for database integration and NetBeans as the",
+      "University of Moratuwa development environment. Utilized Java and Object-Oriented",
+      "Programming to improve operational efficiency.",
+      "Exploratory Data Analysis with Excel",
+      "Great Learning Academy Saloon Suraliya 2024",
+      "Web Development Project",
+      "WORK EXPERIENCE Developed a responsive website for Saloon Suraliya with online booking,",
+      "service menu, and customer feedback. Used HTML, CSS, JavaScript, and",
+      "Project Officer",
+      "PHP with MySQL for front-end and back-end development to enhance",
+      "Srilankan Airlines user experience and streamline salon operations.",
+      "Intern Business Analyst",
+      "ProDesigner.lk",
+      "Operational Manager Project Manager – eWaste Project 2024-PRESENT",
+      "DSL Pvt Ltd",
+      "University of Kelaniya",
+      "Photographer & Director",
+      "Head of Photography 2023-2024",
+      "Thala Photography",
+      "Kelani Steam Faculty Media Unit",
+      "Editor – Physics Student Society 2023-2024",
+      "University of Kelaniya",
+      "Project Management",
+      "Captain -Cricket Team 2016-2017",
+      "Public Relations",
+      "T/Agrabodhi Collage",
+      "Leadership ACHIEVEMENTS",
+      "Effective Communication",
+      "Best Undergraduate Research Project",
+      "Critical Thinking",
+      "University of Kelaniya",
+      "Smart-Net-Data-Driven Cricket Bowling Machine",
+      "Top 5 Finalists in the Poster Category at the ICAPS 2024",
+      "Figma, Microsoft Word, Excel, Undergraduate Symposium and Innovation Exhibition",
+      "Microsoft Project, Trello, Asana, and Smart-Net-Data-Driven Cricket Bowling Machine",
+      "PowerPoint Python, Java, Arduino IDE, 2nd Runner-Up, Provincial Level",
+      "AutoCAD, EasyEDA, Photoshop, Vegas Inter-School Table Tennis Tournament",
+      "Pro, Lightroom, Illustrator, Canva,"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Excel",
+      "Java",
+      "JavaScript",
+      "MySQL",
+      "PHP",
+      "Python"
+    ],
+    "num_skills": 7,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 10.5,
+    "skill_score": 8.4
+  },
+  {
+    "candidate_id": "CAND_ACA0EA9A",
+    "candidate_name": "ANUSARA SUGEESHWARA",
+    "email": "kasrsugeeshwara@gmail.com",
+    "mobile_number": "+94 71 401 5777",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "data engineering : pandas, numpy, apache spark, snowflake, data wrangling, feature engineering,",
+      "university": "",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "JavaScript",
+          "MATLAB",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Flask",
+          "Node.js",
+          "React",
+          "Streamlit"
+        ],
+        "technologies": [
+          "Git",
+          "GitHub",
+          "Hugging Face",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "Neural Networks",
+          "NumPy",
+          "Pandas",
+          "SpaCy"
+        ],
+        "database": [
+          "Neo4j",
+          "Snowflake"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Clustering",
+          "Data Science",
+          "Data Visualization",
+          "Feature Engineering",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Design Team Lead, MANTHRA Hackathon, NSBM IEEE Student Branch, 2023",
+      "Mentor, SkillShare GitHub and React Native Session, NSBM IEEE Student Branch, 2023",
+      "Committee Member, Duothan 2.0 Buildathon, NSBM IEEE Student Branch, 2023",
+      "IEEE Xtreme 18: University Rank 1st, Island Rank 76th, 2023",
+      "IEEE Xtreme 19: University Rank 2nd, Island Rank 36th, 2024",
+      "Vestoria TechTrek Coding Challenge: 4th Place, 2024",
+      "Solafune - Machine Learning competition top 5% -2025",
+      "Mr. Gayan Perera | gayanp@nsbm.ac.lk | +94 71 401 5777",
+      "Lecturer -NSBM Green University - Department of Computer and Data Science",
+      "Mihiran Chamara | mihiranp@scienter.lk | +94 71 138 5982",
+      "Software Engineer - Scienter Technologies"
+    ],
+    "all_skills": [
+      "Classification",
+      "Clustering",
+      "Data Science",
+      "Data Visualization",
+      "Feature Engineering",
+      "Flask",
+      "Git",
+      "GitHub",
+      "Hugging Face",
+      "JavaScript",
+      "Jupyter",
+      "MATLAB",
+      "Machine Learning",
+      "Matplotlib",
+      "NLP",
+      "Neo4j",
+      "Neural Networks",
+      "Node.js",
+      "NumPy",
+      "Pandas",
+      "Python",
+      "R",
+      "React",
+      "Regression",
+      "SQL",
+      "Snowflake",
+      "SpaCy",
+      "Spark",
+      "Streamlit"
+    ],
+    "num_skills": 29,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 43.5,
+    "skill_score": 34.8
+  },
+  {
+    "candidate_id": "CAND_AEE75E7F",
+    "candidate_name": "ARUN JEGANATHAN",
+    "email": "jeganathanarun9901@gmail.com",
+    "mobile_number": "+94775959641",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bachelor of science in physical science • mern stack",
+      "university": "university of jaffna 08/2020 – 03/2024 • react js",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React",
+          "Spring"
+        ],
+        "technologies": [
+          "Git",
+          "GitHub",
+          "Linux",
+          "Machine Learning"
+        ],
+        "database": [
+          "Firebase",
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Express",
+      "Firebase",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Linux",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "PHP",
+      "Python",
+      "React",
+      "Spring"
+    ],
+    "num_skills": 15,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 22.5,
+    "skill_score": 18.0
+  },
+  {
+    "candidate_id": "CAND_9556242E",
+    "candidate_name": "Anees Mohamad Ashraf",
+    "email": "amashraf547@gmail.com",
+    "mobile_number": "+94 75 155 3516",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "currently pursuing a degree in data science to transition into a career that blends technology with data-driven decision-",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Azure",
+          "Excel",
+          "GCP",
+          "Git",
+          "Machine Learning",
+          "Power BI",
+          "Tableau"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization",
+          "Hypothesis Testing",
+          "Regression",
+          "Statistical Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Introduction to Data Science",
+      "LinkedIn Learning",
+      "Date of Completion:[12/18/2024]",
+      "Python for Data Science and Machine Learning Essential Training",
+      "LinkedIn Learning Date of Completion:[19/01/2025]",
+      "Hands-On Data Science using SQL, Tableau, Python, and Spark",
+      "LinkedIn Learning Date of Completion:[21/01/2025]",
+      "Academic Projects",
+      "Business Analytics, Link for the project",
+      "Business Analytics Project – Sri Lanka Ministry of Industry and Commerce Conducted an in-depth data analysis on",
+      "occupational prestige using business intelligence and statistical techniques to support strategic workforce planning for",
+      "Sri Lankaʼs Ministry of Industry and Commerce. Analyzed relationships between prestige, income, education, and",
+      "employment type using R Studio. Applied hypothesis testing, ANOVA, regression analysis, and predictive analytics to",
+      "derive insights for policy recommendations. Findings contributed to optimizing resource allocation and workforce",
+      "development programs to enhance economic and industrial growth.",
+      "English Tamil"
+    ],
+    "all_skills": [
+      "Azure",
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Excel",
+      "GCP",
+      "Git",
+      "Hypothesis Testing",
+      "Machine Learning",
+      "MySQL",
+      "Power BI",
+      "Python",
+      "R",
+      "Regression",
+      "SQL",
+      "Spark",
+      "Statistical Analysis",
+      "Tableau"
+    ],
+    "num_skills": 18,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 27.0,
+    "skill_score": 21.599999999999998
+  },
+  {
+    "candidate_id": "CAND_5AD06641",
+    "candidate_name": "Chamathka Divyanjali Kasthuri",
+    "email": "chamathkadiwyanjali485@gmail.com",
+    "mobile_number": "0703148165",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "computer science undergraduate student",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "React"
+        ],
+        "technologies": [
+          "GitHub",
+          "Postman",
+          "REST API"
+        ],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Postman",
+      "Python",
+      "REST API",
+      "React",
+      "SQL",
+      "Unity"
+    ],
+    "num_skills": 9,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 13.5,
+    "skill_score": 10.799999999999999
+  },
+  {
+    "candidate_id": "CAND_9B669102",
+    "candidate_name": "Chamini Fernando",
+    "email": "chaminifernando087@gmail.com",
+    "mobile_number": "0764954636",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "• deliveredlecturesformodulesintheb.sc.(hons)incomputerscienceandbictdegreeprograms.",
+      "university": "",
+      "year": "2016"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Flask",
+          "Node.js",
+          "React"
+        ],
+        "technologies": [
+          "GitHub"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL",
+          "Neo4j"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "TheInstituteofHumanResourceAdvancement. UniversityofColombo.",
+      "Extra-Curricular Activities",
+      "• Committeemember,9thInternationalConferenceonAdvancesinTechnologyandComputing(ICATC)and",
+      "FacultyResearchSymposium(FCTFRS)2024.",
+      "• Committeemember,8thInternationalConferenceonAdvancesinTechnologyandComputing(ICATC)and",
+      "FacultyResearchSymposium(FCTFRS)2023.",
+      "• FormermemberofComputerScienceStudentAssociation,UniversityofKelaniya."
+    ],
+    "all_skills": [
+      "Flask",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "MongoDB",
+      "MySQL",
+      "Neo4j",
+      "Node.js",
+      "PHP",
+      "Python",
+      "R",
+      "React",
+      "SQL"
+    ],
+    "num_skills": 13,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 19.5,
+    "skill_score": 15.6
+  },
+  {
+    "candidate_id": "CAND_A7DCF9D7",
+    "candidate_name": "Chamodi H Jayasooriya",
+    "email": "chamodijayasooriya25@gmail.com",
+    "mobile_number": "+94 714060234",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bachelor of information technology – university of moratuwa",
+      "university": "diploma in english – aquinas college, colombo",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [],
+        "frameworks": [],
+        "technologies": [],
+        "database": [],
+        "technical_skills": [
+          "Data Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Data Analysis"
+    ],
+    "num_skills": 1,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 1.5,
+    "skill_score": 1.2
+  },
+  {
+    "candidate_id": "CAND_6A53BE92",
+    "candidate_name": "Charith Dharmawickrama",
+    "email": "Priyanthacharith88@gmail.com",
+    "mobile_number": "077 389 0004",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) information technology",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "React"
+        ],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "CI/CD",
+          "Docker",
+          "GCP",
+          "Git",
+          "Kubernetes",
+          "Linux",
+          "Power BI",
+          "Windows"
+        ],
+        "database": [
+          "Oracle"
+        ],
+        "technical_skills": [
+          "Data Visualization"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "AWS",
+      "Azure",
+      "CI/CD",
+      "Data Visualization",
+      "Docker",
+      "GCP",
+      "Git",
+      "Java",
+      "JavaScript",
+      "Kubernetes",
+      "Linux",
+      "Oracle",
+      "PHP",
+      "Power BI",
+      "Python",
+      "React",
+      "SQL",
+      "Windows"
+    ],
+    "num_skills": 18,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 27.0,
+    "skill_score": 21.599999999999998
+  },
+  {
+    "candidate_id": "CAND_53CF5D86",
+    "candidate_name": "DEWDINI",
+    "email": "sathsarani700@gmail.com",
+    "mobile_number": "+94772949068",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "power bi undergraduate research project 2024",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Excel",
+          "Power BI"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Data Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Data Analysis",
+      "Excel",
+      "Power BI",
+      "Python"
+    ],
+    "num_skills": 4,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 6.0,
+    "skill_score": 4.8
+  },
+  {
+    "candidate_id": "CAND_0833CA4D",
+    "candidate_name": "ANURADHA",
+    "email": "anuradhabzcontact@gmail.com",
+    "mobile_number": "0771246685",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc graduate | ai & ict enthusiast |",
+      "university": "profile the open university of sri lanka",
+      "year": "2019"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "MATLAB",
+          "PHP",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [],
+        "technologies": [],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Cinnamon Grand Colombo",
+        "project_description": " 0771246685/0724418576 Participated in a digitalization project in the Human Resources department anuradhabzcontact@gmail.com",
+        "duration": "2024–2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Git"
+        ]
+      },
+      {
+        "project_name": "Address: Rathmalagara, St. John Paul II EMC, Chilaw",
+        "project_description": " Weerakodiyana, Madampe Taught ICT to students from Grade 4 to Grade 11 LinkedIn: Anuradha Sathruwan Skills Volunteering Programming Languages:Basic knowledge of",
+        "duration": "2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C"
+        ]
+      },
+      {
+        "project_name": "Java, C, and Python. The Open University of Sri Lanka",
+        "project_description": " Artificial Intelligence:Created beginner-level AI Senior Young Mentor (SYM) –Conducted support projects using Python and Google Colab. sessions for first-year Computer Science students Experience in using AI tools and models like ChatGPT, Google Gemini, and Veo 3. Web Development: Basic knowledge of HTML, CSS, JavaScript, and PHP. Extra-Curriculars Database Management: Familiar with SQL",
+        "duration": "2022",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "Java",
+          "Javascript",
+          "R",
+          "Sql",
+          "Php",
+          "Go",
+          "C"
+        ]
+      },
+      {
+        "project_name": "Software Tools: MS Office, MATLAB,Adobe All Island",
+        "project_description": " Acrobat Pro. Dance and Ballet Competition – 3rd Place Creative Skills: Canva, CapCut, and social media content creation",
+        "duration": "2010",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Java",
+      "JavaScript",
+      "MATLAB",
+      "PHP",
+      "Python",
+      "SQL"
+    ],
+    "num_skills": 6,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 4,
+    "evaluation_score": 29.0,
+    "skill_score": 7.199999999999999
+  },
+  {
+    "candidate_id": "CAND_508C8902",
+    "candidate_name": "OJANI JAYASINGHE",
+    "email": "ojanijayasinghe123@gmail.com",
+    "mobile_number": "0703541745",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "dedicated and results-driven undergraduate pursuing a bsc (hons) in information technology with a",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React",
+          "Spring"
+        ],
+        "technologies": [
+          "Excel",
+          "Git",
+          "GitHub",
+          "Machine Learning",
+          "Postman",
+          "Power BI"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Project Experience",
+      "• Social Network Analysis",
+      "Built network graphs using R and igraph for community detection. Applied centrality measures to",
+      "identify key influencers.",
+      "• Enterprise Sales Data Warehouse with OLAP Analytics and Power BI Dashboards",
+      "Designed and implemented a sales data warehouse using SSMS, SSIS, SSAS, and Power BI for",
+      "business analytics.",
+      "• Power BI Business Dashboard",
+      "Developed an interactive dashboard for sales and regional analysis. Automated data visualization",
+      "to enhance decision-making.",
+      "• Skill Sharing and Learning Platform",
+      "Developed an interactive website for skill sharing and learning by using Spring boot(Java), Mongo",
+      "DB and Aouth 2.0 authentication.",
+      "• E-Shopping Store",
+      "Integrates Java technologies with a database to build a functional e-commerce site, showcasing",
+      "server-side scripting, database connectivity, and web technologies.",
+      "Tech Stack: JAVA, SQL",
+      "• MERN Stack Hotel Management System",
+      "Designed and developed a full-stack hotel service management platform.",
+      "Tech Stack: MongoDB, Express.js, React, Node.js.",
+      "• Online Pharmacy Portal",
+      "Designed and developed a full-stack Online pharmacy portal using PHP, HTML,CSS, MySQL",
+      "• AI-Powered Public Transport System (EcoPilot AI)",
+      "Designed an intuitive UI/UX for an AI-driven eco-friendly urban transport app.",
+      "• Power BI for beginners – Simplilearn",
+      "• Data Science Foundations – level 1 - IBM",
+      "• Data Science 101 – Cognitive Class",
+      "• Python and Artificial Intelligence – DevTown",
+      "• Introduction to AI – HP Life",
+      "• Front-end development – University of Moratuwa",
+      "• Web development – University of Moratuwa",
+      "• Introduction to Packet Tracer – Cisco Network Academy",
+      "• Introduction to Data Science – Cisco Network Academy",
+      "• Introduction to GenAI – Google Cloud",
+      "• SQL - HackerRank",
+      "• Learning Data Science: Understanding the basics – LinkedIn Learning",
+      "• Cybersecurity online workshop series – IEEE Computer Society of SLIIT",
+      "• Diploma in English – CET Campus"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Excel",
+      "Express",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "PHP",
+      "Postman",
+      "Power BI",
+      "Python",
+      "R",
+      "React",
+      "SQL",
+      "Spring"
+    ],
+    "num_skills": 21,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 31.5,
+    "skill_score": 25.2
+  },
+  {
+    "candidate_id": "CAND_70BB60EB",
+    "candidate_name": "THARUSHI",
+    "email": "tharushivihangana819@gmail.com",
+    "mobile_number": "+94 71 829 3301",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "statistics undergraduate at the university bsc. (hons) in applied statistics",
+      "university": "of colombo, faculty of science, with a buddhist girls’ national college, kirimetiyana (2007 – 2020)",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Scikit-learn"
+        ],
+        "technologies": [
+          "Excel",
+          "Machine Learning",
+          "Pandas",
+          "Power BI"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Classification",
+          "Data Analysis",
+          "Data Science",
+          "Hypothesis Testing",
+          "Regression",
+          "Statistical Analysis",
+          "Time Series"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "hands-on experience in data exploration,",
+      "handling missing values and creating Supervised Machine Learning: Regression and Classification (Jan 2025)",
+      "interactive dashboards using Power BI DeepLearning.AI, Stanford University",
+      "and R shiny. Passionate about solving real- Power BI for Beginners: Build your First Report (Nov 2024)",
+      "world problems through data-driven Coursera Project Network",
+      "insights. Seeking a data analyst internship Diploma in Microsoft Office (Aug 2012 – Feb 2013)",
+      "to apply my skills and gain practical BIT International Systems (PVT) Ltd.",
+      "experience. Microsoft Office Systems (Mar 2012 – June 2012)",
+      "BIT International Systems (PVT) Ltd.",
+      "LINKEDIN: Blog Editor: FOS Media (2023 – 2024)",
+      "https://www.linkedin.com/in/tharushi- Assistant Secretary: Buddhist Society of University of Colombo, Faculty of",
+      "vihangana-016058312 Science",
+      "tharushivihangana819@gmail.com Chief Editor: FOS Media (2024 – 2025)",
+      "Secretary: Buddhist Society of University of Colombo, Faculty of Science",
+      "Member of Stat Circle in University of Colombo, Faculty of Science",
+      "Dr. A A Sunethra",
+      "Senior Lecturer SKILLS",
+      "Faculty of Science, University of Colombo",
+      "Email: sunethra@stat.cmb.ac.lk Statistical Analysis: Regression, Hypothesis Testing, Time Series",
+      "Phone: +94 71 829 3301 Programming Languages: R, Python, SQL",
+      "LinkedIn: Data Science Tools: R shiny, ggplot2, Pandas, Scikit-learn",
+      "linkedin.com/in/sunethra-abeysinghe- Software: SPSS, Excel, Power BI, Octave",
+      "90330752 Other Skills: Machine Learning, Data Cleaning, Data Imputation, Experimental",
+      "I T Vihanga",
+      "Junior executive, PROJECTS",
+      "Sampath Bank",
+      "Email: tharinduv@sampath.lk Diabetes Risk Explorer – R, Shiny, ggplot2",
+      "Phone: +94 76 367 9310 Built an interactive Shiny web app to explore diabetes risk factors using health",
+      "LinkedIn: and lifestyle data.",
+      "https://www.linkedin.com/in/tharindu- Road Accident Analysis Dashboard – Power BI",
+      "vihanga-041466263? Designed an interactive Power BI dashboard to analyze road accident data in",
+      "the US. Identified key patterns, trends, and contributing factors to enhance",
+      "understanding of road safety risks."
+    ],
+    "all_skills": [
+      "Classification",
+      "Data Analysis",
+      "Data Science",
+      "Excel",
+      "Hypothesis Testing",
+      "Machine Learning",
+      "Pandas",
+      "Power BI",
+      "Python",
+      "R",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Statistical Analysis",
+      "Time Series"
+    ],
+    "num_skills": 15,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 22.5,
+    "skill_score": 18.0
+  },
+  {
+    "candidate_id": "CAND_A8792D2E",
+    "candidate_name": "SETHARA GUNAWARDANA",
+    "email": "setharagunawardana@gmail.com",
+    "mobile_number": "+94 71 829 3301",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc. (hons) in applied science",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Scikit-learn"
+        ],
+        "technologies": [
+          "Excel",
+          "Machine Learning",
+          "Pandas",
+          "Power BI"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Data Analysis",
+          "Regression",
+          "Statistical Analysis",
+          "Time Series"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Team Member",
+        "project_description": " Akalanka rathnayake",
+        "duration": "2022/23",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R"
+        ]
+      },
+      {
+        "project_name": "Team Member",
+        "project_description": " Site Reliability Engineer Email: ACHIVEMENTS iamakalanka.r@gmail.com",
+        "duration": "2014 - 2017",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C"
+        ]
+      },
+      {
+        "project_name": "Faculty Colors",
+        "project_description": " Phone: +94766363557",
+        "duration": "2023",
+        "complexity": "Medium",
+        "technologies_used": []
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Dr. A.A. Sunethra",
+      "Senior Lecturer,",
+      "Sri Lanka Institute of Information Technology",
+      "Department of Statistics,",
+      "University of Colombo",
+      "Email: EXTRACURRICULAR ACTIVITIES",
+      "sunethra@stat.cmb.ac.lk",
+      "Phone: +94 71 829 3301 Member - STAT Circle, University of Colombo",
+      "Team Member - Karate Team, University of Colombo (2022/23)",
+      "Akalanka rathnayake",
+      "Team Member - Karate Team, Devi Balika Vidyalaya (2014 - 2017)",
+      "Site Reliability Engineer",
+      "Email: ACHIVEMENTS",
+      "iamakalanka.r@gmail.com",
+      "Faculty Colors - Faculty of Science, University of Colombo (2023)",
+      "Phone: +94766363557"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Excel",
+      "Machine Learning",
+      "Pandas",
+      "Power BI",
+      "Python",
+      "R",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Statistical Analysis",
+      "Time Series"
+    ],
+    "num_skills": 12,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 3,
+    "evaluation_score": 33.0,
+    "skill_score": 14.399999999999999
+  },
+  {
+    "candidate_id": "CAND_C8702B0F",
+    "candidate_name": "Dimuthu Kohombange",
+    "email": "dimuthukohombange20@gmail.com",
+    "mobile_number": "+94 71 135 8680",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "b.sc. (hons) in statistics and operations research (ug)",
+      "university": "",
+      "year": "2021"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Deep Learning",
+          "Excel",
+          "Git",
+          "GitHub",
+          "Machine Learning",
+          "Power BI"
+        ],
+        "database": [
+          "MongoDB"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Data Analysis",
+          "Data Science",
+          "Statistical Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Editor, University of Peradeniya Science Student Union",
+        "project_description": "",
+        "duration": "2022-2023",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": "Editor, University of Peradeniya Science Reporter Society",
+        "project_description": " Dr. Niluka Rodrigo Dr. K. M. Nilan Manoj Chathuranga Head of the Department / Senior Lecturer Senior Lecturer Department of Mathematics Department of Mathematics Faculty of Science University of Peradeniya Faculty of Science University of Peradeniya nilukar@sci.pdn.ac.lk chathuranga.mudalige@sci.pdn.ac.lk Phone : +94 71 017 6327 Phone : +94 71 988 7144",
+        "duration": "2022-2023",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "Go",
+          "C"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "(University of Moratuwa)",
+      "Editor, University of Peradeniya Science Student Union (2022-2023)",
+      "Editor, University of Peradeniya Science Reporter Society (2022-2023)",
+      "Dr. Niluka Rodrigo Dr. K. M. Nilan Manoj Chathuranga",
+      "Head of the Department / Senior Lecturer Senior Lecturer",
+      "Department of Mathematics Department of Mathematics",
+      "Faculty of Science University of Peradeniya Faculty of Science University of Peradeniya",
+      "nilukar@sci.pdn.ac.lk chathuranga.mudalige@sci.pdn.ac.lk",
+      "Phone : +94 71 017 6327 Phone : +94 71 988 7144"
+    ],
+    "all_skills": [
+      "Classification",
+      "Data Analysis",
+      "Data Science",
+      "Deep Learning",
+      "Excel",
+      "Express",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Machine Learning",
+      "MongoDB",
+      "Node.js",
+      "Power BI",
+      "Python",
+      "R",
+      "React",
+      "SQL",
+      "Statistical Analysis",
+      "TensorFlow"
+    ],
+    "num_skills": 20,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 2,
+    "evaluation_score": 40.0,
+    "skill_score": 24.0
+  },
+  {
+    "candidate_id": "CAND_9C20C0C3",
+    "candidate_name": "DINEKSHI",
+    "email": "sdinekshi@gmail.com",
+    "mobile_number": "+94 77 155 7985",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc in physical science",
+      "university": "university of ruhuna",
+      "year": "2020"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Excel",
+          "Power BI"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Management Function",
+      "Business Analysis & Process",
+      "Initiated Lead Clubs in Schools (Leeds International School Matara,",
+      "(Coursera Project Network) Batemulla National School, Maharagama Central College)",
+      "Investment Risk Management",
+      "(Coursera Project Network)"
+    ],
+    "all_skills": [
+      "Excel",
+      "Java",
+      "JavaScript",
+      "MySQL",
+      "PHP",
+      "Power BI"
+    ],
+    "num_skills": 6,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 9.0,
+    "skill_score": 7.199999999999999
+  },
+  {
+    "candidate_id": "CAND_AE3CFEB1",
+    "candidate_name": "ABDUL CAREEM",
+    "email": "mohamedaski.acm2000@gmail.com",
+    "mobile_number": "+94 776088244",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "undergraduate",
+      "university": "",
+      "year": "2021"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "JavaScript",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Machine Learning",
+          "Power BI"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science",
+          "Statistical Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Data analysis and Data",
+      "BSc Industrial Statistics and Mathematical Finance 2021",
+      "visualization with python",
+      "Statistical analysis with SPSS",
+      "University of Colombo",
+      "Mathematics and Statistics",
+      "Bachelor’s of Information Technology (Reading) 2022",
+      "(Linear algebra ,Calculus,",
+      "University of Colombo School of Computing",
+      "probability and Statistics)",
+      "Data mining with SQL Zahira National College Kalmunai.",
+      "Zahira National College Kalmunai.",
+      "Python, SQL, HTML/CSS,",
+      "JavaScript, C#",
+      "SOFT SKILLS I have completed Diploma in English Language",
+      "I have completed Diploma in Informational Technology",
+      "Leadership I have completed Machine Learning using python",
+      "Critical Thinking problem solving Simpleilearn",
+      "I have completed Introduction to Modern AI Course",
+      "Self Learning",
+      "CISCO Networking Academy",
+      "Decision Making",
+      "I have completed Foundation of Data Science",
+      "IBM-Coursera"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Data Science",
+      "JavaScript",
+      "Machine Learning",
+      "MySQL",
+      "Power BI",
+      "Python",
+      "SQL",
+      "Statistical Analysis"
+    ],
+    "num_skills": 9,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 13.5,
+    "skill_score": 10.799999999999999
+  },
+  {
+    "candidate_id": "CAND_EF8CE921",
+    "candidate_name": "H M KUMUTHU",
+    "email": "kumuthubhudara@gmail.com",
+    "mobile_number": "076 084 0423",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "i am a 21-year-old undergraduate pursuing a bsc (hons) in",
+      "university": "lanka institute of technology. i have a strong background in web",
+      "year": "2019"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "PHP",
+          "Python"
+        ],
+        "frameworks": [
+          "React"
+        ],
+        "technologies": [],
+        "database": [],
+        "technical_skills": [
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Under Graduate Bsc Hons Information Technology",
+      "Effective Communication",
+      "specialize in Data Science SLIIT Campus .",
+      "Critical Thinking",
+      "Python Course in Moratuwa uni",
+      "Web Design Course in Moratuwa uni",
+      "Sinhala REFERENCE",
+      "Wardiere Inc. / CTO"
+    ],
+    "all_skills": [
+      "Data Science",
+      "PHP",
+      "Python",
+      "React"
+    ],
+    "num_skills": 4,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 6.0,
+    "skill_score": 4.8
+  },
+  {
+    "candidate_id": "CAND_D74A7457",
+    "candidate_name": "Hasini Maheshika Dassanayake",
+    "email": "hasini20020116@gmail.com",
+    "mobile_number": "+94 77 418 9687",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "undergraduate",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python"
+        ],
+        "frameworks": [],
+        "technologies": [],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Technical Skills Java for Beginners – Great Learning",
+      "Python Web Design for Beginners – University of Moratuwa",
+      "• Java Python for Beginners – University of Moratuwa",
+      "Web Design Fundamentals English Diploma - Sri Jinarathana Vocational Training",
+      "Trello Centre",
+      "Figma Business Level 1 – Chartered Accountants of Sri Lanka",
+      "Basic Accounting Knowledge NIBM – National Institute of Business Management",
+      "Sinhala Member of the FOCSE of the KIU - 2022 / present",
+      "English Senior Prefect of Christ King College, Pannipitiya -",
+      "Prefect of Christ King College, Pannipitiya - 2018/2019",
+      "REFERENCES President of Buddhist Society - 2019/2020",
+      "Member of School Commerce Society - 2018/2020",
+      "Prof. Rathna Wijethunga",
+      "Retired Professor",
+      "University of Sri Jaywardanapura",
+      "Phone : 0718098670",
+      "Ms. Nilusha Chamindi",
+      "Head of the IT Faculty - KIU",
+      "Phone : 0724110843"
+    ],
+    "all_skills": [
+      "Java",
+      "Python"
+    ],
+    "num_skills": 2,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 3.0,
+    "skill_score": 2.4
+  },
+  {
+    "candidate_id": "CAND_A89E4F3F",
+    "candidate_name": "HIRUNI NAVODYA",
+    "email": "hiruni2207navodya@gmail.com",
+    "mobile_number": "+94 787854936",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc eng hons, electrical engineering",
+      "university": "",
+      "year": "2021"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "R"
+        ],
+        "frameworks": [
+          "PyTorch",
+          "React",
+          "Scikit-learn",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Computer Vision",
+          "Deep Learning",
+          "Git",
+          "GitHub",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NumPy",
+          "Pandas",
+          "YOLO"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Visualization",
+          "Time Series"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Engineering 2025",
+        "project_description": " Personal Skills K.L.Y.Y. Liyanage, M.L.H. Navodya, \"Mathematical Modeling for Optimizing Dragon Fruit (Selenicereus undatus) Cultivation”, In proceedings of the Mini Team work Symposium, Department of Mathematics, University of Ruhuna, 2025 (Paper ID: Presentation skills 9) Communication skills M.L.H. Navodya, K.L.Y.Y Liyanage \"Deep Learning-Based Detection of Hevea Analytical and Problem Solving brasiliensis Leaf Diseases for Sustainable Cultivation ”, In the International",
+        "duration": "SCSE 2025) (Paper ID: 409",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "Go",
+          "C",
+          "Deep Learning",
+          "Problem Solving",
+          "Communication"
+        ]
+      },
+      {
+        "project_name": "Creative and Logical Thinking Symposium on Agriculture & Environment",
+        "project_description": " Time management Self - motivated Leadership REPLY Challenges 2025: Hack the Code Rubber Plant Nursery Management System Challenge | World Rank - 367 ICRES 2025 : Top 10 Projects | Circularity Final Year Project 2024 Jun - Present Challenge | Smart Waste Management Develop and implement an automated Rubber Plant Nursery Management System for Textile Recycling and Reuse System for Rubber Research Center in Agalawaththa that optimizes resource using Computer Vision. utilization and enhances plant growth through integrated IoT and Machine ACES Hackathon 2025 : Top 5 Web Learning techniques. Applications | Digital transformation in Design and implement an automated irrigation system with remote control Social Services | Kindness Connect Web capabilities, real-time monitoring and integrated plant growth prediction Application. modeling. AtomX Pronuclear Challenge 2025: Predictive model of Rubber plant growth was published at the 8th International Research Conference on Smart Computing and Systems Engineering 2025 (SCSE Nuclear Paint for Safer Roadways in Sri 2025). Lanka. FLASH 2025 : Early Warning Innovation Challange | AI-Powered Drought Early Hotel Revenue Forecasting System Using Time Series and Machine Warning System for Sri Lanka. Learning Models 2025 April - 2025 July Diploma in Tamil language 2020 : Island",
+        "duration": "ISAE) 2025 (Paper ID: 11",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Computer Vision",
+          "Git",
+          "Time Series",
+          "Leadership",
+          "Time Management",
+          "Innovation"
+        ]
+      },
+      {
+        "project_name": "Semester 8",
+        "project_description": " 1st SPARK 2024 : Top 15 Young Developed a predictive analytics system to forecast hotel revenue by meal Entrepreneur | Youth Entrepreneur period and revenue center over a three-month horizon. The project used one Competition. year of historical transactional data and applied multiple forecasting models to Greenovate 2025 : Green Innovative Idea support data-driven decisions for staffing, inventory, and marketing. Competition UoP | Reducing Plastic Tech Stack: XGBoost, SARIMAX, Facebook Prophet, LSTM, CNN-LSTM, LightGBM, Waste & Enhancing Environmental Temporal Fusion Transformer (TFT) Sustainability | Semi Final. μ Mora 2020 : Mathematics Competition | Deep Learning-Based Detection of Hevea brasiliensis Leaf Diseases for Final Round 2025 Jan - 2025 April Higher Educational Merit Scholarship : Sustainable Cultivation Merit in GCE AL - 2019 | Island Rank 39 Develop a deep learning system to identify plant leaf diseases, promoting Southern Province Sinhala Literature sustainable farming. Enabling early intervention to minimize crop loss and Competition : 2015 Ministry of Education reduce pesticide usage. | Won the 1st place. Tech Stack: Python, YOLO, VGG16, ResNet50, EfficientNet Southern Province Mathematics This was published at the International Symposium on Agriculture & Environment ( Competition : 2014 & 2013 Ministry of ISAE 2025 ). Education | Won the 1st place. Southern Province Science Competition : Modeling Dengue Disease Spread Using the SIS Model and Lotka-Volterra 2013 | Ministry of Education | Won the 1st place. Model in Sri Lanka 2025 Jan - 2025 April Social Science Competition : 2011| Simulate dengue transmission in Sri Lanka via SIS and Lotka-Volterra models Ministry of Education | Provincial 1st using Python-based computational tools. Australian National Chemistry Quiz: Tech Stack: Python, NumPy, SciPy, Matplotlib, Pandas Distinction pass for Australian National This was published at The Peradeniya University International Research",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Deep Learning",
+          "Yolo",
+          "Pandas",
+          "Numpy",
+          "Matplotlib"
+        ]
+      },
+      {
+        "project_name": "Chemistry Quiz in 2012. Symposium and Exposition .",
+        "project_description": "",
+        "duration": "iPURSE 2025",
+        "complexity": "Medium",
+        "technologies_used": []
+      }
+    ],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Computer Vision",
+      "Data Analysis",
+      "Data Visualization",
+      "Deep Learning",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Jupyter",
+      "Machine Learning",
+      "Matplotlib",
+      "MongoDB",
+      "MySQL",
+      "NumPy",
+      "Pandas",
+      "PyTorch",
+      "Python",
+      "R",
+      "React",
+      "Scikit-learn",
+      "Spark",
+      "Streamlit",
+      "TensorFlow",
+      "Time Series",
+      "YOLO"
+    ],
+    "num_skills": 25,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 4,
+    "evaluation_score": 57.5,
+    "skill_score": 30.0
+  },
+  {
+    "candidate_id": "CAND_8C23313A",
+    "candidate_name": "I M A L K A W I J R A T H N E",
+    "email": "vidithimalka@gmail.com",
+    "mobile_number": "+94 714237527",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "computing & software engineering (merit pass).",
+      "university": "",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Excel",
+          "Git"
+        ],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "GCE Advanced Level (2022 - 2023)",
+      "Wariyapola Sri Sumangala College,",
+      "Kandy, Sri Lanka",
+      "Merit Pass, Higher Diploma in Computing & Software Engineering(2024)",
+      "Completed with passes in Commerce",
+      "stream. Leadership:",
+      "Deputy Head Prefect, Wariyapola Sri Sumangala College (2022)",
+      "GCE Ordinary Level (2019) Wariyapola",
+      "Vice President, Commerce Society (2021-2022)",
+      "Sri Sumangala College, Kandy, Sri",
+      "Lanka - Successfully completed. Extracurricular:",
+      "Member, Rotary Interact Club (2020-2022)",
+      "Member, Photography Club (2019-2022)"
+    ],
+    "all_skills": [
+      "Excel",
+      "Git",
+      "Java",
+      "R",
+      "SQL"
+    ],
+    "num_skills": 5,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 7.5,
+    "skill_score": 6.0
+  },
+  {
+    "candidate_id": "CAND_B1B94CE6",
+    "candidate_name": "M. M. SUMAIYA",
+    "email": "msumaiya21@gmail.com",
+    "mobile_number": "+94 762665035",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "passionate and driven data science undergraduate with a proven academic track record and a",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Keras",
+          "PyTorch",
+          "Scikit-learn",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Deep Learning",
+          "Excel",
+          "GitHub",
+          "Machine Learning",
+          "Matplotlib",
+          "NumPy",
+          "OpenCV",
+          "Pandas",
+          "Power BI",
+          "Seaborn",
+          "Tableau"
+        ],
+        "database": [
+          "Neo4j"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Excel",
+      "GitHub",
+      "Kafka",
+      "Keras",
+      "Machine Learning",
+      "Matplotlib",
+      "Neo4j",
+      "NumPy",
+      "OpenCV",
+      "Pandas",
+      "Power BI",
+      "PyTorch",
+      "Python",
+      "R",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Spark",
+      "Streamlit",
+      "Tableau",
+      "TensorFlow"
+    ],
+    "num_skills": 25,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 37.5,
+    "skill_score": 30.0
+  },
+  {
+    "candidate_id": "CAND_CD3330E3",
+    "candidate_name": "CHAMINDU A. ELDENIYA",
+    "email": "caeldeniya@outlook.com",
+    "mobile_number": "0766265828",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "b.sc. physical science undergraduate at the university of kelaniya,",
+      "university": "",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React"
+        ],
+        "technologies": [
+          "Excel",
+          "Git",
+          "GitHub",
+          "Postman",
+          "Power BI"
+        ],
+        "database": [
+          "MongoDB"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Visualization"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "for Professional Excellence Developed a MERN stack app with JWT auth and CRUD APIs",
+      "(Intermediate Level) (tested via Postman).",
+      "Built responsive UI with React & Tailwind CSS.",
+      "2016 - 2019",
+      "Features: media uploads, search, real-time comments.",
+      "Technologies: MongoDB, Express.js, React, Node.js, JWT",
+      "Prj Link : https://github.com/ChaminduAE/Blogging-Platform.git",
+      "Advanced Level in Physical",
+      "Science Stream - 2019 [A C C]",
+      "2010 - 2016",
+      "ISIPATHNA COLLEGE, Introduction to Front-End Development by META(Online Course)",
+      "COLOMBO - 05 Power BI for Beginners by SIMPLILEARN (Online Course)",
+      "Data Visualization with Power BI by GREAT LEARNING (Online",
+      "Grade 6 to Ordinary Level -",
+      "2015 [8-As,1-B]",
+      "Data Analyst 101: Excel Formulas & Functions by SIMPLILEARN",
+      "(Online Course)",
+      "Excel Dashboards for Beginners by SIMPLILEARN (Online Course)",
+      "Dr. W.A.C. Weerakoon (Senior Lecturer (Grade II) )",
+      "University of Kelaniya, Sri Lanka",
+      "Phone: +94 (011) 2903 371",
+      "Email : chinthanie@kln.ac.lk",
+      "Prof. N. V. Chandrasekera (Professor)",
+      "University of Kelaniya, Sri Lanka",
+      "Phone: +94 (011) 2903375",
+      "Email : nvchandrasekara@kln.ac.lk"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Data Visualization",
+      "Excel",
+      "Express",
+      "Git",
+      "GitHub",
+      "Java",
+      "MongoDB",
+      "Node.js",
+      "Postman",
+      "Power BI",
+      "Python",
+      "React",
+      "SQL"
+    ],
+    "num_skills": 14,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 21.0,
+    "skill_score": 16.8
+  },
+  {
+    "candidate_id": "CAND_9783EAB2",
+    "candidate_name": "PROFILE",
+    "email": "kavindipiyumika31@gmail.com",
+    "mobile_number": "+94 71 0602717",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "advance in the software engineering industry.",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Excel",
+          "Machine Learning"
+        ],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "+94 71 0602717",
+      "Diploma in Information & Communication 2020 - 2021",
+      "kavindipiyumika31@gmail.com",
+      "Successfully Completed Diploma in Information &",
+      "459/3, Anguruwathota Rd,",
+      "Communication Technology conducted and examined by",
+      "Wewala, Horana.",
+      "Nenasala Campus",
+      "Kavindi Piyumika",
+      "English Language & Speech Training 2020 - 2021",
+      "Successfully Completed English Language & Speech Training",
+      "Course conducted Department of Official Languages.",
+      "Programme in Python for Beginers 2024",
+      "Technical Skills",
+      "Successfully Completed learning programme in python for",
+      "Java beginners conducted by University of Moratuwa.",
+      "Python Workshop Serious 2024",
+      "Successfully Completed Workshop in python conducted by",
+      "Open University of Sri Lanka.",
+      "Python PROJECTS",
+      "Train Booking System (Java) 2022- 2023",
+      "QA (Manual)",
+      "Networking Train ticket booking system with GUI developed by using Java",
+      "Machine Learning",
+      "Premier League Management System(Java) 2020- 2021",
+      "Premier league management system developed by using java",
+      "MS PowerPoint",
+      "to manage the operations in a football league",
+      "Professional Skills ADDITIONAL ACTIVITIES",
+      "Management skills",
+      "Organizational skills Senior member of Science Society - Taxila 2017/2018",
+      "Central College",
+      "Feedback skills",
+      "Communicational skills",
+      "Member – Taxila Central College Sinhala 2017/2018",
+      "Adaptability skills",
+      "Literary Union.",
+      "Interpersonal skills",
+      "Leadership skills"
+    ],
+    "all_skills": [
+      "Excel",
+      "Java",
+      "JavaScript",
+      "Machine Learning",
+      "PHP",
+      "Python",
+      "SQL"
+    ],
+    "num_skills": 7,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 10.5,
+    "skill_score": 8.4
+  },
+  {
+    "candidate_id": "CAND_B150F1F6",
+    "candidate_name": "KAVINDU JAYARUWAN",
+    "email": "Jayaruwanrathnayaka@gmail.com",
+    "mobile_number": "0760417645",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "a motivated data science undergraduate with hands-on experience from academic projects in data analysis, machine learning,",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Streamlit"
+        ],
+        "technologies": [
+          "Excel",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NumPy",
+          "Pandas",
+          "Power BI",
+          "Seaborn"
+        ],
+        "database": [
+          "PostgreSQL"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization",
+          "Feature Engineering",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Excel",
+      "Feature Engineering",
+      "Jupyter",
+      "Machine Learning",
+      "Matplotlib",
+      "NumPy",
+      "Pandas",
+      "PostgreSQL",
+      "Power BI",
+      "Python",
+      "R",
+      "Regression",
+      "SQL",
+      "Seaborn",
+      "Streamlit"
+    ],
+    "num_skills": 18,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 27.0,
+    "skill_score": 21.599999999999998
+  },
+  {
+    "candidate_id": "CAND_09B104EC",
+    "candidate_name": "Dilhara Jayathilake",
+    "email": "dilharaisuri2001@gmail.com",
+    "mobile_number": "+94764225107",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "motivated it undergraduate with a solid foundation in networking, software development, and system",
+      "university": "",
+      "year": "2020"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "TypeScript"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React"
+        ],
+        "technologies": [
+          "Excel",
+          "Git",
+          "Netlify",
+          "Power BI"
+        ],
+        "database": [
+          "Firebase",
+          "MongoDB"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Athletics: District & Inter",
+        "project_description": " Team Leadership: Organized events as a member of Sri Lanka Federation of Youth Clubs. Sinhala (Native) English (Fluent) Social events, Computers and Gaming, Sports cars, Movies, Hiking, Camping",
+        "duration": "2015–2018",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Leadership"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Diploma in Human Resource Management - LPEC Campus",
+      "People's Bank | June 28, 2021 – December 28, 2021",
+      "Assisted customers in the savings department, processing transactions, account inquiries, and compliance documentation.",
+      "Pioneered digital account onboarding, guiding clients through e-KYC (Know Your Customer) processes and mobile banking",
+      "Resolved customer issues related to online banking platforms (e.g., login errors, transaction disputes).",
+      "Collaborated with IT teams to report and troubleshoot technical gaps in digital banking services."
+    ],
+    "all_skills": [
+      "Excel",
+      "Express",
+      "Firebase",
+      "Git",
+      "Java",
+      "JavaScript",
+      "MongoDB",
+      "Netlify",
+      "Node.js",
+      "Power BI",
+      "Python",
+      "React",
+      "TypeScript"
+    ],
+    "num_skills": 13,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 1,
+    "evaluation_score": 24.5,
+    "skill_score": 15.6
+  },
+  {
+    "candidate_id": "CAND_1F880F9D",
+    "candidate_name": "MADHUSHA CHINTHANI",
+    "email": "madhuomchinthani@gmail.com",
+    "mobile_number": "071 5293115",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "a passionate undergraduate student specializing in data analysis, with a strong drive to",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "SQL",
+          "TypeScript"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Excel",
+          "GitHub",
+          "NLP",
+          "Postman",
+          "Power BI",
+          "Tableau"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Visualization",
+          "Statistical Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "B.Sc. Hons in Information and Communication Technology (Undergraduate),",
+      "University of Sri Jayewardenepura, Sri Lanka, 2022-2025",
+      "Extra-Curricular Activities",
+      "Successfully completed Power Bi Beginners Simplilearn.",
+      "Successfully completed Introduction to Minitab in Simplilearn.",
+      "Successfully completed Business Analysis & Process Management in",
+      "Successfully completed Introduction to Artificial Intelligence in LinkedIn.",
+      "Successfully completed Postman API Fundamentals Student Expert in",
+      "Successfully completed NLP Customer Experience in Great Learning.",
+      "Successfully completed Introduction to Packet Tracer in Cisco.",
+      "Successfully completed ICTT NVQ (Level 4) in National Apprentice and",
+      "Industrial Training Authority in 2022.",
+      "by University of Sabaragamuwa in 2021.",
+      "Technical Skills Soft Skills Analytical Skills",
+      "Excel Communication Problem-solving",
+      "SQL Collaboration Critical thinking",
+      "Power BI Curiosity Mathematical reasoning",
+      "Tableau Time management",
+      "Data Cleaning & Visualization",
+      "Statistical Analysis"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Data Visualization",
+      "Excel",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "NLP",
+      "Postman",
+      "Power BI",
+      "SQL",
+      "Statistical Analysis",
+      "Tableau",
+      "TypeScript"
+    ],
+    "num_skills": 13,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 19.5,
+    "skill_score": 15.6
+  },
+  {
+    "candidate_id": "CAND_2DFCB16A",
+    "candidate_name": "Mujahid Mashood",
+    "email": "mujahidmashood2001@gmail.com",
+    "mobile_number": "+94741127996",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "i am a final year data science undergraduate seeking an internship in data science and ai/ml at a respectable",
+      "university": "sri lanka institute of information technology (sliit) oct 2022 – present",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Flask",
+          "React",
+          "Scikit-learn",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "Git",
+          "Hugging Face",
+          "Linux",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "NLTK",
+          "NumPy",
+          "Pandas",
+          "Postman",
+          "Power BI",
+          "Seaborn"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "• Python for Beginners by University of Moratuwa",
+      "• AWS Academy Cloud Foundations",
+      "• Adaptability",
+      "• Time management",
+      "• Leadership",
+      "• Communication Skills",
+      "• Team collaboration",
+      "• Analytical Skills",
+      "• Self-learning"
+    ],
+    "all_skills": [
+      "AWS",
+      "Azure",
+      "Data Analysis",
+      "Data Science",
+      "Express",
+      "Flask",
+      "Git",
+      "Hugging Face",
+      "Java",
+      "JavaScript",
+      "Linux",
+      "Machine Learning",
+      "Matplotlib",
+      "MySQL",
+      "NLP",
+      "NLTK",
+      "NumPy",
+      "Pandas",
+      "Postman",
+      "Power BI",
+      "Python",
+      "R",
+      "React",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Streamlit",
+      "TensorFlow"
+    ],
+    "num_skills": 28,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 42.0,
+    "skill_score": 33.6
+  },
+  {
+    "candidate_id": "CAND_9B9B9664",
+    "candidate_name": "Nadeera Kalpanee Withana",
+    "email": "nadeerawithana2k20@gmail.com",
+    "mobile_number": "+94710367205",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "iamathird-yearundergraduateatsliit,specializingininformationtechnologywithafocusondatascience.duringmy",
+      "university": "",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Kotlin",
+          "PHP",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React"
+        ],
+        "technologies": [
+          "AWS",
+          "Git",
+          "GitHub",
+          "Postman"
+        ],
+        "database": [
+          "Firebase",
+          "MongoDB",
+          "MySQL",
+          "SQLite"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "• Completed“Python-Basic”2(HackerRank)",
+      "• Completed“AmazonAuroraGettingStarted”2(AWS)",
+      "• Completed“FundamentalofMachineLearningandArtificialIntelligence”2(AWS)",
+      "• Completed“GettingstartedwithDevOps”2(AWS)",
+      "Winning:WinningEnglishdaycompetitionsofSujathaVidyalaya,Matara. 2017",
+      "GirlGuide:ServedasaGirlguideofSriLankaGirlguideAssociation. 2014-2016",
+      "ClassMonitress:ServedasaclassmonitressofSujathaVidyalaya,Matara. 2013-2015"
+    ],
+    "all_skills": [
+      "AWS",
+      "Express",
+      "Firebase",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Kotlin",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "PHP",
+      "Postman",
+      "Python",
+      "R",
+      "React",
+      "SQL",
+      "SQLite"
+    ],
+    "num_skills": 18,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 27.0,
+    "skill_score": 21.599999999999998
+  },
+  {
+    "candidate_id": "CAND_AFEB6B3B",
+    "candidate_name": "ABDULLAH AZAAM",
+    "email": "abdullah010213azaam@gmail.com",
+    "mobile_number": "+94 77 320 1771",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "b.sc (hons) computer science (r)",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "PHP",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "PyTorch",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Docker",
+          "Git",
+          "GitHub",
+          "Jupyter",
+          "Linux",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "NumPy",
+          "Pandas",
+          "Plotly",
+          "Power BI",
+          "Seaborn",
+          "Tableau"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science",
+          "Feature Engineering",
+          "Regression",
+          "Supervised Learning",
+          "Unsupervised Learning"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "AWS",
+      "Data Analysis",
+      "Data Science",
+      "Docker",
+      "Feature Engineering",
+      "Git",
+      "GitHub",
+      "Hadoop",
+      "Jupyter",
+      "Linux",
+      "Machine Learning",
+      "Matplotlib",
+      "MySQL",
+      "NLP",
+      "NumPy",
+      "PHP",
+      "Pandas",
+      "Plotly",
+      "Power BI",
+      "PyTorch",
+      "Python",
+      "R",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Spark",
+      "Supervised Learning",
+      "Tableau",
+      "TensorFlow",
+      "Unsupervised Learning"
+    ],
+    "num_skills": 31,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 46.5,
+    "skill_score": 37.199999999999996
+  },
+  {
+    "candidate_id": "CAND_2E86D007",
+    "candidate_name": "Lakshitha Warnamal",
+    "email": "lwarnamal@gmail.com",
+    "mobile_number": "+94 77 398 0440",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "2020 – 2025 b.sc. (hons) computing and information system",
+      "university": "sabaragamuwa university of sri lanka",
+      "year": "2020"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Dart",
+          "JavaScript",
+          "PHP",
+          "Python",
+          "R"
+        ],
+        "frameworks": [
+          "Django",
+          "Flask",
+          "Flutter",
+          "Keras",
+          "Node.js",
+          "PyTorch",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "BeautifulSoup",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NumPy",
+          "Pandas",
+          "Selenium",
+          "Ubuntu",
+          "Windows"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "2023 Mastering Generative AI with OpenAI (online)",
+      "2023 AI/ML Engineer - Stage 1 (online)",
+      "2025 Machine Learning using Python (online)",
+      "Simplilearn",
+      "2025 Artificial Intelligence Beginners Guide : What is AI? (online)",
+      "Simplilearn"
+    ],
+    "all_skills": [
+      "BeautifulSoup",
+      "Dart",
+      "Data Analysis",
+      "Django",
+      "Flask",
+      "Flutter",
+      "JavaScript",
+      "Jupyter",
+      "Keras",
+      "Machine Learning",
+      "Matplotlib",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "NumPy",
+      "PHP",
+      "Pandas",
+      "PyTorch",
+      "Python",
+      "R",
+      "Scikit-learn",
+      "Selenium",
+      "TensorFlow",
+      "Ubuntu",
+      "Windows"
+    ],
+    "num_skills": 25,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 37.5,
+    "skill_score": 30.0
+  },
+  {
+    "candidate_id": "CAND_7496CA7E",
+    "candidate_name": "NADEE DEVINDI",
+    "email": "wgnadeedevindi@gmail.com",
+    "mobile_number": "+94742881403",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "as a data science undergraduate at sliit, i am a highly motivated, solution oriented and innovative team",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React"
+        ],
+        "technologies": [
+          "Excel",
+          "Git",
+          "GitHub",
+          "Power BI"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL",
+          "Oracle"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "• Python For Beginners | University of Moratuwa",
+      "• Introduction to Data Science | Cisco Networking Academy",
+      "• Business Analysis Basic | Simplilearn",
+      "• Isuru Jagoda ,Senior SQE Engineer Embla Software Innovation (Pvt) Ltd , Isuru@embla.asia,",
+      "+94716483515",
+      "•Kithsiri Coomasaru, CEO ,Prime Engineering Lanka (Pvt) Limited, kitcoomc@gmail.com, +94750200567"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Excel",
+      "Express",
+      "Git",
+      "GitHub",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "Oracle",
+      "Power BI",
+      "Python",
+      "R",
+      "React",
+      "SQL"
+    ],
+    "num_skills": 16,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 24.0,
+    "skill_score": 19.2
+  },
+  {
+    "candidate_id": "CAND_134976DE",
+    "candidate_name": "NAYANTHA DHASUN",
+    "email": "nayanthasr@gmail.com",
+    "mobile_number": "(+94) 77 603 5192",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "undergraduate",
+      "university": "",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Kotlin"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Power BI"
+        ],
+        "database": [
+          "MySQL",
+          "Oracle"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Full Name",
+        "project_description": " Ilukpitiya Nationality - Sri Lankan Odoo Functional Training Certificate – Odoo eLearning Platform Status - Single Date of Birth - 2002.12.26 Completed Practical Training in Odoo ERP Gender - Male Covering accounting, sales, inventory and HR modules Developed ERP-based Power BI dash- Reading - BSc (Hons) Information Technology for Business boards that automated financial Coventry University - UK • reporting at Frella International, Higher National Diploma in Information Systems Management enhancing reporting efficiency and National institute of Business Management decision-making. O v erall GPA : 3.7/4.0 Completed Multiple International Certifications in ERP (Odoo, ERPNext) Diploma in Business information Systems • and Business Analysis (PMI, IIBA) while National Institute of Business Management - Sri Lanka managing academic and internship Overall GPA : 3.6/4.0 responsibilities. Passed in G.C.E Advanced Level Examination - Commerce Stream Achieved 3.7/4.0 GPA in Higher Dharmaraja College - Kandy, Sri Lanka National Diploma in Information • Systems Management . Passed in G.C.E Ordinary Level Examination Improved data integrity in ERP opera- K/Jinaraja Boys’ College - Gampola, Sri Lanka tions by identifying and resolving Overall Results : 5A’s Including English and Mathematics • system gaps during internship, enhancing team reporting accuracy. Runners-up – NIBM Cricket Fiesta 2024 • Represented the institute in the Market Research on Smart Purification Portable Water Bottles in Sri Lanka inter-batch cricket tournament, showcasing teamwork, strategic Conducted market research about water bottles in Sri Lankan market to under- thinking and sportsmanship. stand the market conditions, customer preferences, competition and potential • opportunities for our new product and created a business plan for it.",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Power Bi",
+          "Teamwork"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Reading for CMA Operational Level",
+      "Volunteering at STEM Up Education",
+      "Passed in AAT - Finalist",
+      "Member of IT Society",
+      "Member of PRANA Social Club",
+      "Diploma in Human Resources Management - NYSCO Sri Lanka",
+      "LANGUAGES Completion of Oracle Database Foundation",
+      "Completed the Business Analysis Foundations Course",
+      "English - Professional proficiency",
+      "Awarded by the International Institute of Business Analysis (IIBA®)",
+      "Sinhala - Native proficiency",
+      "Full Name - Nayantha Dhasun Bandara Project Management Institute (PMI)",
+      "Nationality - Sri Lankan",
+      "Status - Single",
+      "Date of Birth - 2002.12.26",
+      "Completed Practical Training in Odoo ERP",
+      "Gender - Male",
+      "Covering accounting, sales, inventory and HR modules",
+      "Developed ERP-based Power BI dash- Reading - BSc (Hons) Information Technology for Business",
+      "boards that automated financial Coventry University - UK",
+      "• reporting at Frella International,",
+      "Higher National Diploma in Information Systems Management",
+      "enhancing reporting efficiency and",
+      "National institute of Business Management",
+      "decision-making.",
+      "O v erall GPA : 3.7/4.0",
+      "Completed Multiple International",
+      "• and Business Analysis (PMI, IIBA) while National Institute of Business Management - Sri Lanka",
+      "managing academic and internship Overall GPA : 3.6/4.0",
+      "responsibilities.",
+      "Passed in G.C.E Advanced Level Examination - Commerce Stream",
+      "Achieved 3.7/4.0 GPA in Higher",
+      "Dharmaraja College - Kandy, Sri Lanka",
+      "National Diploma in Information",
+      "• Systems Management .",
+      "Passed in G.C.E Ordinary Level Examination",
+      "Improved data integrity in ERP opera- K/Jinaraja Boys’ College - Gampola, Sri Lanka",
+      "tions by identifying and resolving Overall Results : 5A’s Including English and Mathematics",
+      "• system gaps during internship,",
+      "enhancing team reporting accuracy.",
+      "Runners-up – NIBM Cricket Fiesta",
+      "• Represented the institute in the",
+      "Market Research on Smart Purification Portable Water Bottles in Sri Lanka",
+      "inter-batch cricket tournament,",
+      "showcasing teamwork, strategic Conducted market research about water bottles in Sri Lankan market to under-",
+      "thinking and sportsmanship. stand the market conditions, customer preferences, competition and potential",
+      "• opportunities for our new product and created a business plan for it."
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Data Science",
+      "Java",
+      "Kotlin",
+      "MySQL",
+      "Oracle",
+      "Power BI"
+    ],
+    "num_skills": 7,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 1,
+    "evaluation_score": 15.5,
+    "skill_score": 8.4
+  },
+  {
+    "candidate_id": "CAND_59211E5D",
+    "candidate_name": "Yavindi",
+    "email": "nethyaaadias@gmail.com",
+    "mobile_number": "+94 70 727 1542",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "a dedicated data science graduate from sliit and current undergraduate at the university",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Deep Learning",
+          "Linux",
+          "Machine Learning"
+        ],
+        "database": [
+          "MySQL",
+          "Oracle"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Oracle Database Administration and Performance Optimization on Linux - Installed",
+      "Oracle 23ai, configured databases, optimized memory with initialization parameters,",
+      "implemented SQL-based data redaction, and managed control files, redo logs, and",
+      "backup/recovery processes.",
+      "“NeuralCoco” - Utilized machine learning for tissue culture and plant protection in",
+      "coconut cultivation, performing image classification and object detection to analyze",
+      "coconut embryos and identify shoots.",
+      "\"Adventure-Works\" - A robust data warehouse was developed to manage filtered",
+      "information and deliver insightful dashboards, empowering businesses to make informed",
+      "decisions and identify critical trends efficiently.",
+      "\"World Shipper\" - Designing a well-structured data warehouse & implementing a robust",
+      "ETL process to ensure clean, organized data ready for analysis and decision-making.",
+      "“Movie Recommendation System” - Developed a Python-based movie recommendation",
+      "system using Natural Language Processing and cosine similarity, enabling personalized",
+      "movie suggestions based on user-provided titles and identified preferences.",
+      "Introduction to Oracle SQL - Udemy - Query writing, database objects, and Oracle SQL",
+      "architecture.",
+      "UNIX: Getting Started – Udemy - Gained UNIX/Linux basics, file permissions, scripting,",
+      "and command-line tools.",
+      "LANGUAGES - Python, SQL, R, Java, Linux INTERESTED AREAS - Machine Learning,",
+      "TOOLS - PowerBI, IBM Cognos, Oracle, Deep Learning, Data Analytics, Data",
+      "MySql, R Studio, Anaconda Navigator, Engineering, Mathematics, Statistics",
+      "TensorFlow, AWS, SSIS, SSMS SOFT SKILLS - Communication, Leadership,",
+      "Time management",
+      "BSC (HONS) IN INFORMATION Dr. Prasanna S. Haddela Oshada Amila",
+      "TECHNOLOGY, DATA SCIENCE Head/Graduate Studies Specialist Software",
+      "SRI LANKA INSTITUTE OF Senior Lecturer(HG) Engineer",
+      "INFORMATION TECHNOLOGY (SLIIT) Faculty of Computing LSEG Technology",
+      "2021 - 2024 SLIIT Malabe Millennium Drive,",
+      "BSC (HONS) IN PHYSICAL SCIENCE 0714705502/ 0117544126 Malabe 0771661737",
+      "UNIVERSITY OF PERADENIYA prasanna.s@sliit.lk oshada.amila@lseg.com",
+      "2022 - 2026"
+    ],
+    "all_skills": [
+      "AWS",
+      "Classification",
+      "Data Science",
+      "Deep Learning",
+      "Java",
+      "Linux",
+      "Machine Learning",
+      "MySQL",
+      "Oracle",
+      "Python",
+      "R",
+      "SQL",
+      "TensorFlow"
+    ],
+    "num_skills": 13,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 19.5,
+    "skill_score": 15.6
+  },
+  {
+    "candidate_id": "CAND_D7D2A11D",
+    "candidate_name": "NETHMINI PARINDI WEERASEKARA",
+    "email": "parindinethmini@gmail.com",
+    "mobile_number": "+94 74 108 3333",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "data science undergraduate",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Flask",
+          "Streamlit"
+        ],
+        "technologies": [
+          "Azure",
+          "Docker",
+          "Excel",
+          "Git",
+          "GitHub",
+          "Jupyter",
+          "Kubernetes",
+          "Machine Learning",
+          "Power BI"
+        ],
+        "database": [
+          "MongoDB"
+        ],
+        "technical_skills": [
+          "Data Science",
+          "Data Visualization",
+          "Supervised Learning"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Google Cloud Big Data & ML Fundamentals – Coursera December 2023",
+      "Gained foundational knowledge in cloud-based data processing and ML tools.",
+      "Docker & Kubernetes – Coursera December 2023",
+      "Learned containerization, orchestration, and microservices deployment."
+    ],
+    "all_skills": [
+      "Azure",
+      "Data Science",
+      "Data Visualization",
+      "Docker",
+      "Excel",
+      "Flask",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Jupyter",
+      "Kubernetes",
+      "Machine Learning",
+      "MongoDB",
+      "Power BI",
+      "Python",
+      "R",
+      "SQL",
+      "Streamlit",
+      "Supervised Learning"
+    ],
+    "num_skills": 20,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 30.0,
+    "skill_score": 24.0
+  },
+  {
+    "candidate_id": "CAND_A0746461",
+    "candidate_name": "HAREESH JEYASEELAN",
+    "email": "Jeyoharee@gmail.com",
+    "mobile_number": "0754920720",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "analytics undergraduate with a proven ability to skill in customer service, data analysis and",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express"
+        ],
+        "technologies": [
+          "Excel",
+          "Power BI"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Visualization"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Business Management School (BMS) | 2023",
+      "Name - Mrs.G. Niranjala",
+      "Finance Officer, United Nations",
+      "Phone number: 0773613785",
+      "Name – V. Ramanah",
+      "Computer Land International Pvt Ltd, CEO/Managing Director",
+      "Phone number: 0777324184"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Data Visualization",
+      "Excel",
+      "Express",
+      "Power BI",
+      "Python",
+      "SQL"
+    ],
+    "num_skills": 7,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 10.5,
+    "skill_score": 8.4
+  },
+  {
+    "candidate_id": "CAND_FE9AC678",
+    "candidate_name": "Unknown Name",
+    "email": "",
+    "mobile_number": "",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "",
+      "university": "",
+      "year": ""
+    },
+    "skills": [
+      {
+        "programming_languages": [],
+        "frameworks": [],
+        "technologies": [],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [],
+    "num_skills": 0,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 0.0,
+    "skill_score": 0.0
+  },
+  {
+    "candidate_id": "CAND_B8AC6392",
+    "candidate_name": "M. R. Rikhaz Ahamed",
+    "email": "rikhazahamed300@gmail.com",
+    "mobile_number": "+94 752853300",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "ai & ml engineer (bsc in artificial intelligence)",
+      "university": "",
+      "year": "2021"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R"
+        ],
+        "frameworks": [
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Computer Vision",
+          "Deep Learning",
+          "Machine Learning",
+          "OpenCV"
+        ],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Computer Vision",
+      "Deep Learning",
+      "Machine Learning",
+      "OpenCV",
+      "Python",
+      "R",
+      "TensorFlow"
+    ],
+    "num_skills": 7,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 10.5,
+    "skill_score": 8.4
+  },
+  {
+    "candidate_id": "CAND_24F4D650",
+    "candidate_name": "SACHINI",
+    "email": "sachinishshanka2001@gmail.com",
+    "mobile_number": "0703044875",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "computer science undergraduate",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "Angular",
+          "React"
+        ],
+        "technologies": [
+          "Excel"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL",
+          "PostgreSQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "and advance my skills in a professional Completed G.C.E. Ordinary level Examination  Bandarawela",
+        "project_description": " centrall college,Bandarawela setting. Contact School Communication & Resource Management System Created “schoolify” to improve communication, resource handling, and educational access in Sri Lankan schools. Project was based on Next.js for both frontend and backend , 0703044875 PostgreSQL for database and Tailwind CSS for styling Infrastation Hub sachinishshanka2001@gmail.com Developed a website for improve a sustainable goal (9) under Web design and Development module based on HTML . CSS , Java Script 251/1/A,Moratuwa Road,Suwarapola ,Piliyandala Program to predict progression Developed a program to predict progression outcomes at the end of each academic year of an university based of Python http://www.linkedin.com/in/ sachini-nishshanka Real Time Ticketing System Developed for handle concurrent ticket releases (by vendors) and purchases (by customers) based on OOP Concepts , Angular for frontend and SpringBoot for backend. Plane management system Created for users to buy and cancel seats, view available and sold seats and handle ticket price and sales info based on Java Client side web application English A web application that allow user to search, view, and manage Sinhala property listings based on multiple criterias based on React JS Tamil RESTful API for a \"Bookstore\" application Created a RESTful API that allow client to interact with Books, Authors, Customers, Carts and Orders based on Java (JAX-RS ,Postaman) Web application for book list management A web application that allow users to manage a list of books by adding , viewing, updateing and deleting books based on Teamwork Angular for frontend and ASP .NET with C# for backend Risk Management Leadership . EXTRA ACADEMIC QUALIFICATION Public Communication Critical Thinking Attendance at Cutting Edge program of IIT -2023 Creativity All Island Olympiad Compitition (Mathematics) -2016 Completd IT and English cerificate courses -2015",
+        "duration": "2016",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "Java",
+          "C#",
+          "R",
+          "Sql",
+          "Go",
+          "C",
+          "Next.Js",
+          "React",
+          "Angular",
+          "Spring",
+          "Postgresql",
+          "Communication",
+          "Teamwork",
+          "Leadership",
+          "Critical Thinking"
+        ]
+      },
+      {
+        "project_name": "Volunteering",
+        "project_description": " Word Processing School and zonal achievement in( sport , music and dancing) - 2016 MS Word MS Excel Completed music Visharad - 2017 MS Powepoint web Development NON RELATED REFERENCES Mr.Pasindu Madhuranga JavaScript Assistant Lecturer, Frontend Development School of computing, React.js Informatics institute of technology. Next.js Colombo 05. Angular pasindu.m@iit.ac.lk. Backend Development Mr.Shanitha Alochana. Python BSC Hons in Engineering Electronic and Telecommunication Java from SLTC Research University, Next.js Core Network Devops, Springboot Dialog Axiata PLC. ASP .NET shanithalochana@gmail.com. C# Database Management I hereby declare that the information given above by SQL (MySQL) me is true and accurate to the best of my knowledge. PostgreSQL MongoDB Sachini Nishshanka",
+        "duration": "2019-present",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "Java",
+          "Javascript",
+          "C#",
+          "R",
+          "Sql",
+          "Go",
+          "C",
+          "Next.Js",
+          "React",
+          "Angular",
+          "Spring",
+          "Mysql",
+          "Postgresql",
+          "Mongodb",
+          "Excel",
+          "Communication"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Public Communication",
+      "Critical Thinking Attendance at Cutting Edge program of IIT -2023",
+      "All Island Olympiad Compitition (Mathematics) -2016",
+      "Completd IT and English cerificate courses -2015",
+      "Volunteering (2019-present)",
+      "Word Processing School and zonal achievement in( sport , music and",
+      "dancing) - 2016",
+      "Completed music Visharad - 2017",
+      "MS Powepoint",
+      "web Development NON RELATED REFERENCES",
+      "Mr.Pasindu Madhuranga",
+      "Assistant Lecturer,",
+      "Frontend Development School of computing,",
+      "React.js Informatics institute of technology.",
+      "Next.js Colombo 05.",
+      "Angular pasindu.m@iit.ac.lk.",
+      "Backend Development",
+      "Mr.Shanitha Alochana.",
+      "BSC Hons in Engineering Electronic and Telecommunication",
+      "from SLTC Research University,",
+      "Core Network Devops,",
+      "Dialog Axiata PLC.",
+      "shanithalochana@gmail.com.",
+      "Database Management",
+      "I hereby declare that the information given above by",
+      "SQL (MySQL)",
+      "me is true and accurate to the best of my knowledge.",
+      "Sachini Nishshanka"
+    ],
+    "all_skills": [
+      "Angular",
+      "Excel",
+      "Java",
+      "JavaScript",
+      "MongoDB",
+      "MySQL",
+      "PHP",
+      "PostgreSQL",
+      "Python",
+      "React",
+      "SQL"
+    ],
+    "num_skills": 11,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 2,
+    "evaluation_score": 26.5,
+    "skill_score": 13.2
+  },
+  {
+    "candidate_id": "CAND_A985AF39",
+    "candidate_name": "Unknown Name",
+    "email": "",
+    "mobile_number": "",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "",
+      "university": "",
+      "year": ""
+    },
+    "skills": [
+      {
+        "programming_languages": [],
+        "frameworks": [],
+        "technologies": [
+          "GitHub"
+        ],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "GitHub"
+    ],
+    "num_skills": 1,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 1.5,
+    "skill_score": 1.2
+  },
+  {
+    "candidate_id": "CAND_EC16FCC9",
+    "candidate_name": "SAHEED MOHAMMED SAJEETH",
+    "email": "shdsajeeth@gmail.com",
+    "mobile_number": "+94 754544819",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) software engineering 2025-2026",
+      "university": "",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "Django",
+          "React",
+          "Spring"
+        ],
+        "technologies": [
+          "AWS",
+          "Docker",
+          "Git",
+          "GitHub",
+          "Kubernetes"
+        ],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "AWS",
+      "Django",
+      "Docker",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Kubernetes",
+      "PHP",
+      "Python",
+      "React",
+      "SQL",
+      "Spring"
+    ],
+    "num_skills": 13,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 19.5,
+    "skill_score": 15.6
+  },
+  {
+    "candidate_id": "CAND_E83B66AF",
+    "candidate_name": "SANDALI KAVINDI",
+    "email": "hasandalikavindi@gmail.com",
+    "mobile_number": "+94714460903",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": " bsc. (hons.) statistics and operations research",
+      "university": " adaptability faculty of science, university of peradeniya",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Excel",
+          "GitHub",
+          "Machine Learning",
+          "Power BI"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization",
+          "Statistical Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      " Data Science Master Class Comprehensive Course (Conducted by H.M. Samadhi Chathuranga Rathnayake",
+      "- visiting lecturer of University of Colombo School of Computing) - 2024",
+      " Microsoft Excel: Mastering Data Analysis with Pivot Table – Udemy – 2024",
+      " Complete Microsoft Power BI course Beginners to Intermediate – Udemy - 2024",
+      " Minitab, SPSS, Power BI Workshop conducted by Statistical Circle, University of Peradeniya – 2023",
+      " Certified Lean Six Sigma White Belt – Skill Gate (Pvt) Ltd – May, 2025",
+      " Programming Languages: Python, Java, C, R",
+      " Data Analysis and Visualization Tools: Excel, R Studio, Power BI, SPSS, Minitab",
+      " Optimization Tools: Lingo, Octave",
+      " Database: MySQL",
+      " Cloud: Google Colab",
+      " Office & Productivity Tools: MS Office (Word, Excel, PowerPoint), Google Workspace (Docs, Sheets,"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Excel",
+      "GitHub",
+      "Java",
+      "Machine Learning",
+      "MySQL",
+      "Power BI",
+      "Python",
+      "R",
+      "SQL",
+      "Statistical Analysis"
+    ],
+    "num_skills": 13,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 19.5,
+    "skill_score": 15.6
+  },
+  {
+    "candidate_id": "CAND_46EF8BFB",
+    "candidate_name": "Sandali Atugoda",
+    "email": "sasankasandali@gmail.com",
+    "mobile_number": "+94 713830244",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc in management information systems(special)",
+      "university": "",
+      "year": "2020"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "SQL"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "GCP",
+          "GitHub",
+          "Postman",
+          "Selenium",
+          "Swagger",
+          "Tableau"
+        ],
+        "database": [
+          "Firebase",
+          "SQLite"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "POS System For Cruising Smoothly",
+        "project_description": " ◦ Developed a Point of Sale (POS) system tailored for a business in Weligama, streamlining sales, inventory management, and reporting processes to enhance operational efficiency. ◦ Key Responsibilities: Bug Tracking and Reporting ◦ Tools Used: SQL Server, Java Languages: C++, C, Java, C , SQL, JavaScript, HTML, CSS, .NET Tools and Technologies: Jira, TestRail, Zephyr, PostMan, Swagger, JMeter, Selenium, Confluence, Figma, NetBeans,IntelliJIDEA,VisualStudio,VisualStudioCode,AndroidStudio,Tableau,GitHub,AWS,Azure,GCP, Cisco Jabber, LucidChart, Ms Visio, Prometheus, VMware, Microsoft SQL Server, Active Directory, Microsoft IIS, SAP Crystal Reports ◦ Java Object-Oriented Programming by Kathryn Hodge - LinkedIn Learning ◦ Advanced Java Programming course by Bethan Palmer - LinkedIn Learning ◦ Advanced Java Development course by Bethan Palmer - LinkedIn Learning ◦ Java Exception Handling by Cecili Reid - LinkedIn Learning ◦ Understanding Manual Testing course by Mike Fine - LinkedIn Learning ◦ Software Testing Foundations: Test Techniques by Mike Fine - LinkedIn Learning ◦ Programming Foundations: Software Testing/QA course by Meaghan Lewis -LinkedIn Learning ◦ Test Automation Foundations’course by Meaghan Lewis - LinkedIn Learning ◦ Learning Selenium” course by Meaghan Lewis - LinkedIn Learning ◦ Project Management Foundations - LinkedIn Learning",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Java",
+          "Javascript",
+          "C++",
+          "R",
+          "Sql",
+          "C",
+          "Git",
+          "Github",
+          "Aws",
+          "Azure",
+          "Gcp",
+          "Selenium",
+          "Postman",
+          "Swagger",
+          "Tableau"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "◦ Java Object-Oriented Programming by Kathryn Hodge - LinkedIn Learning",
+      "◦ Advanced Java Programming course by Bethan Palmer - LinkedIn Learning",
+      "◦ Advanced Java Development course by Bethan Palmer - LinkedIn Learning",
+      "◦ Java Exception Handling by Cecili Reid - LinkedIn Learning",
+      "◦ Understanding Manual Testing course by Mike Fine - LinkedIn Learning",
+      "◦ Software Testing Foundations: Test Techniques by Mike Fine - LinkedIn Learning",
+      "◦ Programming Foundations: Software Testing/QA course by Meaghan Lewis -LinkedIn Learning",
+      "◦ Test Automation Foundations’course by Meaghan Lewis - LinkedIn Learning",
+      "◦ Learning Selenium” course by Meaghan Lewis - LinkedIn Learning",
+      "◦ Project Management Foundations - LinkedIn Learning"
+    ],
+    "all_skills": [
+      "AWS",
+      "Azure",
+      "Firebase",
+      "GCP",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Postman",
+      "SQL",
+      "SQLite",
+      "Selenium",
+      "Swagger",
+      "Tableau"
+    ],
+    "num_skills": 13,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 1,
+    "evaluation_score": 24.5,
+    "skill_score": 15.6
+  },
+  {
+    "candidate_id": "CAND_1E3167FE",
+    "candidate_name": "Sanduni Tharuka Rathnayake",
+    "email": "sandunirathnayake094@gmail.com",
+    "mobile_number": "+94 763290660",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bachelor of science with honours information technology sp. data science feb 2020 - mar 2024",
+      "university": "sri lanka institute of information technology",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "JavaScript",
+          "PHP",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "React"
+        ],
+        "technologies": [
+          "Azure",
+          "Computer Vision",
+          "Deep Learning",
+          "Excel",
+          "GitHub",
+          "Linux",
+          "Machine Learning",
+          "Matplotlib",
+          "NLTK",
+          "Neural Networks",
+          "NumPy",
+          "Pandas",
+          "Power BI",
+          "Seaborn",
+          "SpaCy"
+        ],
+        "database": [
+          "Oracle",
+          "PostgreSQL"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Clustering",
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Oracle Cloud Infrastructure 2024 Generative AI Professional (1Z0-1127-24) - Oracle University",
+      "Oracle Cloud Infrastructure 2023 AI Foundations Associate (1Z0-1122-23 ) - Oracle University",
+      "SQL for Data Science",
+      "Introduction to Cybersecurity - CISCO Networking Academy",
+      "Artificial Intelligence Masterclass",
+      "Mr.Sajeewa Gunasena, Mr.Samadhi Rathnayake,",
+      "Manager Maintenance Department, MAS Linea Lecturer Faculty of Computing, SLIIT, Malabe",
+      "Aqua , Hanwella, Sri Lanka. Campus, Sri Lanka.",
+      "sajeewaG@lineaaqua.com (+94) 777489712 samadhi.r@sliit.lk (+94) 714672084"
+    ],
+    "all_skills": [
+      "Azure",
+      "Classification",
+      "Clustering",
+      "Computer Vision",
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Excel",
+      "GitHub",
+      "JavaScript",
+      "Linux",
+      "Machine Learning",
+      "Matplotlib",
+      "NLTK",
+      "Neural Networks",
+      "NumPy",
+      "Oracle",
+      "PHP",
+      "Pandas",
+      "PostgreSQL",
+      "Power BI",
+      "Python",
+      "R",
+      "React",
+      "Regression",
+      "SQL",
+      "Seaborn",
+      "SpaCy"
+    ],
+    "num_skills": 29,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 43.5,
+    "skill_score": 34.8
+  },
+  {
+    "candidate_id": "CAND_917512DC",
+    "candidate_name": "SANDUTHARI JAYASINGHE",
+    "email": "jmnsanduthari@gmail.com",
+    "mobile_number": "+94 71 131 8287",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "undergraduate 2022 - present",
+      "university": "an undergraduate studying data science at sri lanka institute of information",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Kotlin",
+          "PHP",
+          "Python",
+          "R"
+        ],
+        "frameworks": [
+          "React",
+          "Spring",
+          "Streamlit"
+        ],
+        "technologies": [
+          "Excel",
+          "Git",
+          "GitHub",
+          "Machine Learning",
+          "Postman",
+          "Power BI"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "|Physics",
+        "project_description": " Synthetic Cannabis Dispencery Database Sujatha Vidyalaya - Matara Analysis of the dataset to make a data warehouse. G.C.E. ORDINARY LEVEL EXAMINATION - 2017 A cube with OLAP Operations. 9 A’s Reports to show the results of the analysis numerically. Sujatha Vidyalaya - Matara Technologies used : SSMS, SSIS, SSAS, Power BI, Excel Book Recommendation System",
+        "duration": "Feb 2025 - June 2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Power Bi",
+          "Excel"
+        ]
+      },
+      {
+        "project_name": "",
+        "project_description": " Programming Languages Pre-processed and cleaned the data set. Python PHP Implemented recommendation logic. R JavaScript Java C# Technologies used : Python, Streamlit, MongoDB HTML Kotlin",
+        "duration": "July 2024 - Nov 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "Java",
+          "Javascript",
+          "C#",
+          "R",
+          "Php",
+          "Go",
+          "Kotlin",
+          "C",
+          "Streamlit",
+          "Mongodb"
+        ]
+      },
+      {
+        "project_name": "CSS Streamlit Customer Churn Prediction System",
+        "project_description": " Databases Pre-processed and cleaned the data set. MySQL Trained machine learning models. Hyper-parameter tuning for increasing the accuracy of the model. MongoDB Version Controlling Implemented frontend using streamlit. Git Github Technologies used : Python, Streamlit, Machine Learning Skill Sharing and Learning Management System",
+        "duration": "July 2024 - Nov 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "Sql",
+          "Go",
+          "C",
+          "Streamlit",
+          "Mysql",
+          "Mongodb",
+          "Machine Learning",
+          "Git",
+          "Github"
+        ]
+      },
+      {
+        "project_name": "",
+        "project_description": " Problem Solving Implemented CRUD operations for skill sharing. Critical Thinking Overcame various development challengers and resolved them. Creativity Organized Conducted API testing. Self-Motivated Technologies used : Spring-Boot, React.js, MongoDB, Postman Time Management Vehicle Repair & Services Management System",
+        "duration": "July 2024 - Nov 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "Go",
+          "C",
+          "React",
+          "Spring",
+          "Mongodb",
+          "Postman",
+          "Problem Solving",
+          "Critical Thinking",
+          "Time Management"
+        ]
+      },
+      {
+        "project_name": "",
+        "project_description": " Communication Skills Implemented CRUD operations for supplier management. Overcame various development challengers and resolved them. Python for Beginners (CODL - Conducted API testing. University of Moratuwa) Certificate for completion of Technologies used: MongoDB, ExpressJS, ReactJS, NodeJS, Postman Machine Learning course (Simplilearn) ACHIEVEMENTS Mr. N. A. N. J. Maduwansha Miss Uthpala Samarakoon BA (Hons) (USJ), MSc (Moratuwa) Senior lecturer, Senior Lecturer Participation in final round of Department of Social Statistics, SLIIT, Malabe Campus, Sri Lanka Mini Hackathon 6.0 conducted Faculty of Humanities and Social Sciences, uthpala.s@sliit.lk by SLIIT MS club. University of Sri Jayewardenepura Senior girl guide at Sujatha Tel - 0712642240 Vidyalaya. Email - jnuwan66@sjp.ac.lk",
+        "duration": "Feb 2024 - June2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "Go",
+          "C",
+          "React",
+          "Express",
+          "Mongodb",
+          "Machine Learning",
+          "Postman",
+          "Communication"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Overcame various development challengers and resolved them.",
+      "Python for Beginners (CODL -",
+      "Conducted API testing.",
+      "University of Moratuwa)",
+      "Machine Learning course",
+      "(Simplilearn)",
+      "ACHIEVEMENTS Mr. N. A. N. J. Maduwansha Miss Uthpala Samarakoon",
+      "BA (Hons) (USJ), MSc (Moratuwa) Senior lecturer, Senior Lecturer",
+      "Participation in final round of Department of Social Statistics, SLIIT, Malabe Campus, Sri Lanka",
+      "Mini Hackathon 6.0 conducted Faculty of Humanities and Social Sciences, uthpala.s@sliit.lk",
+      "by SLIIT MS club. University of Sri Jayewardenepura",
+      "Senior girl guide at Sujatha Tel - 0712642240",
+      "Vidyalaya. Email - jnuwan66@sjp.ac.lk"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Data Science",
+      "Excel",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Kotlin",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "PHP",
+      "Postman",
+      "Power BI",
+      "Python",
+      "R",
+      "React",
+      "Spring",
+      "Streamlit"
+    ],
+    "num_skills": 19,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 5,
+    "evaluation_score": 53.5,
+    "skill_score": 22.8
+  },
+  {
+    "candidate_id": "CAND_2F77652F",
+    "candidate_name": "Shaeela Banu Hussain",
+    "email": "shaeelab.hussain@gmail.com",
+    "mobile_number": "+94725727272",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bachelor of information technology (graduated)",
+      "university": "university of colombo",
+      "year": "2020"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python"
+        ],
+        "frameworks": [
+          "PyTorch",
+          "Scikit-learn",
+          "Streamlit"
+        ],
+        "technologies": [
+          "Deep Learning",
+          "Excel",
+          "GitHub",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "NumPy",
+          "Pandas",
+          "Power BI",
+          "REST API"
+        ],
+        "database": [
+          "MySQL",
+          "PostgreSQL"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Clustering",
+          "Data Science",
+          "Data Visualization",
+          "Feature Engineering",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Classification",
+      "Clustering",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Excel",
+      "Feature Engineering",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Machine Learning",
+      "Matplotlib",
+      "MySQL",
+      "NLP",
+      "NumPy",
+      "PHP",
+      "Pandas",
+      "PostgreSQL",
+      "Power BI",
+      "PyTorch",
+      "Python",
+      "REST API",
+      "Regression",
+      "Scikit-learn",
+      "Streamlit"
+    ],
+    "num_skills": 25,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 37.5,
+    "skill_score": 30.0
+  },
+  {
+    "candidate_id": "CAND_DF2A738E",
+    "candidate_name": "Education",
+    "email": "mfmfarhan@me.com",
+    "mobile_number": "+9476 403 3031",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc natural science (special computer science)",
+      "university": "open university of sri lanka",
+      "year": "2018"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "JavaScript",
+          "PHP",
+          "R"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Excel"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "To an Active and Challenging position Information and Communication Technology",
+      "in any field that seeking an ambitious Technician.",
+      "and talented person, to dedicate Technical College Sammanthurai DISTINCTION",
+      "through high professional, where",
+      "Advanced Career Skill (English)",
+      "acquired skill and education will be",
+      "Technical College Sammanthurai DISTINCTION",
+      "utilized towards continued growth",
+      "and advancement of the organization. Award & Competitions",
+      "English Language Day - 2011",
+      "Divisional Level First Place in Recitation.",
+      "Second Language (Sinhala) - 2009",
+      "C, VB.Net, PHP Zonal Level First Place in Place in Poem.",
+      "Second Language (Sinhala) - 2011",
+      "Web Developing",
+      "Zonal Level Second Place in Place in Reading.",
+      "HTML,CSS, Javascript",
+      "UI/UX Engineering",
+      "Software Engineering"
+    ],
+    "all_skills": [
+      "Excel",
+      "JavaScript",
+      "MySQL",
+      "PHP",
+      "R"
+    ],
+    "num_skills": 5,
+    "experience_months": 6,
+    "experience_level": "Entry Level",
+    "num_projects": 0,
+    "evaluation_score": 7.5,
+    "skill_score": 6.0
+  },
+  {
+    "candidate_id": "CAND_5376585C",
+    "candidate_name": "SHILMA THANZEEL",
+    "email": "shilmathanzeel5@gmail.com",
+    "mobile_number": "+94769759995",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "a b.sc. (hons) information technology undergraduate (specialized in data science) with a growing foundation in statistics, programming, and",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Kotlin",
+          "PHP",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React"
+        ],
+        "technologies": [
+          "Excel",
+          "GitHub",
+          "Machine Learning",
+          "Power BI"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL",
+          "Snowflake"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Excel",
+      "Express",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Kotlin",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "PHP",
+      "Power BI",
+      "Python",
+      "R",
+      "React",
+      "SQL",
+      "Snowflake"
+    ],
+    "num_skills": 20,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 30.0,
+    "skill_score": 24.0
+  },
+  {
+    "candidate_id": "CAND_C0E74ABB",
+    "candidate_name": "Education",
+    "email": "shakiranisamdeen@gmail.com",
+    "mobile_number": "+94 76 299 0187",
+    "current_role": "Undergraduate",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bachelor of commerce (honours) in business technology",
+      "university": "university of kelaniya",
+      "year": "2026"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Power BI"
+        ],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Bachelor of Commerce (Honours) in Business Technology",
+      "University Of Kelaniya",
+      "Expected Date of Graduation: January, 2026",
+      "Advanced Level",
+      "Al-Azhar Central College, Thihariya",
+      "Accounting B",
+      "Information and Communication Technology A",
+      "Economics A",
+      "SHAKIRA Ordinary Level",
+      "Oxford International College, Kahatowita 2017",
+      "Tamil Language and Literature A",
+      "English Language A",
+      "Mathematics A",
+      "Appreciation of English Literary Texts C",
+      "Health and Physical Education A",
+      "Second Language (Sinhala) A",
+      "+94 76 299 0187",
+      "Google Analytics Cerification 2025",
+      "shakiranisamdeen@gmail.com AAT Passed Finalist 2021"
+    ],
+    "all_skills": [
+      "Power BI",
+      "Python"
+    ],
+    "num_skills": 2,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 3.0,
+    "skill_score": 2.4
+  },
+  {
+    "candidate_id": "CAND_300E011F",
+    "candidate_name": "E.G. Thakshila Abeygunawardhana",
+    "email": "thakshilam985@gmail.com",
+    "mobile_number": "076 7310242",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "PHP",
+          "R"
+        ],
+        "frameworks": [],
+        "technologies": [],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Communication Technology Education center",
+      "• Developed a Vehicle Parking Management System using Java Script, HTML, CSS for",
+      "the frontend, PHP for the backend & MySQL for the database.",
+      "• Developed a Salon system using JS, HTML, CSS for the group project.",
+      "• Developed a hotel booking system in Java.",
+      "I worked in the accounting department of MPS Food & Tobacco company for a short",
+      "time period of two months.",
+      " Language – English, Sinhala",
+      " Tools – Office Package, HTML, CSS, JS, PHP, MySQL, Java, C#, C+, Canva, Social",
+      "media, LinkedIn",
+      " Soft Skills – Problem-solving, Effective Communication Skills, Teamwork",
+      "and Leadership Skills",
+      "Dilini Kumarihamy, Head of Department IT, SLIATE – Nawalapitiya – 0777882155",
+      "H.M.S.R.B. Abeykoon – SLIATE – Nawalapitiya – 0704402489"
+    ],
+    "all_skills": [
+      "Java",
+      "MySQL",
+      "PHP",
+      "R"
+    ],
+    "num_skills": 4,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 6.0,
+    "skill_score": 4.8
+  },
+  {
+    "candidate_id": "CAND_1D1695F1",
+    "candidate_name": "Thimeesha Samaradiwakara",
+    "email": "thimeeshasamaradiwakara@gmail.com",
+    "mobile_number": "+94115445000",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) in data science",
+      "university": "nsbm green university",
+      "year": "2020"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Dart",
+          "Java",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Flutter",
+          "PyTorch",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Deep Learning",
+          "Git",
+          "GitHub",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "NumPy",
+          "Pandas",
+          "Power BI",
+          "Seaborn",
+          "Vercel"
+        ],
+        "database": [
+          "Firebase",
+          "Neon",
+          "SQLite",
+          "Snowflake"
+        ],
+        "technical_skills": [
+          "Clustering",
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization",
+          "Regression",
+          "Statistical Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "NLP Analysis of Technology Tweets",
+        "project_description": " Developed an end-to-end NLP pipeline to analyze 200 tech-focused tweets using Python. Key tasks included data collection via Twitter API, text preprocessing, POS tagging, named entity recognition, sentiment analysis, topic modeling, and stylometric clustering. Generated insights on public sentiment, trending topics, and writing styles in technology discussions. Real-Time Phishing URL Detection Browser Extension Designed and developed a lightweight, real-time phishing detection system using machine learning models (Logistic Regression, Random Forest, SVM). Integrated multi-layer URL analysis and explainable AI features in a browser extension to enhance phishing detection accuracy with minimal resource use.",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Machine Learning",
+          "Nlp",
+          "Regression",
+          "Clustering"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Industry Preparation Program-NSBM Green University 2024"
+    ],
+    "all_skills": [
+      "Clustering",
+      "Dart",
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Firebase",
+      "Flutter",
+      "Git",
+      "GitHub",
+      "Java",
+      "Jupyter",
+      "Machine Learning",
+      "Matplotlib",
+      "NLP",
+      "Neon",
+      "NumPy",
+      "Pandas",
+      "Power BI",
+      "PyTorch",
+      "Python",
+      "R",
+      "Regression",
+      "SQL",
+      "SQLite",
+      "Seaborn",
+      "Snowflake",
+      "Statistical Analysis",
+      "TensorFlow",
+      "Vercel"
+    ],
+    "num_skills": 30,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 1,
+    "evaluation_score": 50.0,
+    "skill_score": 36.0
+  },
+  {
+    "candidate_id": "CAND_F0AED9CA",
+    "candidate_name": "Thirupalachanthiran Agish",
+    "email": "agishagi2000@gmail.com",
+    "mobile_number": "",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) in information and communications engineering",
+      "university": "sltc research university mar 2021 – present",
+      "year": "2021"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "GitHub",
+          "Jupyter",
+          "Machine Learning",
+          "Pandas",
+          "Power BI",
+          "Tableau"
+        ],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "• Pandas – May 2025",
+      "• Intro to Machine Learning – Aug 2024",
+      "• Python – Aug 2024",
+      "• Artificial Intelligence in the Classroom – Feb 2024",
+      "• Intro to Programming – Feb 2024",
+      "• AWS Academy Graduate – Cloud Foundations – Jul 2023"
+    ],
+    "all_skills": [
+      "AWS",
+      "Azure",
+      "GitHub",
+      "Jupyter",
+      "Machine Learning",
+      "Pandas",
+      "Power BI",
+      "Python",
+      "R",
+      "SQL",
+      "Tableau"
+    ],
+    "num_skills": 11,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 16.5,
+    "skill_score": 13.2
+  },
+  {
+    "candidate_id": "CAND_12958856",
+    "candidate_name": "Thomars Thuvarangan",
+    "email": "thomarsthuvaa@gmail.com",
+    "mobile_number": "",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "• b.eng. in software engineering (hons) - 2024",
+      "university": "london metropolitan university, london, uk",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Angular",
+          "Spring"
+        ],
+        "technologies": [
+          "Git",
+          "GitHub",
+          "Machine Learning",
+          "OpenCV"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Classification"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Angular",
+      "Classification",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "OpenCV",
+      "Python",
+      "R",
+      "SQL",
+      "Spring"
+    ],
+    "num_skills": 14,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 21.0,
+    "skill_score": 16.8
+  },
+  {
+    "candidate_id": "CAND_B0193106",
+    "candidate_name": "THUVARAKA THAYAPRAN",
+    "email": "thuvathaya1919@gmail.com",
+    "mobile_number": "0777172468",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "as a data analyst with a strong foundation in data engineering and data science, i bring advanced",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Flask"
+        ],
+        "technologies": [
+          "Deep Learning",
+          "Excel",
+          "GitHub",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NumPy",
+          "OpenCV",
+          "Power BI"
+        ],
+        "database": [
+          "MySQL",
+          "SQLite"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Languages Data Science",
+      "Python, R, HTML5, CSS, JavaScript, JAVA Data Analysis & Data Visualization",
+      "Database Data Engineering",
+      "MySQL, MS SQL, SQLite Machine Learning & Deep Learning",
+      "Visualization Tools Business Intelligence / Business Analytics",
+      "PowerBI, QlickSense, MS Excel Requirement gathering and Analysis",
+      "Designing Tools",
+      "Communication & Presentation Skills",
+      "Draw.io, Figma",
+      "Documentation & Report writing",
+      "Other Tools",
+      "Visual Studio, R Studio, Jupyter Notebook",
+      "Problem Solving"
+    ],
+    "all_skills": [
+      "Classification",
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Excel",
+      "Flask",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Jupyter",
+      "Machine Learning",
+      "Matplotlib",
+      "MySQL",
+      "NumPy",
+      "OpenCV",
+      "Power BI",
+      "Python",
+      "R",
+      "Regression",
+      "SQL",
+      "SQLite"
+    ],
+    "num_skills": 22,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 33.0,
+    "skill_score": 26.4
+  },
+  {
+    "candidate_id": "CAND_65E2A96F",
+    "candidate_name": "USHAMA RISWAN",
+    "email": "ushamariswan@gmail.com",
+    "mobile_number": "",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Excel",
+          "GitHub",
+          "Power BI",
+          "Tableau"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Data Visualization"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Analytical skills",
+      "Pattern recognition January 2024 - August 2024, Online",
+      "Completed extensive six-month job ready Google Career",
+      "Relational and SQL",
+      "Visualization data cleaning, data visualization, project management,",
+      "interpreting and communicating data analytics findings.",
+      "Python, R, Tableau,",
+      "Confidence in transforming complex data into actionable",
+      "Power BI, Sheets,",
+      "and clear insights. Fluency in programming languages and a",
+      "SQl and Excel",
+      "solid understanding of databases.",
+      "Diploma in Business Managment (Pearson)",
+      "June 2023 - December 2023",
+      "Diploma in Computer Science (Pearson)",
+      "Tamil January 2024 - October 2024",
+      "HND in Computing (Pearson)",
+      "October 2024 (Ongoing)",
+      "https://github.com/UshamaRiswan/Data_Analyst_Portfolio_",
+      "ushamariswan@gmail.com Projects",
+      "+94 75-094-7974",
+      "No. 193/02/C/1, 9TH Mile Post Paba Waththa, Ilukewela, Weuda",
+      "www.linkedin.com/in/ushama-riswan-697818270"
+    ],
+    "all_skills": [
+      "Data Visualization",
+      "Excel",
+      "GitHub",
+      "Power BI",
+      "Python",
+      "R",
+      "SQL",
+      "Tableau"
+    ],
+    "num_skills": 8,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 12.0,
+    "skill_score": 9.6
+  },
+  {
+    "candidate_id": "CAND_BEEAC839",
+    "candidate_name": "Vidhushika Francis",
+    "email": "vidhushika.francis@gmail.com",
+    "mobile_number": "(+94) 71 869 1535",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) in information technology specializing in data science (2020 - 2024)",
+      "university": "",
+      "year": "2020"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "PyTorch",
+          "React",
+          "Scikit-learn",
+          "Spring",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "CI/CD",
+          "Docker",
+          "GitHub",
+          "Hugging Face",
+          "Jupyter",
+          "Kubernetes",
+          "Machine Learning",
+          "NLP",
+          "OCR",
+          "Postman",
+          "Power BI",
+          "REST API",
+          "Tableau"
+        ],
+        "database": [
+          "Firebase",
+          "MongoDB",
+          "MySQL",
+          "Oracle",
+          "Snowflake"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Sri Lanka Institute of Information Technology (SLIIT)",
+      "BSc (Hons) in Information Technology Specializing in Data Science (2020 - 2024)",
+      "• Dean's List Award (Final Semester).",
+      "• Relevant Coursework: Machine Learning, Data Engineering, AI, Cloud Computing, Analytics.",
+      "Business Level in Chartered Accountancy (2020 - 2022)",
+      "Diploma in Computerized Accounting, ESOFT (2020 July)",
+      "Good Shepherd Convent Kandy (2005 – 2018)",
+      "Work Experience",
+      "We Are Team Rocket Pvt Ltd | Colombo",
+      "Remote Data Associate (Nov 2023 - Apr 2024)",
+      "• Led a team to develop automated data pipelines, improving data processing efficiency by 30%.",
+      "• Utilized Python and SQL to extract, clean, and transform large datasets for client reporting.",
+      "• Designed Power BI dashboards, enhancing key business metric visualization for decision-making.",
+      "• Collaborated with cross-functional teams to implement AI-driven insights.",
+      "Data Intern (May 2023 - Nov 2023)",
+      "• Assisted in data preprocessing, cleaning, and training predictive models to improve accuracy.",
+      "• Conducted Exploratory Data Analysis (EDA), identifying trends that optimized customer engagement.",
+      "• Partnered with senior data scientists to develop AI-driven business solutions.",
+      "Commercial Bank of Ceylon PLC - Intern (August 2019 – February 2020)",
+      "AQL International Girls School - Teacher (January 2019 – August 2019)"
+    ],
+    "all_skills": [
+      "AWS",
+      "Azure",
+      "CI/CD",
+      "Data Analysis",
+      "Data Science",
+      "Docker",
+      "Express",
+      "Firebase",
+      "GitHub",
+      "Hadoop",
+      "Hugging Face",
+      "Java",
+      "JavaScript",
+      "Jupyter",
+      "Kubernetes",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "NLP",
+      "Node.js",
+      "OCR",
+      "Oracle",
+      "Postman",
+      "Power BI",
+      "PyTorch",
+      "Python",
+      "R",
+      "REST API",
+      "React",
+      "SQL",
+      "Scikit-learn",
+      "Snowflake",
+      "Spark",
+      "Spring",
+      "Streamlit",
+      "Tableau",
+      "TensorFlow"
+    ],
+    "num_skills": 37,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 55.5,
+    "skill_score": 44.4
+  },
+  {
+    "candidate_id": "CAND_4C80CBEB",
+    "candidate_name": "V i n u j a",
+    "email": "Vinujamathi3@gmail.com",
+    "mobile_number": "+94 0765834032",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "date of birth - 15 march 1997 beng (hons) software engineering",
+      "university": "",
+      "year": "2020"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "JavaScript",
+          "Python"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Excel",
+          "Power BI"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Vinuja Mathiyazhagan",
+      "Date of Birth - 15 March 1997 BEng (Hons) Software Engineering",
+      "Gender - Female (Topup)currently pursuing",
+      "Nationality - Srilankan",
+      "ESOFT METRO Campus",
+      "2020 – 2022",
+      "Pearson btec level 5 higher national diploma (RQF)",
+      "Programming Languages: Python, C++,",
+      "international in computering (Software Engineering)",
+      "JavaScript.",
+      "Database knowledge in MySQL",
+      "Microsoft Word, Excel, and Power Point NVQ Level 4 in computerized accounting",
+      "Adobe Photoshop",
+      "NVQ Level 3 in Information technology",
+      "Diploma in Spoken English",
+      "Student Counsellor",
+      "August 2024 - Feb 2025",
+      "Run a own business",
+      "March 2021 - 2024",
+      "Launched and led a successful e-commerce venture.",
+      "Managed IT infrastructure, and data analytics.",
+      "Achieved strong social media engagement and customer.",
+      "satisfaction by digital marketing and graphic designing.",
+      "Coordinator",
+      "Phone Number TRINCO AID FOUNDATION GTE LTD",
+      "May 2020- July2022",
+      "+94 0765834032",
+      "E - Mail EXPEREINCE",
+      "Vinujamathi3@gmail.com",
+      "Created WordPress Website ( Photography Website and E-",
+      "commerce Website )",
+      "Bosswel place, wellawatta, Colombo-06.",
+      "Developed Digital marketing skill in online business"
+    ],
+    "all_skills": [
+      "Excel",
+      "JavaScript",
+      "MySQL",
+      "Power BI",
+      "Python"
+    ],
+    "num_skills": 5,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 7.5,
+    "skill_score": 6.0
+  },
+  {
+    "candidate_id": "CAND_7821B593",
+    "candidate_name": "YATHUSHANAN MEIYALAGAN",
+    "email": "m.yathushanan@gmail.com",
+    "mobile_number": "+94 774371691",
+    "current_role": "Student",
+    "target_role": "Data Analyst",
+    "current_employment": "",
+    "education": {
+      "degree": "b.sc. (hons) in computer science",
+      "university": "",
+      "year": "2018"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "JavaScript",
+          "PHP",
+          "R"
+        ],
+        "frameworks": [
+          "Flutter"
+        ],
+        "technologies": [
+          "Azure",
+          "GitHub",
+          "Linux",
+          "Windows"
+        ],
+        "database": [
+          "Firebase",
+          "MySQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "+94 779099319  IEEE student branch, University of Jaffna",
+        "project_description": "",
+        "duration": "2020",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": " Computer Society, University of Jaffna  – Student Member",
+        "project_description": "",
+        "duration": "2020",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": " Computer Society of Srilanka",
+        "project_description": " Technologies  Routing/WAN  Flutter  Firewall and Security  Windows / Linux  Cloud  Cisco Packet Tracer  Servers  Monitoring and Troubleshooting Extra-Curricular Activities  Prefect – KM/Carmel Fatima College National School  Participated provincial level volleyball competition  Member of School Senior Western Music Band",
+        "duration": "2020 – present",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Flutter",
+          "Linux",
+          "Windows"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "khopithankhopi@gmail.com",
+      "+94 767571240",
+      " Following CCNA (Cisco Certified Network Associate)",
+      " Following Azure Administrator AZ-104",
+      "Mr.C. Nithusan  Science Exhibition | University of Jaffna – 2020",
+      "Cloud Engineer  Member of IEEE Community",
+      "Infinity innovators PVT Ltd",
+      "Organizations",
+      "nithushanc@infyinnos.com",
+      "+94 779099319  IEEE student branch, University of Jaffna (2020) - Student member",
+      " Computer Society, University of Jaffna (2020) – Student Member",
+      " Computer Society of Srilanka (2020 – present)",
+      "Technologies",
+      " Routing/WAN  Flutter",
+      " Firewall and Security  Windows / Linux",
+      " Cloud  Cisco Packet Tracer",
+      " Servers  Monitoring and Troubleshooting",
+      "Extra-Curricular Activities",
+      " Prefect – KM/Carmel Fatima College National School",
+      " Participated provincial level volleyball competition",
+      " Member of School Senior Western Music Band"
+    ],
+    "all_skills": [
+      "Azure",
+      "Firebase",
+      "Flutter",
+      "GitHub",
+      "JavaScript",
+      "Linux",
+      "MySQL",
+      "PHP",
+      "R",
+      "Windows"
+    ],
+    "num_skills": 10,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 3,
+    "evaluation_score": 30.0,
+    "skill_score": 12.0
+  }
+]

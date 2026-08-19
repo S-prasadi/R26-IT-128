@@ -1,0 +1,32 @@
+{
+  "v1": {
+    "file": "cv_job_score_model.pkl",
+    "algorithm": "RandomForestRegressor",
+    "hyperparameters": {
+      "n_estimators": 200,
+      "random_state": 42
+    },
+    "trained_on": "notebook CV_Job_Model (3).ipynb, cleaned_cv_dataset.json (pre-2026-08-18)",
+    "test_mae": 1.22,
+    "test_r2": 0.9851,
+    "status": "retired (superseded by v2, 2026-08-18) \u2014 see IMPROVEMENT_PLAN.md Phase 6"
+  },
+  "v2": {
+    "file": "cv_job_score_model_v2.pkl",
+    "algorithm": "Gradient Boosting",
+    "hyperparameters": {
+      "min_samples_leaf": 30,
+      "max_iter": 300,
+      "max_depth": 3,
+      "learning_rate": 0.1
+    },
+    "trained_on": "Dataset/combined_resumes.json via backend/train.py + backend/compare_models.py",
+    "cv_mae_mean": 0.7481,
+    "cv_r2_mean": 0.9929,
+    "test_mae": 0.6056,
+    "test_r2": 0.9966,
+    "trained_at": "2026-08-18T08:04:14.679767+00:00",
+    "status": "deployed (live) \u2014 loaded by app.py (2026-08-18)",
+    "deployed_at": "2026-08-18"
+  }
+}

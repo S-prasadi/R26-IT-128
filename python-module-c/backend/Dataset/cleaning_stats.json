@@ -1,0 +1,8 @@
+{
+  "total_resumes_processed": 10,
+  "successfully_cleaned": 10,
+  "skipped": 0,
+  "total_skills_extracted": 262,
+  "unique_skills_count": 135,
+  "average_skills_per_resume": 26.2
+}

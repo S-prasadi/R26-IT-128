@@ -1,0 +1,5569 @@
+[
+  {
+    "candidate_id": "CAND_99FD4846",
+    "candidate_name": "Sasini Meheshani Lokuvithana",
+    "email": "2021e138@eng.jfn.ac.lk",
+    "mobile_number": "(+94)704250270",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "undergraduate in electronic & electrical engineering, seeking opportunities in devops or blockchain related areas with a",
+      "university": "university of jaffna, kilinochchi, sri lanka march 2022 - present",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "JavaScript",
+          "MATLAB",
+          "Python"
+        ],
+        "frameworks": [
+          "Keras",
+          "Node.js"
+        ],
+        "technologies": [
+          "AWS",
+          "Computer Vision",
+          "Deep Learning",
+          "Docker",
+          "Git",
+          "GitHub",
+          "Linux",
+          "Machine Learning",
+          "Windows"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Classification",
+          "Data Visualization"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Virtual Private Cloud",
+        "project_description": " Designed and deployed a secure, scalable VPC on AWS with custom subnets, routing, and security groups, enhancing cloud network isolation and infrastructure management. Tech: Security Groups, Cloud Infrastructure, Network Security (GitHub link)",
+        "duration": "VPC) Creation Using AWS (July 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Git",
+          "Github",
+          "Aws"
+        ]
+      },
+      {
+        "project_name": "Node.js Website Deployment on AWS Lightsail – Clicking Game",
+        "project_description": " Deployed a Node.js app on AWS Lightsail with Apache integration, automating startup and managing secure access to ensure reliable cloud hosting. Tech: AWS Lightsail, Apache, Linux Administration, SSH, Cloud Deployment, Automation (GitHub link)",
+        "duration": "July 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Node.Js",
+          "Git",
+          "Github",
+          "Aws",
+          "Linux"
+        ]
+      },
+      {
+        "project_name": "Remote Git Repository Setup and Version Control",
+        "project_description": " Configured and managed remote Git repositories on Linux to streamline version control, support collaboration, and Tech: Git, Linux, Version Control, Collaboration, Workflow Management (GitHub link) LEGO-Based Mobile Robot with PID Control (6th semester) Built an autonomous LEGO robot using PID control and sensor fusion for accurate navigation and shape detection, achieving 95% shape classification accuracy and enhanced path stability. Tech: Ultrasonic Sensors, Colour & Reflectance Sensors, Robotics, Embedded Systems (GitHub link) Design Project: Implementation of PID Controller (5th semester) Designed and analysed a second-order system with PID controllers to optimize dynamic response, demonstrating applications in temperature control, quadcopter stabilization, HVAC, and motor speed regulation. Tech: Performance Optimization, Control Systems, Engineering Applications (GitHub link) PCB Development for Fire Alarm Circuit (4th semester) Designed and fabricated a fire alarm PCB using a 555 Timer IC and thermistor for temperature detection, gaining practical experience in circuit simulation, PCB etching, and assembly. Tech: Circuit Simulation (Proteus), Soldering, Fabrication (GitHub link) DevOps, Blockchain, Machine Learning, Deep Learning, Embedded, Docker, Git & GitHub, Cloud Computing, Automation Languages: Python, C++, MATLAB, html Platforms: Linux, Windows, Amazon Web Services (AWS), Block chain, Kaggle, Collab, Jupiter Notebook Soft Skills: Adaptability, Creativity, Time Management, Leadership, Project Management Introduction to Programming Using Python for Beginners | University Of Moratuwa (Certificate link - code-0BMhz4Suzb) HTML Essential Training | LinkedIn (Certificate link) Docker for Windows | LinkedIn (Certificate link) DevOps Foundations | LinkedIn (Certificate link) Introduction to DevOps | IBM (Certificate link) Getting Started with Git and GitHub | IBM (Certificate link) AWS For Beginners | Great Learning (Certificate link) Project : Use Commands and Create a Remote Git Repository | Coursera (Certificate link) Project : Using AWS Publish a NodeJS Website from Scratch | Coursera (Certificate link) Project : Create a VPC using AWS | Coursera (Certificate link) Introduction to Cloud Computing | IBM (Certificate link) Docker Basics Unleashed | Udemy (Certificate link) UniHack - 1st inter- University Blockchain Hackathon in Sri Lanka – Participant - Coin Ceylon (Certificate link) IEEE ComSoc Summer School – University of Jaffna BITCODE V5.0 Preselection Round - Certificate of Participation | Faculty of Management Studies – Rajarata University (Certificate link) 'AlgoXplore' of Hackathon Hub - NSBM | Hackathon Hub NSBM (Certificate link) COP29 : Bridging Ambition and Action | LSEG Company (Certificate link) How to become Microsoft Learn Student Ambassador | Microsoft Learn Student Ambassadors (Certificate link) Describe Cloud Concept | Microsoft Learn Student Ambassadors (Certificate link) IESL STUDENT MEMBER - Dec 2023 (present) IEEE STUDENT MEMBER - Mar 2025 (present) IEEE Communications Society Membership IEEE Women in Engineering Membership",
+        "duration": "June 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "C++",
+          "R",
+          "Matlab",
+          "Go",
+          "C",
+          "Machine Learning",
+          "Deep Learning",
+          "Git",
+          "Github",
+          "Docker",
+          "Aws",
+          "Linux",
+          "Windows",
+          "Classification",
+          "Communication",
+          "Leadership",
+          "Collaboration",
+          "Time Management",
+          "Adaptability"
+        ]
+      },
+      {
+        "project_name": "ESU",
+        "project_description": "",
+        "duration": "Engineering Student Union) committee member (2023-2024",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": "SPORTS: E WEEK",
+        "project_description": "",
+        "duration": "2024",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": "E WEEK",
+        "project_description": "",
+        "duration": "2022",
+        "complexity": "Medium",
+        "technologies_used": []
+      }
+    ],
+    "certificates_or_qualifications": [
+      "IEEE ComSoc Summer School – University of Jaffna",
+      "IESL STUDENT MEMBER - Dec 2023 (present)",
+      "IEEE STUDENT MEMBER - Mar 2025 (present)",
+      "IEEE Communications Society Membership",
+      "IEEE Women in Engineering Membership",
+      "ESU (Engineering Student Union) committee member (2023-2024)",
+      "SPORTS: E WEEK - ELLE Second place (2024)",
+      "E WEEK - 100*4 Third place (2022)"
+    ],
+    "all_skills": [
+      "AWS",
+      "Classification",
+      "Computer Vision",
+      "Data Visualization",
+      "Deep Learning",
+      "Docker",
+      "Git",
+      "GitHub",
+      "JavaScript",
+      "Keras",
+      "Linux",
+      "MATLAB",
+      "Machine Learning",
+      "Node.js",
+      "Python",
+      "Windows"
+    ],
+    "num_skills": 16,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 6,
+    "evaluation_score": 54.0,
+    "skill_score": 19.2
+  },
+  {
+    "candidate_id": "CAND_99D8455A",
+    "candidate_name": "AMA THATHSARANI",
+    "email": "atmanage4@gmail.com",
+    "mobile_number": "",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "techncal skills bsc in data science (top up) (enrolled)",
+      "university": "esoft metro university(pearson)",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [],
+        "technologies": [],
+        "database": [],
+        "technical_skills": [
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Learning Agility",
+        "project_description": " Communication ESOFT METRO UNIVERSITY (PEARSON) Level 3 Diploma in Information Technology Academic Context Information Technology Concepts English (Fluent) Enhancing Productivity with Microsoft Office Graphics and Multimedia Network Sinhala (Native) Technology Computer Hardware Internet, Email and Web Designing Database with SQL Programming with C#.net Programming with Python Introduction to Software Engineering",
+        "duration": "2023 -2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "C#",
+          "R",
+          "Sql",
+          "C",
+          "Communication"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Python for Beginners (University of Moratuwa)",
+      "AI/ML Engineer Course, Stage 1, (sliit university SL)",
+      "+94 70-268-1548 Introduction to Data Science (Netacad.com)",
+      "Introduction to Cybersecurity(Netacad.com)",
+      "atmanage4@gmail.com"
+    ],
+    "all_skills": [
+      "Data Science",
+      "Python",
+      "SQL"
+    ],
+    "num_skills": 3,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 1,
+    "evaluation_score": 9.5,
+    "skill_score": 3.5999999999999996
+  },
+  {
+    "candidate_id": "CAND_0D357D38",
+    "candidate_name": "Avishka Devindi",
+    "email": "avishkadev918@gmail.com",
+    "mobile_number": "076 972 5479",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) computer science with artificial intelligence",
+      "university": "nibm , awarded by coventry university uk 076 972 5479",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "PyTorch",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "Deep Learning",
+          "Docker",
+          "Machine Learning",
+          "NLP",
+          "Tableau"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Modeling",
+          "Data Science",
+          "Feature Engineering",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Python for Data Science, AI &",
+      "Development (Reading)",
+      "Projects Python Basics",
+      "Python Data Structures",
+      "API and Data Collecting",
+      "The Agricultural Drone and Rover System",
+      "2024 AWS Solution Architect",
+      "The Agricultural Drone and Rover System automates crop monitoring and",
+      "AWS Technical Essentials",
+      "treatment. A drone captures high-resolution images and sends them to a",
+      "Amazon Simple Storage",
+      "cloud-based AI, which detects issues like pests or nutrient imbalances. The",
+      "Amazon API Gateway",
+      "rover then autonomously targets affected areas with precise treatments",
+      "StyleFusion AI",
+      "Develop a web application that combines traditional image processing with AI-",
+      "based image generation to enable intuitive, creative image editing. Users can",
+      "upload photos, apply visual styles (e.g, sketch, cartoon), and modify images",
+      "further using natural language prompts, making advanced editing accessible",
+      "without technical skills.",
+      "VitaScan 3D",
+      "This project converts 2D medical images like X-rays or CT scans into 3D",
+      "models using advanced image processing and machine learning. It identifies",
+      "issues such as fractures by highlighting affected areas, helping medical",
+      "professionals diagnose and visualize conditions with greater accuracy and",
+      "Student Exam Performance Prediction",
+      "Developed a predictive model to classify student exam outcomes (Pass/Fail)",
+      "using Python and scikit-learn. Applied key data preprocessing techniques",
+      "including feature engineering, label encoding, and train-test split to prepare the",
+      "dataset. Trained a logistic regression model that achieved 85% accuracy.",
+      "Evaluated performance using metrics such as accuracy, confusion matrix,",
+      "precision, recall, and F1-score. Improved model accuracy through effective",
+      "feature selection and parameter tuning. This project demonstrates strong skills",
+      "in data analysis, machine learning, and model evaluation—relevant to real-",
+      "world educational and analytics applications."
+    ],
+    "all_skills": [
+      "AWS",
+      "Azure",
+      "Data Analysis",
+      "Data Modeling",
+      "Data Science",
+      "Deep Learning",
+      "Docker",
+      "Feature Engineering",
+      "Java",
+      "Machine Learning",
+      "NLP",
+      "PyTorch",
+      "Python",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Tableau",
+      "TensorFlow"
+    ],
+    "num_skills": 18,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 27.0,
+    "skill_score": 21.599999999999998
+  },
+  {
+    "candidate_id": "CAND_626C4BA9",
+    "candidate_name": "Vinushaanth Selvarajah",
+    "email": "selvavinu26816@gmail.com",
+    "mobile_number": "+94 769940455",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "university of moratuwa, department of computer science and engineering",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "FastAPI",
+          "Flask",
+          "Node.js",
+          "PyTorch",
+          "React",
+          "Scikit-learn",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Docker",
+          "Git",
+          "GitHub",
+          "Hugging Face",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "NumPy",
+          "OpenCV",
+          "Pandas",
+          "Plotly",
+          "Seaborn"
+        ],
+        "database": [
+          "Firebase",
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Science",
+          "Feature Engineering"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Data Science Fundamentals",
+        "project_description": " Skills: Data Science and Machine Learning Completed training on missing data handling, dataset preparation, and analysis techniques.",
+        "duration": "Jul 2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Machine Learning",
+          "Data Science"
+        ]
+      },
+      {
+        "project_name": "SpiritX  — MoraSpirit",
+        "project_description": " Skills: Gemini API, Next.js Participated in a 36-hour web development challenge showcasing teamwork and creativity.",
+        "duration": "May 2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Next.Js",
+          "Teamwork"
+        ]
+      },
+      {
+        "project_name": "Feature Engineering  — Kaggle",
+        "project_description": " Skills: Feature Engineering Learned feature creation and transformation to improve ML models.",
+        "duration": "Feb 2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Feature Engineering"
+        ]
+      },
+      {
+        "project_name": "Intro to Machine Learning  — Kaggle",
+        "project_description": " Skills: Machine Learning Covered data preprocessing, model building, and decision trees.",
+        "duration": "Feb 2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Machine Learning"
+        ]
+      },
+      {
+        "project_name": "Intro to Pandas  — Kaggle",
+        "project_description": " Skills: Pandas Mastered basic data manipulation for analysis.",
+        "duration": "Feb 2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Pandas",
+          "Data Manipulation"
+        ]
+      },
+      {
+        "project_name": "MoraXtreme 9.0  — IEEE Computer Society",
+        "project_description": " Skills: C++ Competitor in a national algorithmic coding competition. Memberships Institute of Engineers, Sri Lanka Membership No: S-30449 Tamil Literary Association Mora Examination Languages English (Fluent), Tamil (Native), Sinhala (Basic) Referees Prof. Dulani Meedeniya, Ph.D. Dr. Adheesha Wijayasiri, Ph.D. Senior Lecturer & S5 Coordinator Senior Lecturer & Industrial Training Coordinator Department of Computer Science Department of Computer Science and Engineering and Engineering University of Moratuwa, Sri Lanka University of Moratuwa, Sri Lanka Email: dulanim@cse.mrt.ac.lk Email: adheeshaw@cse.mrt.ac.lk",
+        "duration": "Oct 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "C++",
+          "R",
+          "Go",
+          "C"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Data Science Fundamentals - Essential Tools and Concepts (Jul 2025) — Alison",
+      "Skills: Data Science and Machine Learning",
+      "Completed training on missing data handling, dataset preparation, and analysis techniques.",
+      "SpiritX (May 2025) — MoraSpirit",
+      "Skills: Gemini API, Next.js",
+      "Participated in a 36-hour web development challenge showcasing teamwork and creativity.",
+      "Feature Engineering (Feb 2025) — Kaggle",
+      "Skills: Feature Engineering",
+      "Learned feature creation and transformation to improve ML models.",
+      "Intro to Machine Learning (Feb 2025) — Kaggle",
+      "Skills: Machine Learning",
+      "Covered data preprocessing, model building, and decision trees.",
+      "Intro to Pandas (Feb 2025) — Kaggle",
+      "Skills: Pandas",
+      "Mastered basic data manipulation for analysis.",
+      "MoraXtreme 9.0 (Oct 2024) — IEEE Computer Society",
+      "Skills: C++",
+      "Competitor in a national algorithmic coding competition.",
+      "Memberships",
+      "Institute of Engineers, Sri Lanka",
+      "Membership No: S-30449",
+      "Tamil Literary Association",
+      "Mora Examination",
+      "English (Fluent), Tamil (Native), Sinhala (Basic)",
+      "Prof. Dulani Meedeniya, Ph.D. Dr. Adheesha Wijayasiri, Ph.D.",
+      "Senior Lecturer & S5 Coordinator Senior Lecturer & Industrial Training Coordinator",
+      "Department of Computer Science Department of Computer Science",
+      "and Engineering and Engineering",
+      "University of Moratuwa, Sri Lanka University of Moratuwa, Sri Lanka",
+      "Email: dulanim@cse.mrt.ac.lk Email: adheeshaw@cse.mrt.ac.lk"
+    ],
+    "all_skills": [
+      "AWS",
+      "Data Science",
+      "Docker",
+      "Express",
+      "FastAPI",
+      "Feature Engineering",
+      "Firebase",
+      "Flask",
+      "Git",
+      "GitHub",
+      "Hugging Face",
+      "Java",
+      "JavaScript",
+      "Jupyter",
+      "Machine Learning",
+      "Matplotlib",
+      "MongoDB",
+      "MySQL",
+      "NLP",
+      "Node.js",
+      "NumPy",
+      "OpenCV",
+      "Pandas",
+      "Plotly",
+      "PyTorch",
+      "Python",
+      "React",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Streamlit",
+      "TensorFlow"
+    ],
+    "num_skills": 32,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 6,
+    "evaluation_score": 78.0,
+    "skill_score": 38.4
+  },
+  {
+    "candidate_id": "CAND_52BAFD9F",
+    "candidate_name": "Chamara Sandanayake",
+    "email": "scssandanayake@gmail.com",
+    "mobile_number": "(+94) 077 056 2005",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "data science undergraduate",
+      "university": "",
+      "year": "2005"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Dart",
+          "JavaScript",
+          "MATLAB",
+          "Python",
+          "R",
+          "SQL",
+          "TypeScript"
+        ],
+        "frameworks": [
+          "Django",
+          "FastAPI",
+          "Flask",
+          "Flutter",
+          "Keras",
+          "Next.js",
+          "PyTorch",
+          "Scikit-learn",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "CI/CD",
+          "Computer Vision",
+          "Deep Learning",
+          "Docker",
+          "GCP",
+          "Git",
+          "GitHub",
+          "Hugging Face",
+          "Machine Learning",
+          "NLP",
+          "NLTK",
+          "Netlify",
+          "Neural Networks",
+          "OCR",
+          "OMR",
+          "OpenCV",
+          "Plotly",
+          "Postman",
+          "REST API",
+          "SpaCy",
+          "Vercel",
+          "YOLO"
+        ],
+        "database": [
+          "Firebase",
+          "MongoDB",
+          "MySQL",
+          "Neon",
+          "PostgreSQL",
+          "Snowflake"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Modeling",
+          "Data Science",
+          "Data Visualization",
+          "Feature Engineering",
+          "Hypothesis Testing",
+          "Statistical Analysis",
+          "Supervised Learning",
+          "Time Series",
+          "Unsupervised Learning"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Marking.IO",
+        "project_description": " This Project aims to automate the paper marking process which integrating data processing pipelines for MCQ and Essay paper marking using ML and deep learning techniques such as OCR , OMR, Computer Vision and NLP. Tensorflow, PyTorch, Spacy and NLTK. the project aims to reduce workloads for academicians. It uses Typescript, NextJS, AccernityUI, SchadCN in front end development and Django, Rest API and FastAPI as backend framework. NEON - PostgreSQL as database. System aims to enhance grading consistency, and provide detailed analytics.",
+        "duration": " Aug 2024 - Apr 2025 ",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Typescript",
+          "R",
+          "Sql",
+          "Go",
+          "C",
+          "Tensorflow",
+          "Pytorch",
+          "Fastapi",
+          "Django",
+          "Nextjs",
+          "Postgresql",
+          "Neon",
+          "Deep Learning",
+          "Nlp",
+          "Computer Vision",
+          "Ocr",
+          "Omr",
+          "Spacy",
+          "Nltk",
+          "Rest Api"
+        ]
+      },
+      {
+        "project_name": "Gait",
+        "project_description": " Developed a machine learning model to authenticate users based on acceleration data, employing feature extraction and selection techniques to enhance model accuracy. Using Neural Networks and Deep Learning techniques and Utilizing MATLAB for data pre-processing, model training, and evaluation, implementing algorithms such as, Support Vector Machines (SVM) and Genetic Algorithms to achieve robust authentication performance. Conducted a comprehensive data analysis to identify patterns in user acceleration data, informing feature engineering and model refinement.",
+        "duration": " Acceleration Data ) User Authentication ( Dec 2024 - Jan 2025 ",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "Matlab",
+          "Go",
+          "C",
+          "Machine Learning",
+          "Deep Learning",
+          "Neural Networks",
+          "Data Analysis",
+          "Feature Engineering"
+        ]
+      },
+      {
+        "project_name": "Forecast IQ",
+        "project_description": " Developed and deployed a weather forecasting application utilizing forecast data from time series analysis techniques, including ARIMA ,SARIMA and Fourier models, to predict weather conditions based on historical data, enhancing planning and decision-making processes. Conducted comprehensive data collection, pre-processing, and exploratory data analysis (EDA) to identify patterns and trends, employing Python for statistical methods to ensure accurate and reliable forecasts.",
+        "duration": " Apr 2024 - Mar 2025 ",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Data Analysis",
+          "Time Series"
+        ]
+      },
+      {
+        "project_name": "Pneumetra",
+        "project_description": " Developed a comprehensive big data analytics platform using Snowflake for monitoring, analyzing, and forecasting air quality metrics ( AQI ) across Sri Lanka. This solution integrates real-time data processing pipelines, machine learning models, and interactive real time and predictive forecasting dashboards to provide accurate air quality predictions and insights. Developed using Python, TensorFlow, Keras, scikit-learn, PostgreSQL, Snowflake, Docker, GCP, SQL, SHAP, Plotly and Streamlit.",
+        "duration": " Mar 2025 ",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "Sql",
+          "C",
+          "Tensorflow",
+          "Keras",
+          "Scikit-Learn",
+          "Streamlit",
+          "Postgresql",
+          "Snowflake",
+          "Machine Learning",
+          "Docker",
+          "Gcp",
+          "Plotly"
+        ]
+      },
+      {
+        "project_name": "NeuralFace",
+        "project_description": " Enhancing university security with Face Recognition Technology In a dynamic project using Tensorflow Lite and Google ML-Kit, Flutter and Firebase. This Portable Facial Recognition application can be used within university or any academic environment to identify the student and student’s details.",
+        "duration": " Feb 2024 - Apr 2024 ",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "Go",
+          "C",
+          "Tensorflow",
+          "Flutter",
+          "Firebase"
+        ]
+      },
+      {
+        "project_name": "Process Mining Project on University Student Enrollment Log",
+        "project_description": " Utilized R programming for data cleaning, pre-processing, and visualization to effectively communicate insights. Conducted an in-depth analysis of student enrollment event logs using process mining techniques, such as Alpha Miner and Heuristic Miner algorithms, to identify hidden patterns, bottlenecks, and inefficiencies within the enrollment process. Used libraries such as bupaR, edeaR and processmapR for process analytics and visualizations",
+        "duration": " Mar 2024 - Apr 2024 ",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "Go",
+          "C"
+        ]
+      },
+      {
+        "project_name": "EV Industry News Sentiment analyzer",
+        "project_description": " developed a Natural Language Processing (NLP) pipeline using spaCy and NLTK to analyze discussions, sentiments, text summarizing and emerging trends in the Electric Vehicle (EV) industry using data collected by scrapping from reliable EV news websites. The goal was to extract consumer insights regarding EV brands, models, and technologies to understand market perception, brand reputation, and key industry concerns.",
+        "duration": " Jan 2025 - Feb 2025 ",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "Go",
+          "C",
+          "Nlp",
+          "Spacy",
+          "Nltk"
+        ]
+      },
+      {
+        "project_name": "HR Predictive Analysis",
+        "project_description": " utilizing R's powerful analytical tools and techniques to analyze an HR dataset from a pharmaceutical company. Understanding HR data is crucial for organizational success, especially in people acquisition, retention, and development. This project highlights the transformative potential of data-driven approaches in HR management, contributing to more effective organizational strategies.",
+        "duration": " Jan 2024 - Feb 2024 ",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C"
+        ]
+      },
+      {
+        "project_name": "Vacant Lot Detection",
+        "project_description": " Vacant Lot Detection Using Aerial Imagery, developed a deep learning computer vision model to identify and segment vacant lots from aerial imagery for urban planning and land management. Utilized remote sensing techniques, image processing, and geospatial analysis to detect underutilized land by analyzing land cover patterns and features.",
+        "duration": " June 2025 ",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Deep Learning",
+          "Computer Vision"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Fundamentals of MLOps - KodeKloud ( 2025 )",
+      "Microsoft AI Skill Challenge - Microsoft Learn ( 2023 )",
+      "Introduction to Deep Learning with PyTorch - Datacamp ( 2025 )",
+      "Intermediate to Deep Learning with PyTorch - Datacamp ( 2025 )",
+      "Volunteering",
+      "1) FOSS Community - NSBM ( 2022 - 2025 )",
+      "Volunteer (Dev team & Design team)",
+      "Council member"
+    ],
+    "all_skills": [
+      "CI/CD",
+      "Computer Vision",
+      "Dart",
+      "Data Analysis",
+      "Data Modeling",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Django",
+      "Docker",
+      "FastAPI",
+      "Feature Engineering",
+      "Firebase",
+      "Flask",
+      "Flutter",
+      "GCP",
+      "Git",
+      "GitHub",
+      "Hugging Face",
+      "Hypothesis Testing",
+      "JavaScript",
+      "Keras",
+      "MATLAB",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "NLP",
+      "NLTK",
+      "Neon",
+      "Netlify",
+      "Neural Networks",
+      "Next.js",
+      "OCR",
+      "OMR",
+      "OpenCV",
+      "Plotly",
+      "PostgreSQL",
+      "Postman",
+      "PyTorch",
+      "Python",
+      "R",
+      "REST API",
+      "SQL",
+      "Scikit-learn",
+      "Snowflake",
+      "SpaCy",
+      "Statistical Analysis",
+      "Streamlit",
+      "Supervised Learning",
+      "TensorFlow",
+      "Time Series",
+      "TypeScript",
+      "Unsupervised Learning",
+      "Vercel",
+      "YOLO"
+    ],
+    "num_skills": 55,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 9,
+    "evaluation_score": 127.5,
+    "skill_score": 66.0
+  },
+  {
+    "candidate_id": "CAND_7EEB74EA",
+    "candidate_name": "Upeksha Gimhani",
+    "email": "gimhaniupeksha9@gmail.com",
+    "mobile_number": "+94 78 899 5949",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "undergraduate",
+      "university": "",
+      "year": "2019"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Go",
+          "Java",
+          "JavaScript",
+          "Kotlin",
+          "PHP",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React"
+        ],
+        "technologies": [
+          "GitHub",
+          "Machine Learning"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Online Recipe Management System",
+        "project_description": " --Tools: Figma (UI/UX Design), Android Studio --Tools: HTML, CSS, PHP (lead the group) A sleek mobile app for a café, to enhance customer experience An easy-to-use web platform for browsing, managing, and convenience. and sharing recipes.",
+        "duration": "2023) Mobile Application for a Cafe(2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "Php",
+          "C"
+        ]
+      },
+      {
+        "project_name": "Online School Information Management System",
+        "project_description": " --Tools: Java, JavaScript, MySQL --Tools - Android studio (Frontend & Backend Development) A comprehensive system for managing school data and A handy mobile app to help users effortlessly track and manage operations. their finances on the go.",
+        "duration": "2024) Finance Tracker Mobile Application(2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Java",
+          "Javascript",
+          "R",
+          "Sql",
+          "Go",
+          "C",
+          "Mysql"
+        ]
+      },
+      {
+        "project_name": "Mobile UI for a Fitness App",
+        "project_description": "",
+        "duration": "2025",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": "Online Apparel Shopping Platform",
+        "project_description": " --Tools: Figma (UI/UX Design), Android Studio --Tools: MERN (MongoDB, Express.js, React.js, Node.js) A mobile fitness app designed in Figma to help users track A modern and user-friendly online apparel store built with the workouts, monitor progress, and stay motivated with a user- MERN stack for seamless shopping and customization. friendly interface.",
+        "duration": "2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "Go",
+          "C",
+          "React",
+          "Express",
+          "Node.Js",
+          "Mongodb"
+        ]
+      },
+      {
+        "project_name": "Python for Beginners",
+        "project_description": " Universtiy of Moratuwa, Sri Lanka(CODL)",
+        "duration": "2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C"
+        ]
+      },
+      {
+        "project_name": "Data Science Career Path",
+        "project_description": " Udemy / Learntoupgrade Online, Makeintern Course",
+        "duration": "2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C"
+        ]
+      },
+      {
+        "project_name": "Strategies for Success",
+        "project_description": " Makeintern Course CSS, BootStrap, JavaScript, PHP Full Stack",
+        "duration": "2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Java",
+          "Javascript",
+          "R",
+          "Php",
+          "C"
+        ]
+      },
+      {
+        "project_name": "Crash Course",
+        "project_description": " Udemy / Proper Dot Institute",
+        "duration": "2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R"
+        ]
+      },
+      {
+        "project_name": "Java Fundamentals Course For Beginners",
+        "project_description": " Sara Academy",
+        "duration": "2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Python for Beginners (2024)",
+      "Universtiy of Moratuwa, Sri Lanka(CODL)",
+      "Data Science Career Path(2025)",
+      "Udemy / Learntoupgrade Online, Makeintern Course",
+      "Advanced Project Management :",
+      "Strategies for Success(2025)",
+      "Makeintern Course",
+      "CSS, BootStrap, JavaScript, PHP Full Stack",
+      "Crash Course (2025)",
+      "Udemy / Proper Dot Institute",
+      "Java Fundamentals Course For Beginners(2025)",
+      "Sara Academy"
+    ],
+    "all_skills": [
+      "Data Science",
+      "Express",
+      "GitHub",
+      "Go",
+      "Java",
+      "JavaScript",
+      "Kotlin",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "PHP",
+      "Python",
+      "R",
+      "React",
+      "SQL"
+    ],
+    "num_skills": 16,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 9,
+    "evaluation_score": 69.0,
+    "skill_score": 19.2
+  },
+  {
+    "candidate_id": "CAND_FEEE6BD0",
+    "candidate_name": "Ahamed Rishad",
+    "email": "drishad@outlook.com",
+    "mobile_number": "",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) in computing (top-up) – london metropolitan university uk 2024-present (reading)",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "PHP",
+          "Python"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Excel"
+        ],
+        "database": [],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Sri Lankan School Muscat, Muscat, Sultanate of Oman"
+    ],
+    "all_skills": [
+      "Excel",
+      "Java",
+      "PHP",
+      "Python"
+    ],
+    "num_skills": 4,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 6.0,
+    "skill_score": 4.8
+  },
+  {
+    "candidate_id": "CAND_01B77EB1",
+    "candidate_name": "DEWDU SENDANAYAKE",
+    "email": "hdsendanayake01@gmail.com",
+    "mobile_number": "+94 70 708 1326",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) data science undergraduate",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Kotlin",
+          "PHP",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Flask",
+          "Keras",
+          "PyTorch",
+          "React",
+          "Scikit-learn",
+          "Spring",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "Computer Vision",
+          "Docker",
+          "Excel",
+          "Git",
+          "GitHub",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "Neural Networks",
+          "NumPy",
+          "OpenCV",
+          "Pandas",
+          "Power BI",
+          "Seaborn",
+          "Tableau"
+        ],
+        "database": [
+          "MySQL",
+          "Oracle",
+          "Snowflake"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization",
+          "Feature Engineering",
+          "Regression",
+          "Statistical Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "NASA Space Apps 2024: Global Nominee, Best Use of AI/ ML Engineer - Stage 1",
+      "Science, Best Mission Concept",
+      "Data Visualization With Power BI SQL for Data Science",
+      "Introduction to Neural Network LangChain for LLM Application Development",
+      "Python Programming Machine Learning"
+    ],
+    "all_skills": [
+      "AWS",
+      "Azure",
+      "Computer Vision",
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Docker",
+      "Excel",
+      "Feature Engineering",
+      "Flask",
+      "Git",
+      "GitHub",
+      "Hadoop",
+      "Java",
+      "JavaScript",
+      "Jupyter",
+      "Keras",
+      "Kotlin",
+      "Machine Learning",
+      "Matplotlib",
+      "MySQL",
+      "Neural Networks",
+      "NumPy",
+      "OpenCV",
+      "Oracle",
+      "PHP",
+      "Pandas",
+      "Power BI",
+      "PyTorch",
+      "Python",
+      "R",
+      "React",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Snowflake",
+      "Spark",
+      "Spring",
+      "Statistical Analysis",
+      "Streamlit",
+      "Tableau",
+      "TensorFlow"
+    ],
+    "num_skills": 43,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 64.5,
+    "skill_score": 51.6
+  },
+  {
+    "candidate_id": "CAND_2602A2E6",
+    "candidate_name": "DILEESHA KAVINDI JAYAKODI",
+    "email": "kavindijayakodi@gmail.com",
+    "mobile_number": "0718543872",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "datascienceundergraduate",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Kotlin",
+          "PHP",
+          "Python"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "GitHub",
+          "Power BI"
+        ],
+        "database": [
+          "Oracle"
+        ],
+        "technical_skills": [
+          "Classification"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "• DataPreprocessing,ModelBuildingandstreamlitinterface.",
+      "(cid:140) OCIGenerativeAI ProfessionalCer-",
+      "ETL Development project with OLAP and Power BI Oracle",
+      "• Visualcode,SSMS,SSIS,SSAS,PowerBI (cid:140) PythonforBeginners-ECetificate",
+      "UniversityofMoratuwa",
+      "verificationcode-BYfswsIwGT",
+      "Sysco Sales Consultant Project - Codefest final round",
+      "Recommendationsystem,IoTandchatbot",
+      "• https://github.com/curly2523/Foods-app",
+      "• Python Hard-working Eyefordetail",
+      "Communicationskills TeamWork",
+      "Mern Stack Project",
+      "HerbalHeavenE-CommerceWebApp Python StatisticalAnalysis AWS",
+      "• https://github.com/KavishkaSashmitha/HerbalHeaven Azure Hadoop DataMining MachineLearning",
+      "Springboot Project"
+    ],
+    "all_skills": [
+      "AWS",
+      "Azure",
+      "Classification",
+      "GitHub",
+      "Hadoop",
+      "Java",
+      "Kotlin",
+      "Oracle",
+      "PHP",
+      "Power BI",
+      "Python"
+    ],
+    "num_skills": 11,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 16.5,
+    "skill_score": 13.2
+  },
+  {
+    "candidate_id": "CAND_AC534A96",
+    "candidate_name": "Thennila Mathimaaran",
+    "email": "nilabhagatnila@gmail.com",
+    "mobile_number": "+94 775604752",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) in information technology (2021–2025)",
+      "university": "university of kelaniya, sri lanka",
+      "year": "2021"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "JavaScript",
+          "PHP",
+          "Python",
+          "R"
+        ],
+        "frameworks": [
+          "Node.js",
+          "React"
+        ],
+        "technologies": [
+          "AWS",
+          "BeautifulSoup",
+          "Computer Vision",
+          "Excel",
+          "Git",
+          "GitHub",
+          "Machine Learning",
+          "NLP",
+          "Pandas",
+          "Power BI",
+          "Tableau"
+        ],
+        "database": [
+          "Firebase",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Modeling",
+          "Data Science",
+          "Data Visualization",
+          "Regression",
+          "Statistical Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Web Scraping and Analysis of E",
+        "project_description": " Technologies (Python, BeautifulSoup, Pandas, Power BI) Performed web scraping of multiple e-commerce sites to extract product data, pricing trends, andcustomerreviewpatterns. Analyzeddatatoidentifypricingstrategiesandpopularproduct segments. Created interactive dashboards using Power BI to visualize insights and trends for decision-making.",
+        "duration": "2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Beautifulsoup",
+          "Pandas",
+          "Power Bi"
+        ]
+      },
+      {
+        "project_name": "Stroke Prediction Analysis  Group",
+        "project_description": " Technologies (R, Logistic Regression) Developedapredictivemodeltoanalyzestrokeoccurrencesusinglogisticregression. Conducted data preprocessing, feature selection, and statistical analysis to enhance model accuracy and identify key risk factors such as age, BMI, hypertension, and heart disease.",
+        "duration": "2023",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Statistical Analysis",
+          "Regression"
+        ]
+      },
+      {
+        "project_name": "Product Management System  Individual",
+        "project_description": " Technologies (React, Laravel, MySQL) BuiltaCRUD-basedproductmanagementsystemwithadynamicReactfront-endandaLaravel backend to handle inventory and product operations efficiently. Skills Programming: PHP, Python, C++, HTML, JavaScript,HTML/ CSS, R Frameworks: React, Laravel, Pandas Databases: MySQL, Firebase Version Control: Git, GitHub Data Analysis Tools: Power BI, Tableau, Google Data Studio, R Studio, Weka, Orange, Excel (Advanced), MS Office Specialization Modules - Data Science - Distributed Systems and Cloud Computing - Artificial Intelligence - Machine Learning - Statistical data Modeling - Big Data and Data Warehousing - Natural Language Processing - Reinforcement Learning - Data Mining and Applied Analytics - Data structures & Algorithms - Software Design Patterns & Frameworks - Advanced Databases Certifications - Machine Learning Foundations - Data, Data, Everywhere (Google) Research",
+        "duration": "2023",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "Java",
+          "Javascript",
+          "C++",
+          "R",
+          "Sql",
+          "Php",
+          "Go",
+          "C",
+          "React",
+          "Mysql",
+          "Firebase",
+          "Machine Learning",
+          "Git",
+          "Github",
+          "Pandas",
+          "Tableau",
+          "Power Bi",
+          "Excel",
+          "Data Science",
+          "Data Analysis",
+          "Data Modeling"
+        ]
+      },
+      {
+        "project_name": "Factors Influencing Green IT Adoption in Sri Lankan IT Organizations  Link",
+        "project_description": " Conducted in-depth research on factors influencing Green IT adoption. Developed a conceptual framework validated through a survey of 159 IT professionals, identifying actionable strategies for sustainable IT practices. Languages - English (Professional) - Tamil (Native) - Sinhala (Limited Proficiency) Interests Data Analysis and Visualization - Advanced Analytics - Data Storytelling and Reporting - Business Analysis - Statistical Modeling and Decision Making - Business Intelligence",
+        "duration": "2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Data Analysis"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "- Machine Learning Foundations",
+      "- Data, Data, Everywhere (Google)",
+      "Factors Influencing Green IT Adoption in Sri Lankan IT Organizations (2024) Link",
+      "Conducted in-depth research on factors influencing Green IT adoption. Developed a conceptual",
+      "framework validated through a survey of 159 IT professionals, identifying actionable strategies",
+      "for sustainable IT practices.",
+      "- English (Professional) - Tamil (Native) - Sinhala (Limited Proficiency)",
+      "Data Analysis and Visualization - Advanced Analytics - Data Storytelling and Reporting -",
+      "Business Analysis - Statistical Modeling and Decision Making - Business Intelligence"
+    ],
+    "all_skills": [
+      "AWS",
+      "BeautifulSoup",
+      "Computer Vision",
+      "Data Analysis",
+      "Data Modeling",
+      "Data Science",
+      "Data Visualization",
+      "Excel",
+      "Firebase",
+      "Git",
+      "GitHub",
+      "JavaScript",
+      "Machine Learning",
+      "MySQL",
+      "NLP",
+      "Node.js",
+      "PHP",
+      "Pandas",
+      "Power BI",
+      "Python",
+      "R",
+      "React",
+      "Regression",
+      "Statistical Analysis",
+      "Tableau"
+    ],
+    "num_skills": 25,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 4,
+    "evaluation_score": 57.5,
+    "skill_score": 30.0
+  },
+  {
+    "candidate_id": "CAND_24AABA0E",
+    "candidate_name": "Haarun Chandramohan",
+    "email": "haarunchandramohan@gmail.com",
+    "mobile_number": "+94768077013",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "i’m an undergraduate student at sri lankan institute of information technology (sliit). i’m a creative",
+      "university": "",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Kotlin",
+          "PHP",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React"
+        ],
+        "technologies": [
+          "GitHub"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Express",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Kotlin",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "PHP",
+      "React",
+      "SQL"
+    ],
+    "num_skills": 11,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 16.5,
+    "skill_score": 13.2
+  },
+  {
+    "candidate_id": "CAND_E931B936",
+    "candidate_name": "HIRUNI SAPARAMADU",
+    "email": "saparamaduhiruni@gmail.com",
+    "mobile_number": "+94 70 594 7815",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc. special (hons) in information technology specializing in data science - sliit",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "PyTorch",
+          "React",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "GCP",
+          "Git",
+          "GitHub",
+          "Jupyter",
+          "Machine Learning",
+          "NLP",
+          "Pandas",
+          "Plotly",
+          "Power BI",
+          "REST API",
+          "Tableau"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "9th International Conference on Information Technology Research",
+        "project_description": " Paper title - An Integrated Framework for Self-Adjusting Temperature, Humidity, and Airflow Direction in Smart Air Conditioning Systems - Publication Link Contribution : Author Publisher : IEEE Published Date : 05.02.2025 Mr. Eshan M. Herath Mr. Bhanuka Senanayake Chief Data Scientist - Deep Data Insights Data Scientist-LSEG Phone : +94 71 825 8943 Phone : +94 71 046 9835 Email : eshan.m.herath@gmail.com Email : bhanuka.senanayake@lseg.com",
+        "duration": "ICITR-2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Python for Beginners Course - University of Moratuwa",
+      "Introduction to Machine Learning - Great Learning Academy",
+      "Data Analytics Essentials Course - Cisco Networking Academy",
+      "Introduction to Data Science - Cisco Networking Academy",
+      "Data Visualization with PowerBI - Great Learning Academy",
+      "Data Visualization with Tableau - Great Learning Academy",
+      "Tensorflow Python - Great Learning Academy",
+      "9th International Conference on Information Technology Research (ICITR-2024)",
+      "Paper title - An Integrated Framework for Self-Adjusting Temperature, Humidity, and Airflow",
+      "Direction in Smart Air Conditioning Systems - Publication Link",
+      "Contribution : Author",
+      "Publisher : IEEE",
+      "Published Date : 05.02.2025",
+      "Mr. Eshan M. Herath Mr. Bhanuka Senanayake",
+      "Chief Data Scientist - Deep Data Insights Data Scientist-LSEG",
+      "Phone : +94 71 825 8943 Phone : +94 71 046 9835",
+      "Email : eshan.m.herath@gmail.com Email : bhanuka.senanayake@lseg.com"
+    ],
+    "all_skills": [
+      "Airflow",
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "GCP",
+      "Git",
+      "GitHub",
+      "Java",
+      "Jupyter",
+      "Machine Learning",
+      "NLP",
+      "Pandas",
+      "Plotly",
+      "Power BI",
+      "PyTorch",
+      "Python",
+      "REST API",
+      "React",
+      "SQL",
+      "Streamlit",
+      "Tableau",
+      "TensorFlow"
+    ],
+    "num_skills": 22,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 1,
+    "evaluation_score": 38.0,
+    "skill_score": 26.4
+  },
+  {
+    "candidate_id": "CAND_FFAA093B",
+    "candidate_name": "MOHAMED BUHARY MOHAMED IFHAM AAKIL",
+    "email": "ifhamaakilhp@gmail.com",
+    "mobile_number": "+94 76 123 9096",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "computer engineering undergraduate | ai & machine learning enthusiast",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "MATLAB",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Keras",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Computer Vision",
+          "GitHub",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "NumPy",
+          "OCR",
+          "OpenCV",
+          "Pandas"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Machine Learning Specialization (Coursera) Ongoing",
+      " Gaining hands-on experience in supervised, unsupervised, and advanced machine learning techniques using real-world",
+      "Introduction to Generative AI (Coursera) Completed",
+      " Learned the fundamentals of generative AI, including applications of large language models and ethical considerations.",
+      "Machine Learning (Simplilearn) Completed",
+      " Acquired practical knowledge of core ML algorithms, model evaluation, and data preprocessing techniques.",
+      "Artificial Intelligence Masterclass (NoviTech) Completed",
+      " Covered end-to-end AI development, from data handling to building intelligent systems using modern tools.",
+      "Python for Artificial Intelligence (DevTown) Completed",
+      " Developed AI solutions using Python libraries and frameworks for real-world problem-solving.",
+      "AI for Everyone (Coursera) Completed",
+      " Explored AI concepts, industry applications, and strategic integration without requiring a technical background.",
+      " Programming Languages:",
+      "Python, C++, Java, SQL, MIPS Assembly",
+      " Frameworks & Libraries:",
+      "TensorFlow, Keras, OpenCV, Scikit-learn, Pandas, NumPy, Matplotlib",
+      " Tools & Platforms:",
+      "Visual Studio Code, Jupyter Notebook, PyCharm, MATLAB, GitHub, MySQL",
+      " Spoken Languages:",
+      "English (Fluent), Tamil (Native), Sinhala (Conversational), Urdu (Conversational)",
+      "Students Guild Leadership Program Member",
+      "The University of Lahore (UOL)",
+      "● Participated in leadership development initiatives, team coordination, and campus community engagement activities",
+      "aimed at enhancing student representation and organizational skills."
+    ],
+    "all_skills": [
+      "Computer Vision",
+      "Data Science",
+      "GitHub",
+      "Java",
+      "Jupyter",
+      "Keras",
+      "MATLAB",
+      "Machine Learning",
+      "Matplotlib",
+      "MySQL",
+      "NLP",
+      "NumPy",
+      "OCR",
+      "OpenCV",
+      "Pandas",
+      "Python",
+      "R",
+      "SQL",
+      "Scikit-learn",
+      "TensorFlow"
+    ],
+    "num_skills": 20,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 30.0,
+    "skill_score": 24.0
+  },
+  {
+    "candidate_id": "CAND_434E0DDA",
+    "candidate_name": "I.MOHAMED ILSAM AL HAQ",
+    "email": "mohamedilsam99@gmail.com",
+    "mobile_number": "+94 762712434",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "motivated and passionate undergraduate pursuing a bsc in electrical and electronic engineering at sliit, with a strong",
+      "university": "",
+      "year": "2020"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "PyTorch",
+          "Scikit-learn"
+        ],
+        "technologies": [
+          "AWS",
+          "Computer Vision",
+          "Deep Learning",
+          "Excel",
+          "Git",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "Neural Networks",
+          "NumPy",
+          "Pandas",
+          "Power BI",
+          "Seaborn",
+          "Tableau"
+        ],
+        "database": [
+          "PostgreSQL"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization",
+          "Supervised Learning",
+          "Unsupervised Learning"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "• Python for Data Science, AI & Development - IBM",
+      "• Machine Learning with Python – IBM",
+      "• Convolutional Neural Networks in Tensor Flow –Deeplearning.AI",
+      "• Introduction to Tensor Flow for Artificial Intelligence, Machine Learning, and Deep Learning –",
+      "Deeplearning.AI",
+      "• AWS Educate Introduction to Cloud 101",
+      " Machine learning for optimized Crop Management - SLIIT Feb 2024 - Nov 2024",
+      "Developed an AI-driven smart farming system that optimizes crop selection and fertilizer usage using an Artificial",
+      "Neural Network (ANN) model deployed on AWS Sage Maker. The system collects real-time soil data (NPK levels, pH,",
+      "temperature, and humidity) through interconnected sensors, which is processed by the ANN model to predict the best",
+      "crops and recommend optimal fertilizer use. Utilizing AWS API Gateway and AWS Lambda, the system ensures real-",
+      "time data processing, while AWS SNS delivers instant recommendations via email or SMS. This IoT-enabled AI solution",
+      "supports precision agriculture, reduces resource wastage, and empowers farmers with data-driven decision-making.",
+      " Cancer Cell Classification using SVM – IBM Feb 2025 - Mar 2025",
+      "Developed a Support Vector Machine (SVM) model to classify human cell samples as benign or",
+      "malignant. Utilized Python and Scikit-Learn for data preprocessing, model training with different kernels,",
+      "and performance evaluation (accuracy, F1-score, confusion matrix). The model achieved high accuracy and",
+      "supports real-time predictions. This project enhanced my skills in machine learning, feature scaling, and",
+      "model evaluation in healthcare applications.",
+      " Sentiment Analysis Using Deep Learning LSTM - On Going",
+      "Develop an automated system for detecting depression through the analysis of textual data, such as",
+      "social media posts or chat logs. By using Long Short-Term Memory (LSTM) models, the system will classify",
+      "text as indicative of depression or not, overcoming the limitations of traditional self-reporting methods.",
+      "Dr. Nushara Wedasingha Dr. Ruwan Chandrasena",
+      "(PhD in AI)",
+      "Lecturer Head of the Department",
+      "Department of Electrical and Electronic Engineering Department of Electrical and Electronic Engineering",
+      "SLIIT | Malabe Campus SLIIT | Malabe Campus",
+      "Email: nushara.w@sliit.lk Email: ruwan.c@sliit.lk",
+      "Tel: +94 76 449 2051 Tel: +94 11 754 3959",
+      "I.MOHAMED ILSAM AL HAQ mohamedilsam99@gmail.com +94 76 271 2434"
+    ],
+    "all_skills": [
+      "AWS",
+      "Classification",
+      "Computer Vision",
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Excel",
+      "Git",
+      "Jupyter",
+      "Machine Learning",
+      "Matplotlib",
+      "NLP",
+      "Neural Networks",
+      "NumPy",
+      "Pandas",
+      "PostgreSQL",
+      "Power BI",
+      "PyTorch",
+      "Python",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Supervised Learning",
+      "Tableau",
+      "Unsupervised Learning"
+    ],
+    "num_skills": 26,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 39.0,
+    "skill_score": 31.2
+  },
+  {
+    "candidate_id": "CAND_578C58C4",
+    "candidate_name": "KAVINDU KASTHURIRATHNE",
+    "email": "kavindu.kasthu@gmail.com",
+    "mobile_number": "",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "intern data engineering & data analyst | apr 2023 - oct 2023",
+      "university": "",
+      "year": "2004"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Computer Vision",
+          "Deep Learning",
+          "Git",
+          "Jupyter",
+          "Machine Learning",
+          "NLP",
+          "Power BI",
+          "YOLO"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Data Science",
+          "Data Visualization",
+          "Feature Engineering"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "BSc (Hons) in IT Specializing in Data Science | 2021 - 2025",
+      "Sri Lanka Institute of Information Technology (SLIIT)",
+      "Specializing in Data Science",
+      "G.C.E Advanced Level (Physical Science Stream) | 2020",
+      "Royal College, Colombo 07",
+      "Combined Mathematics - B",
+      "Physics - C",
+      "Chemistry - C"
+    ],
+    "all_skills": [
+      "Computer Vision",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Feature Engineering",
+      "Git",
+      "Java",
+      "Jupyter",
+      "Machine Learning",
+      "NLP",
+      "Power BI",
+      "Python",
+      "R",
+      "SQL",
+      "Streamlit",
+      "TensorFlow",
+      "YOLO"
+    ],
+    "num_skills": 17,
+    "experience_months": 24,
+    "experience_level": "Junior",
+    "num_projects": 0,
+    "evaluation_score": 25.5,
+    "skill_score": 20.4
+  },
+  {
+    "candidate_id": "CAND_D76770F5",
+    "candidate_name": "Kavindu Deshappriya",
+    "email": "ksdeshappriya.official@gmail.com",
+    "mobile_number": "+94710559795",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "undergraduate—bsc(hons)insoftwareengineering",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Dart",
+          "Java",
+          "JavaScript",
+          "Python",
+          "TypeScript"
+        ],
+        "frameworks": [
+          "Django",
+          "Express",
+          "FastAPI",
+          "Flask",
+          "Flutter",
+          "React",
+          "Scikit-learn",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "BeautifulSoup",
+          "Docker",
+          "Git",
+          "GitHub",
+          "Linux",
+          "Matplotlib",
+          "NLP",
+          "NumPy",
+          "Pandas"
+        ],
+        "database": [
+          "Firebase",
+          "MongoDB",
+          "MySQL",
+          "PostgreSQL",
+          "SQLite"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "• PythonProgrammingAdvanced,UniversityofMoratuwa–2024",
+      "VerificationCode: 0BKA192jJw(Verify)",
+      "• PythonforBeginners,UniversityofMoratuwa–2024",
+      "VerificationCode: 0ZXLUWI5Mv(Verify)",
+      "English: ProfessionalWorkingProficiency",
+      "Sinhala: Native"
+    ],
+    "all_skills": [
+      "BeautifulSoup",
+      "Dart",
+      "Django",
+      "Docker",
+      "Express",
+      "FastAPI",
+      "Firebase",
+      "Flask",
+      "Flutter",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Linux",
+      "Matplotlib",
+      "MongoDB",
+      "MySQL",
+      "NLP",
+      "NumPy",
+      "Pandas",
+      "PostgreSQL",
+      "Python",
+      "React",
+      "SQLite",
+      "Scikit-learn",
+      "Streamlit",
+      "TensorFlow",
+      "TypeScript"
+    ],
+    "num_skills": 28,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 42.0,
+    "skill_score": 33.6
+  },
+  {
+    "candidate_id": "CAND_855B4C2E",
+    "candidate_name": "KAVINI AMANDI",
+    "email": "kaviniamandimav123@gmail.com",
+    "mobile_number": "+94 70 351 8890",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc(hons) computer science with artificial intelligence sep 2023 - present",
+      "university": "national institute of business management, awarded by coventry university (uk)",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Angular",
+          "FastAPI",
+          "Keras",
+          "PyTorch",
+          "React",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Computer Vision",
+          "Deep Learning",
+          "Excel",
+          "GitHub",
+          "Hugging Face",
+          "Machine Learning",
+          "NLP",
+          "NumPy",
+          "OpenCV",
+          "Pandas",
+          "Selenium"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Classification"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "ChatGPT: Excel at Personal Automation with GPTs, AI & Zapier Specialization - Vanderbilt",
+      "1. TerraShield – IoT-Based Disaster Detection System",
+      "Developed an IoT system using ESP32, AWS IoT Core, and DynamoDB for real-time environmental",
+      "monitoring and alerts. Integrated AWS Lambda for data processing and AWS SageMaker for disaster",
+      "prediction using machine learning, enhancing early warning and risk mitigation.y across marketing",
+      "channels and materials",
+      "2. VitaScan 3D",
+      "This project converts 2D medical images like X-rays or CT scans into 3D models using advanced",
+      "image processing and machine learning. It identifies issues such as fractures by highlighting affected",
+      "areas, helping medical professionals diagnose and visualize conditions with greater accuracy and",
+      "3. StyleFusion AI",
+      "Developed a web application that combines traditional image processing with AI-based image",
+      "generation to enable intuitive, creative image editing. Users can upload photos, apply visual styles",
+      "(e.g., sketch, cartoon), and modify images further using natural language prompts, making advanced",
+      "editing accessible without technical skills.",
+      "4. Email Tone Rewriter (AI-Powered NLP App)",
+      "Developed an AI-powered Email Tone Rewriter using NLP and Hugging Face Transformers, enabling",
+      "users to input any email and instantly rewrite it in a selected tone such as friendly, professional, or",
+      "assertive. The solution features a streamlined user interface built on Google Colab, allowing easy",
+      "interaction and real-time tone adjustment. The project is fully version-controlled and hosted on",
+      "GitHub, making it ready for deployment and collaborative development.",
+      "5. Transaction Risk Analysis System",
+      "Designed and implemented a no-code/low-code transaction risk analysis workflow using n8n and",
+      "OpenAI. Built a secure webhook to receive and validate transaction data, integrated an LLM for risk",
+      "scoring via prompt engineering, and automated admin notifications for high-risk cases. Handled",
+      "various test scenarios including cross-border transactions, high-risk countries, and incomplete data.",
+      "Programming Languages:Python, Java, C++, C, C#, R",
+      "Web Development:HTML, CSS, JavaScript, PHP, React, Angular",
+      "Machine Learning & Deep Learning:TensorFlow, PyTorch, Keras, Scikit-learn, OpenCV, CNNs,",
+      "Natural Language Processing (NLP):Text Classification, Sentiment Analysis, Transformers,",
+      "Prompt Engineering",
+      "Large Language Models & Tools:OpenAI API, LangChain, FastAPI",
+      "Automation Tools:n8n, Zapier, Make.com, Selenium, Beautiful Soup",
+      "APIs & Backend:FastAPI, RESTful APIs",
+      "Databases:SQL (MySQL), NoSQL (MongoDB)",
+      "Cloud Platforms:AWS IoT Core, AWS SageMaker",
+      "Data Handling & Analysis:Pandas, NumPy",
+      "Soft Skills:Analytical Thinking, Team Collaboration, Problem Solving"
+    ],
+    "all_skills": [
+      "AWS",
+      "Angular",
+      "Classification",
+      "Computer Vision",
+      "Deep Learning",
+      "Excel",
+      "FastAPI",
+      "GitHub",
+      "Hugging Face",
+      "Java",
+      "JavaScript",
+      "Keras",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "NLP",
+      "NumPy",
+      "OpenCV",
+      "PHP",
+      "Pandas",
+      "PyTorch",
+      "Python",
+      "R",
+      "React",
+      "SQL",
+      "Scikit-learn",
+      "Selenium",
+      "TensorFlow"
+    ],
+    "num_skills": 28,
+    "experience_months": 3,
+    "experience_level": "Entry Level",
+    "num_projects": 0,
+    "evaluation_score": 42.0,
+    "skill_score": 33.6
+  },
+  {
+    "candidate_id": "CAND_7AE7152E",
+    "candidate_name": "LAHIRU BANDARA",
+    "email": "lahiiru.dananjaya@gmail.com",
+    "mobile_number": "+94 77 237 6081",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "i'm a computer science undergraduate at eastern university, sri lanka, passionate about full stack development and ai-",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "R"
+        ],
+        "frameworks": [
+          "Django",
+          "Express",
+          "FastAPI",
+          "Flask",
+          "Node.js",
+          "PyTorch",
+          "React"
+        ],
+        "technologies": [
+          "Deep Learning",
+          "Excel",
+          "GitHub",
+          "Machine Learning",
+          "Netlify",
+          "Neural Networks"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL",
+          "PostgreSQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Interactivity with JavaScript from Coursera June 2024",
+      "Web Design for Beginners from University of Moratuwa May 2024",
+      "Learning Python from LinkedIn Mar 2024",
+      "Senior Prefect - Govt. Science College Matale 2017 - 2019",
+      "Member of Computer Science Society - Trincomalee Campus 2023 - Present"
+    ],
+    "all_skills": [
+      "Deep Learning",
+      "Django",
+      "Excel",
+      "Express",
+      "FastAPI",
+      "Flask",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "Netlify",
+      "Neural Networks",
+      "Node.js",
+      "PostgreSQL",
+      "PyTorch",
+      "Python",
+      "R",
+      "React"
+    ],
+    "num_skills": 20,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 30.0,
+    "skill_score": 24.0
+  },
+  {
+    "candidate_id": "CAND_FD17331F",
+    "candidate_name": "LIHINI WITHARANA",
+    "email": "lihiniwitharana@gmail.com",
+    "mobile_number": "+94 77 892 0625",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "strong foundation in software engineering, i’ve built full-stack applications and scalable systems that bring ideas",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "PHP",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "PyTorch",
+          "React",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Deep Learning",
+          "Docker",
+          "Git",
+          "GitHub",
+          "Hugging Face",
+          "Jupyter",
+          "Machine Learning",
+          "NLP"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Data Science",
+          "Supervised Learning"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Full",
+        "project_description": " - Built a social blog site for APIIT students with profiles, likes, comments, and interactive posts. - Used Laravel and Filament for rapid admin panel development and efficient full-stack implementation. Sentiment Analysis with DistilBert Personal NLP Project | Python, Transformers (HuggingFace), scikit-learn | - Fine-tuned a pre-trained DistilBert model to classify tweets as positive, negative, or neutral. - Cleaned and preprocessed text data (tokenization, stop-word removal, removing non alphabetical characters) - Achieved an accuracy of 93% on validation data. - Published the model on the Hugging Face Models pipeline. HackX 9.0 - Semifinalists 2024 - Conducted in-depth domain analysis and market research to develop DOMUS, a university student lodging app. - Curated and pitched a comprehensive business proposal.",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Scikit-Learn",
+          "Nlp",
+          "Hugging Face"
+        ]
+      },
+      {
+        "project_name": "Acornic Ventures TravelTech Hackathon  – Finalists 2024",
+        "project_description": " - Proposed and planned Travus, a platform connecting tourists with local tour guides. - Delivered a business pitch and proposal focused on peer-led travel experiences. EXTRA-CURRICULARS Head of Design 2024-2025 - OZEANS ‘24 University of Colombo - Led the creative direction for merchandise and promotional materials, including T-shirts and social media posts. - Managed a design team, delegated tasks, and ensured timely delivery of cohesive visual content.",
+        "duration": "2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "PyData : Introduction to Python and Data Science 2023",
+      "Stat Circle"
+    ],
+    "all_skills": [
+      "AWS",
+      "Classification",
+      "Data Science",
+      "Deep Learning",
+      "Docker",
+      "Git",
+      "GitHub",
+      "Hugging Face",
+      "Jupyter",
+      "Machine Learning",
+      "MySQL",
+      "NLP",
+      "PHP",
+      "PyTorch",
+      "Python",
+      "React",
+      "SQL",
+      "Scikit-learn",
+      "Supervised Learning",
+      "TensorFlow"
+    ],
+    "num_skills": 20,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 2,
+    "evaluation_score": 40.0,
+    "skill_score": 24.0
+  },
+  {
+    "candidate_id": "CAND_7A2DF02A",
+    "candidate_name": "KASUN CHATHURANGA",
+    "email": "bkchathuranga2001@gmail.com",
+    "mobile_number": "+94704522800",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "highlymotivatedanddetail-orientedcomputerscienceundergraduatewithasolidfoundationindataanalysis,",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "Django",
+          "Express",
+          "Node.js",
+          "PyTorch",
+          "React",
+          "Scikit-learn"
+        ],
+        "technologies": [
+          "Git",
+          "GitHub",
+          "Linux",
+          "Matplotlib",
+          "NumPy",
+          "Pandas",
+          "Seaborn",
+          "Windows"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Django",
+      "Express",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Linux",
+      "Matplotlib",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "NumPy",
+      "Pandas",
+      "PyTorch",
+      "Python",
+      "React",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Windows"
+    ],
+    "num_skills": 20,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 30.0,
+    "skill_score": 24.0
+  },
+  {
+    "candidate_id": "CAND_DF46C549",
+    "candidate_name": "MINIDI SATHPIYUMI",
+    "email": "sathpiyumisam2003@gmail.com",
+    "mobile_number": "",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "a motivated and detail-oriented third-year data science undergraduate",
+      "university": "at nsbm green university. skilled in python, sql, data analysis, and web",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "React",
+          "Scikit-learn"
+        ],
+        "technologies": [
+          "Git",
+          "GitHub",
+          "Jupyter",
+          "Matplotlib",
+          "NumPy",
+          "Pandas",
+          "Power BI",
+          "Seaborn",
+          "Tableau"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Clustering",
+          "Data Analysis",
+          "Data Science",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Clustering",
+      "Data Analysis",
+      "Data Science",
+      "Git",
+      "GitHub",
+      "Jupyter",
+      "Matplotlib",
+      "MySQL",
+      "NumPy",
+      "Pandas",
+      "Power BI",
+      "Python",
+      "R",
+      "React",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Tableau"
+    ],
+    "num_skills": 19,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 28.5,
+    "skill_score": 22.8
+  },
+  {
+    "candidate_id": "CAND_486FB443",
+    "candidate_name": "Mohamed Rizvie Fathima Reshma",
+    "email": "reshmarizvie@gmail.com",
+    "mobile_number": "+94 74 091 1016",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) in information technology specializing in data science",
+      "university": "",
+      "year": "2027"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Kotlin",
+          "PHP",
+          "Python"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "GitHub",
+          "Machine Learning",
+          "Windows"
+        ],
+        "database": [
+          "SQLite"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Amina National School Matale.",
+      " Introduction to Data Science (CISCO) –",
+      " Diploma in Information &",
+      " Data Analytics Essentials (CISCO) – Apr",
+      "Communication Technology- 2019",
+      "International College of Business &",
+      "Technology (ICBT)",
+      " Ordinary Level (O/L) – 2018",
+      "Greenwood College International"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Data Science",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Kotlin",
+      "Machine Learning",
+      "PHP",
+      "Python",
+      "SQLite",
+      "Windows"
+    ],
+    "num_skills": 11,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 16.5,
+    "skill_score": 13.2
+  },
+  {
+    "candidate_id": "CAND_88864EA4",
+    "candidate_name": "MOHAMED NAJAHI",
+    "email": "mnajahi887@gmail.com",
+    "mobile_number": "+94769159107",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "i am a second-year bsc (hons) computer science with artificial",
+      "university": "intelligence undergraduate at national institute of business contact me at",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "R"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Azure",
+          "Computer Vision",
+          "Deep Learning",
+          "Git",
+          "GitHub",
+          "Machine Learning",
+          "NLP",
+          "OpenCV"
+        ],
+        "database": [
+          "Firebase",
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "PureH O",
+        "project_description": " 2 (Python, C++, R, Java) Created a system to measure and monitor water quality in real-time. Web Development 1.Features: Live data for pH, temperature, and turbidity with Live Databases alerts. (MySQL, MongoDB) 2.Technologies: ESP32, pH & turbidity sensors, IoT, Web Version Control Dashboard, Firebase, Google Sheets (Git, GitHub)",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "Java",
+          "C++",
+          "R",
+          "Sql",
+          "Go",
+          "C",
+          "Mysql",
+          "Mongodb",
+          "Firebase",
+          "Git",
+          "Github"
+        ]
+      },
+      {
+        "project_name": "Real",
+        "project_description": " IoT & Robotics Developed an interactive game where users control the snake using Embedded Systems hand movements. Data Analysis & Visualization 1.Technologies: OpenCV, Python, MediaPipe, Computer Vision, Languages Real-time Tracking English (Intermediate)",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Computer Vision",
+          "Opencv",
+          "Data Analysis"
+        ]
+      },
+      {
+        "project_name": "AI",
+        "project_description": " Sinhala(Intermediate) Designed a resume analyzer that scores CVs against job descriptions Tamil(Fluent) using NLP. 1.Technologies: Python, Natural Language Processing (NLP), Resume Parsing, Text Similarity Matching H.M.H.T Hikkaduwa Sign Language Detection With Voice Output | Ongoing Lecturer, Department of ICT Building a real-time system to convert sign language gestures to voice. 1.Technologies: Deep Learning, CNNs, OpenCV, AI Gesture Faculty of Technology, Rajarata University of Sri Lanka Recognition, Real-time Speech Synthesis Phone: +94729775568 Email :hashan.hikkaduwa@gmail.com Credential ID: 9752505 | Introduction to Generative AI | K Mahesh Madhushan Offered By Google Cloud Skills Boost | Google Course Director/ Lecturer Kandy Innovation Center, NIBM Credential ID: 9752563 | Introduction to Large Language Models | Offered By Google Cloud Skills Boost | Google Phone: +94754040403 Email : mahesh@nibm.lk Microsoft Certified: Azure AI Fundamentals | Offered By Great Learning Academy | Microsoft",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "Go",
+          "C",
+          "Deep Learning",
+          "Nlp",
+          "Opencv",
+          "Azure",
+          "Innovation"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Email :hashan.hikkaduwa@gmail.com",
+      "Credential ID: 9752505 | Introduction to Generative AI | K Mahesh Madhushan",
+      "Offered By Google Cloud Skills Boost | Google Course Director/ Lecturer",
+      "Kandy Innovation Center, NIBM",
+      "Credential ID: 9752563 | Introduction to Large Language",
+      "Models | Offered By Google Cloud Skills Boost | Google Phone: +94754040403",
+      "Email : mahesh@nibm.lk",
+      "Microsoft Certified: Azure AI Fundamentals | Offered By",
+      "Great Learning Academy | Microsoft"
+    ],
+    "all_skills": [
+      "Azure",
+      "Computer Vision",
+      "Data Analysis",
+      "Deep Learning",
+      "Firebase",
+      "Git",
+      "GitHub",
+      "Java",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "NLP",
+      "OpenCV",
+      "Python",
+      "R"
+    ],
+    "num_skills": 15,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 3,
+    "evaluation_score": 37.5,
+    "skill_score": 18.0
+  },
+  {
+    "candidate_id": "CAND_6885D418",
+    "candidate_name": "Nathasha S.",
+    "email": "nshettiarachchi2019@gmail.com",
+    "mobile_number": "+94 72 378 7196",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc. in information and communication technology.",
+      "university": "",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Computer Vision",
+          "Machine Learning",
+          "Neural Networks"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Computer Vision",
+      "Machine Learning",
+      "MySQL",
+      "Neural Networks",
+      "Python",
+      "R"
+    ],
+    "num_skills": 6,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 9.0,
+    "skill_score": 7.199999999999999
+  },
+  {
+    "candidate_id": "CAND_3C8B57E2",
+    "candidate_name": "Navatharshini Balachandran",
+    "email": "navatharshini.22@cse.mrt.ac.lk",
+    "mobile_number": "+94772435338",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "universityofmoratuwa,departmentofcomputerscienceandengineering",
+      "university": "",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "FastAPI",
+          "Node.js",
+          "React",
+          "Scikit-learn",
+          "Streamlit"
+        ],
+        "technologies": [
+          "GitHub",
+          "Matplotlib",
+          "NumPy",
+          "OpenCV",
+          "Pandas",
+          "Postman",
+          "REST API",
+          "Seaborn",
+          "Vercel"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "• TheDataScienceCourse: CompleteDataScienceBootcamp2025,Udemy(Ongoing)",
+      "• Spiritx2025-Stage1: Xcelerate,WordSpirit360 2025",
+      "Skills: WebDevelopment",
+      "• FeatureEngineering,Kaggle Mar2025",
+      "Skills: FeatureEngineering",
+      "• IntrotoMachineLearning,Kaggle Feb2025",
+      "Skills: MachineLearning",
+      "• Pandas,Kaggle Feb2025",
+      "Skills: Pandas(Software)",
+      "• MoraXtreme9.0-AlgorithmicCodingCompetition,IEEEStudentBranch,UniversityofMoratuwa Oct2024",
+      "Skills: CompetitiveProgramming,DataStructures,Algorithms",
+      "• OOPsinJava,GreatLearning Oct2023",
+      "Skills: Java,Object-OrientedProgramming",
+      "Skills: ProblemSolving",
+      "• WebDesignforBeginners,UniversityofMoratuwa(CODL) 2022",
+      "Skills: WebDesign,HTML,CSS",
+      "• PythonforBeginners,UniversityofMoratuwa(CODL) Jun2022",
+      "Skills: Python",
+      "English: Fluent",
+      "Tamil: Nativeproficiency",
+      "Sinhala: Basic",
+      "Volunteering",
+      "• CompanyCoordinationTeamMember–CareerFair,January2025",
+      "• Mentor–CodeJam: FutureMinds",
+      "Professional Memberships",
+      "• Member,IEEE(InstituteofElectricalandElectronicsEngineers)",
+      "• Member,IESL(InstitutionofEngineers,SriLanka)"
+    ],
+    "all_skills": [
+      "Express",
+      "FastAPI",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Matplotlib",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "NumPy",
+      "OpenCV",
+      "Pandas",
+      "Postman",
+      "Python",
+      "REST API",
+      "React",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Streamlit",
+      "Vercel"
+    ],
+    "num_skills": 22,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 33.0,
+    "skill_score": 26.4
+  },
+  {
+    "candidate_id": "CAND_59211E5D",
+    "candidate_name": "Yavindi",
+    "email": "nethyaaadias@gmail.com",
+    "mobile_number": "+94 70 727 1542",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "a dedicated data science graduate from sliit and current undergraduate at the university",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Deep Learning",
+          "Linux",
+          "Machine Learning"
+        ],
+        "database": [
+          "MySQL",
+          "Oracle"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Oracle Database Administration and Performance Optimization on Linux - Installed",
+      "Oracle 23ai, configured databases, optimized memory with initialization parameters,",
+      "implemented SQL-based data redaction, and managed control files, redo logs, and",
+      "backup/recovery processes.",
+      "“NeuralCoco” - Utilized machine learning for tissue culture and plant protection in",
+      "coconut cultivation, performing image classification and object detection to analyze",
+      "coconut embryos and identify shoots.",
+      "\"Adventure-Works\" - A robust data warehouse was developed to manage filtered",
+      "information and deliver insightful dashboards, empowering businesses to make informed",
+      "decisions and identify critical trends efficiently.",
+      "\"World Shipper\" - Designing a well-structured data warehouse & implementing a robust",
+      "ETL process to ensure clean, organized data ready for analysis and decision-making.",
+      "“Movie Recommendation System” - Developed a Python-based movie recommendation",
+      "system using Natural Language Processing and cosine similarity, enabling personalized",
+      "movie suggestions based on user-provided titles and identified preferences.",
+      "Introduction to Oracle SQL - Udemy - Query writing, database objects, and Oracle SQL",
+      "architecture.",
+      "UNIX: Getting Started – Udemy - Gained UNIX/Linux basics, file permissions, scripting,",
+      "and command-line tools.",
+      "LANGUAGES - Python, SQL, R, Java, Linux INTERESTED AREAS - Machine Learning,",
+      "TOOLS - PowerBI, IBM Cognos, Oracle, Deep Learning, Data Analytics, Data",
+      "MySql, R Studio, Anaconda Navigator, Engineering, Mathematics, Statistics",
+      "TensorFlow, AWS, SSIS, SSMS SOFT SKILLS - Communication, Leadership,",
+      "Time management",
+      "BSC (HONS) IN INFORMATION Dr. Prasanna S. Haddela Oshada Amila",
+      "TECHNOLOGY, DATA SCIENCE Head/Graduate Studies Specialist Software",
+      "SRI LANKA INSTITUTE OF Senior Lecturer(HG) Engineer",
+      "INFORMATION TECHNOLOGY (SLIIT) Faculty of Computing LSEG Technology",
+      "2021 - 2024 SLIIT Malabe Millennium Drive,",
+      "BSC (HONS) IN PHYSICAL SCIENCE 0714705502/ 0117544126 Malabe 0771661737",
+      "UNIVERSITY OF PERADENIYA prasanna.s@sliit.lk oshada.amila@lseg.com",
+      "2022 - 2026"
+    ],
+    "all_skills": [
+      "AWS",
+      "Classification",
+      "Data Science",
+      "Deep Learning",
+      "Java",
+      "Linux",
+      "Machine Learning",
+      "MySQL",
+      "Oracle",
+      "Python",
+      "R",
+      "SQL",
+      "TensorFlow"
+    ],
+    "num_skills": 13,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 19.5,
+    "skill_score": 15.6
+  },
+  {
+    "candidate_id": "CAND_DC4257BB",
+    "candidate_name": "github.com/YashmiKash",
+    "email": "yashmiwijesiriwardhana@gmail.com",
+    "mobile_number": "+9478 433 4851",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "yashmi kashmira wijesiriwardhana information system undergraduate",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python"
+        ],
+        "frameworks": [
+          "React"
+        ],
+        "technologies": [
+          "Excel",
+          "GitHub",
+          "Power BI",
+          "Selenium"
+        ],
+        "database": [
+          "MySQL",
+          "PostgreSQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Japanese Language Proficiency Test - N4 Japanese Language Proficiency Test - N5",
+      "MySQL PostgreSQL HTML",
+      "CSS Power BI Python",
+      "Technical Writing Microsoft Excel Selenium",
+      "Adobe Photoshop Visual Studio Code PHP",
+      "Soft Skills",
+      "Time Management",
+      "Critical Thinking",
+      "Team Collaboration",
+      "Desicion Making",
+      "Sinhala English Japanese"
+    ],
+    "all_skills": [
+      "Excel",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "MySQL",
+      "PHP",
+      "PostgreSQL",
+      "Power BI",
+      "Python",
+      "React",
+      "Selenium"
+    ],
+    "num_skills": 11,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 16.5,
+    "skill_score": 13.2
+  },
+  {
+    "candidate_id": "CAND_03B358C0",
+    "candidate_name": "SHANIKA PERERA",
+    "email": "gshperera99@gmail.com",
+    "mobile_number": "+94 77 291 9715",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "i am a final-year information technology undergraduate specializing in data science at the sri lanka institute of information",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Kotlin",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Flask",
+          "Node.js",
+          "React"
+        ],
+        "technologies": [
+          "Computer Vision",
+          "Excel",
+          "GitHub",
+          "Machine Learning",
+          "NumPy",
+          "Pandas",
+          "Tableau"
+        ],
+        "database": [
+          "Firebase",
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Clustering",
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "",
+        "project_description": "",
+        "duration": "ITCC 2025) (H-index: 12",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": "Mobile Phone Price Predictor",
+        "project_description": " Python | JupyterNotebook | Pandas | Numpy | Flask Web application to predict the mobile phone price according to their brand and features",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Flask",
+          "Jupyter",
+          "Pandas",
+          "Numpy"
+        ]
+      },
+      {
+        "project_name": "Movie Recommendation System",
+        "project_description": " Python | JupyterNotebook | Pandas | Numpy | Content based recommendation system to show recommended movies for their searching.",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Jupyter",
+          "Pandas",
+          "Numpy"
+        ]
+      },
+      {
+        "project_name": "Android Mobile Application",
+        "project_description": " Kotlin | Android Studio | Firebase | Figma Mobile Application for mange finance effectively",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "Kotlin",
+          "C",
+          "Firebase"
+        ]
+      },
+      {
+        "project_name": "https://github.com/gshperera/MoneyMate",
+        "project_description": "",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": "Online Clothing Store",
+        "project_description": " HTML | CSS | JavaScript | React | NodeJs | MongoDB Web application for an online clothing store with new technologies such as MERN stack",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Java",
+          "Javascript",
+          "R",
+          "Go",
+          "C",
+          "React",
+          "Mongodb"
+        ]
+      },
+      {
+        "project_name": "Event Planning System",
+        "project_description": " HTML | CSS | JavaScript | Java | MySQL | UIkit Web application (using MVC architecture) for customers to plan any kind of event efficiently.",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Java",
+          "Javascript",
+          "R",
+          "Sql",
+          "C",
+          "Mysql"
+        ]
+      },
+      {
+        "project_name": "https://github.com/gshperera/OOP",
+        "project_description": "",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": []
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Introduction to Computer Vision - Great Learning Academy",
+      "Probability for Data Science - Great Learning Academy",
+      "Python For Data Science, AI & Development - Offered through Coursera",
+      "Crash Course on Python- An online non-credit course authorized by Google and offered through Coursera",
+      "Python For Data Science - Great Learning Academy",
+      "Backend Web Development using JavaScript, Node.js and Express - Microsoft Learn Student Ambassadors"
+    ],
+    "all_skills": [
+      "Clustering",
+      "Computer Vision",
+      "Data Science",
+      "Excel",
+      "Express",
+      "Firebase",
+      "Flask",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Kotlin",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "NumPy",
+      "Pandas",
+      "Python",
+      "R",
+      "React",
+      "SQL",
+      "Tableau"
+    ],
+    "num_skills": 22,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 8,
+    "evaluation_score": 73.0,
+    "skill_score": 26.4
+  },
+  {
+    "candidate_id": "CAND_EFAA1780",
+    "candidate_name": "RANAKA FERNANDO",
+    "email": "ranakafernando@gmail.com",
+    "mobile_number": "+94 770093285",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "it undergraduate",
+      "university": "",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "JavaScript",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Flask",
+          "Keras",
+          "Node.js",
+          "PyTorch",
+          "React",
+          "Scikit-learn",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Azure",
+          "Deep Learning",
+          "Excel",
+          "Git",
+          "GitHub",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "NLTK",
+          "NumPy",
+          "OpenCV",
+          "Pandas",
+          "Power BI",
+          "Seaborn",
+          "SpaCy"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Data Analysis",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "1.Personalized Ad",
+        "project_description": " Technologies: Python, PyTorch, Transformers, spaCy, Pandas Developed an AI system for personalized ad copy generation using user profiles and product data. Employed a RAG approach with FAISS for search, T5 for generation, and SentenceTransformers for context. Generated synthetic data with Faker and optimized NLP pipelines using FP16, gradient accumulation, and dynamic GPU memory",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Pytorch",
+          "Nlp",
+          "Spacy",
+          "Pandas"
+        ]
+      },
+      {
+        "project_name": "2. SentiMind – Real",
+        "project_description": " Technologies: Python, Flask, scikit-learn, NLTK, HTML/CSS, Azure Developed a real-time sentiment analysis web app with Flask, featuring text preprocessing, vectorization, and classification using scikit-learn and NLTK. Created a responsive UI to display results and track analysis history. Integrated logging for monitoring and deployed the app on Microsoft Azure.",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "C",
+          "Scikit-Learn",
+          "Flask",
+          "Azure",
+          "Nltk",
+          "Classification"
+        ]
+      },
+      {
+        "project_name": "3.LLM",
+        "project_description": " Technologies: Python, OpenAI API, LangChain, Streamlit Implemented a Retrieval-Augmented Generation (RAG) pipeline with LangChain and GPT, enabling dynamic knowledge retrieval and contextual prompt engineering. Deployed the chatbot via Streamlit, supporting memory- based multi-turn conversations. 4. CrowdSnap Market Minds Challenge – 2024 (Group Research Project) Technologies: Python, R, Data Analysis & Visualization Research Topic: Impact of Digital Nomadism on Sri Lanka’s Tourism Industry Researched the impact of digital nomads on Sri Lanka’s tourism, analyzing trends and local economies using Python and R for data cleaning, modeling, and visualization. Delivered actionable insights and recommendations for sustainable tourism development. 5. Inventory, Sales & Repair Management System (Individual Project) Technologies: React, Node.js, Express, MySQL, JWT Designed and developed a full-stack web application for a PC shop to manage inventory, sales (POS), and device repair operations. Built RESTful APIs using Node.js and Express, and implemented a responsive frontend with React. Integrated MySQL for real-time data storage and inventory tracking. Added secure, role-based access control using JWT authentication to ensure data integrity and user authorization. 6. Flower Classification using CNN (Individual Project) Technologies: Python, TensorFlow/Keras, Tkinter, OpenCV Designed and trained a CNN using TensorFlow/Keras to classify Anthurium, Rose, and Sunflower images. Implemented Conv2D and MaxPooling layers and created a Tkinter-based interface for image testing with confidence score visualization. [See Page 2 →] 7. Heart Disease Prediction System using RNN (Group Project) Technologies: Python, TensorFlow, Flask Built an RNN deep learning model with dropout and batch normalization to predict heart disease from patient metrics. Preprocessed and engineered features using Kaggle data to optimize performance. Achieved high accuracy and deployed the model via Flask for real-time prediction. 8. Emotion Detection using CNN (Individual Project) Technologies: Python, TensorFlow/Keras, OpenCV, Flask, CNN Built a real-time emotion detection system using a CNN trained on Kaggle’s Facial Expression Recognition dataset (7 emotion classes). Used OpenCV with Haar Cascade for face detection and preprocessing (48x48 resizing, normalization). Integrated live webcam input and deployed the application via Flask with a responsive UI. 2nd Runner-Up – Salesforce HACKFEST 2025 | CodeTerriers 2nd Runners-Up – IdeaSprint Finals 2025 | University of Kelaniya 1st Runner-Up – CrowdSnap Market Minds Challenge 2024 | University of Kelaniya Semi-finalist – HackVenture 1.0 | AIESEC, University of Kelaniya Programming Languages: Python, JavaScript, SQL, HTML, CSS Machine Learning & AI: scikit-learn, TensorFlow, Keras, NLTK, Transformers, PyTorch, LangChain Data Analytics & Visualization: Power BI, Excel, pandas, NumPy, matplotlib, seaborn, R Web Development: React, Node.js, Express.js, Tailwind CSS, UX/UI, RESTful APIs, Authentication (JWT, OAuth, OTP) Tools & Platforms: Git, Microsoft Azure, Streamlit, OpenCV, FAISS, n8n Other Technologies: MS Office, Figma, Canva Effective Communication Leadership Event Planning Problem Solving Adaptability Quick Learning Critical Thinking Project Management Self-Motivation Team Collaboration Time Management Supervised Machine Learning: Regression and Classification – Coursera (by Stanford University) AI/ML Engineer (Stage 1) – SLIIT Python for Beginners – University of Moratuwa Power BI for Beginners - Simplilearn (Microsoft-endorsed) Event & Logistics Coordinator, Rotaract Club (Project Eduketha) – University of Kelaniya Project Coordinator, LEO Club (Poverty and Hunger Avenue DIRISAVI 4.0) – University of Kelaniya Member, IMSSA Media Club – University of Kelaniya: Provided media and technical support for university events Member, Gavel Club - University of Kelaniya Volunteer, Sasnaka Sansada Foundation, 2022 - 2024",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "Java",
+          "Javascript",
+          "R",
+          "Sql",
+          "C",
+          "Tensorflow",
+          "Pytorch",
+          "Keras",
+          "Scikit-Learn",
+          "Flask",
+          "React",
+          "Express",
+          "Node.Js",
+          "Streamlit",
+          "Mysql",
+          "Machine Learning",
+          "Deep Learning",
+          "Opencv",
+          "Git",
+          "Azure",
+          "Nltk",
+          "Pandas",
+          "Numpy",
+          "Matplotlib",
+          "Seaborn",
+          "Power Bi",
+          "Excel",
+          "Data Analysis",
+          "Classification",
+          "Regression",
+          "Problem Solving",
+          "Communication",
+          "Leadership",
+          "Critical Thinking",
+          "Collaboration",
+          "Time Management",
+          "Adaptability"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Supervised Machine Learning: Regression and Classification – Coursera (by Stanford University)",
+      "AI/ML Engineer (Stage 1) – SLIIT",
+      "Python for Beginners – University of Moratuwa",
+      "Power BI for Beginners - Simplilearn (Microsoft-endorsed)",
+      "Event & Logistics Coordinator, Rotaract Club (Project Eduketha) – University of Kelaniya",
+      "Project Coordinator, LEO Club (Poverty and Hunger Avenue DIRISAVI 4.0) – University of Kelaniya",
+      "Member, IMSSA Media Club – University of Kelaniya: Provided media and technical support for university events",
+      "Member, Gavel Club - University of Kelaniya",
+      "Volunteer, Sasnaka Sansada Foundation, 2022 - 2024"
+    ],
+    "all_skills": [
+      "Azure",
+      "Classification",
+      "Data Analysis",
+      "Deep Learning",
+      "Excel",
+      "Express",
+      "Flask",
+      "Git",
+      "GitHub",
+      "JavaScript",
+      "Keras",
+      "Machine Learning",
+      "Matplotlib",
+      "MySQL",
+      "NLP",
+      "NLTK",
+      "Node.js",
+      "NumPy",
+      "OpenCV",
+      "Pandas",
+      "Power BI",
+      "PyTorch",
+      "Python",
+      "R",
+      "React",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "SpaCy",
+      "Streamlit",
+      "TensorFlow"
+    ],
+    "num_skills": 32,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 3,
+    "evaluation_score": 63.0,
+    "skill_score": 38.4
+  },
+  {
+    "candidate_id": "CAND_836B6254",
+    "candidate_name": "RAVISHKA DISSANAYAKA",
+    "email": "ravishkanimsara20@gmail.com",
+    "mobile_number": "+94 78 182 7743",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "software engineering (ug)",
+      "university": "+94 78 182 7743 university with a strong passion for ai, machine learning, and full-stack",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Dart",
+          "Java",
+          "JavaScript",
+          "Kotlin",
+          "PHP",
+          "Python"
+        ],
+        "frameworks": [
+          "Django",
+          "FastAPI",
+          "Flutter",
+          "React",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Deep Learning",
+          "Docker",
+          "Git",
+          "GitHub",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "NLTK",
+          "NumPy",
+          "Pandas",
+          "REST API",
+          "Seaborn"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Clustering",
+          "Data Science",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "2022 Preprocessed dataset with pandas; created visualization insights using",
+      "National Institute Of Business Management matplotlib and seaborn",
+      "| Sri Lanka Integrated user input and deployed using Django and joblib",
+      "Tech Stack: Python, Django, pandas, NumPy, matplotlib, seaborn, joblib",
+      "Customer Segmentation",
+      "REFERENCE Applied K-Means clustering and PCA to analyze customer behavior and",
+      "segment markets",
+      "Created visual representations for stakeholder insights and business strategies",
+      "ANUTHTHARA SENANANAYAKA Developed in Jupyter Notebook for flexible exploration and sharing",
+      "Head of Operations, Tech Stack: Python, scikit-learn, pandas, matplotlib, seaborn",
+      "Asia Pacific Institute Hardware Store App",
+      "Of Information Technology, Developed a comprehensive mobile shopping app using Flutter",
+      "Kandy Campus Integrated user login/registration with custom APIs; dual storage via API and",
+      "offline JSON",
+      "Phone:+94 81 781 8100",
+      "Added geolocation to locate stores, camera for QR scanning, and battery status",
+      "Email:anutthara@apiit.lk",
+      "Implemented light/dark mode, responsive layout, and intuitive navigation",
+      "Tech Stack: Flutter, Dart, REST API, MongoDB, MySQL",
+      "Lecturer, Pet Care Management System",
+      "Asia Pacific Institute Built a full-featured web platform for pet owners and vets",
+      "Of Information Technology, Key features: vaccination tracking, appointment booking, emergency QR",
+      "Kandy Campus access, chat, and pet store",
+      "Phone:+94 81 781 8109 Role-based access for admins/vets/users; includes inventory management and",
+      "Email:valuka@apiit.lk",
+      "Developed with Laravel and Jetstream; integrated Chatify for communication",
+      "Tech Stack: Laravel, MySQL, Filament, Jetstream, Chatify, GitHub, Jira, Slack"
+    ],
+    "all_skills": [
+      "Classification",
+      "Clustering",
+      "Dart",
+      "Data Science",
+      "Deep Learning",
+      "Django",
+      "Docker",
+      "FastAPI",
+      "Flutter",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Jupyter",
+      "Kotlin",
+      "Machine Learning",
+      "Matplotlib",
+      "MongoDB",
+      "MySQL",
+      "NLP",
+      "NLTK",
+      "NumPy",
+      "PHP",
+      "Pandas",
+      "Python",
+      "REST API",
+      "React",
+      "Regression",
+      "Scikit-learn",
+      "Seaborn",
+      "TensorFlow"
+    ],
+    "num_skills": 31,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 46.5,
+    "skill_score": 37.199999999999996
+  },
+  {
+    "candidate_id": "CAND_D4E1A4F0",
+    "candidate_name": "PRABHASHI MAHAWATTA",
+    "email": "djprabhashi@gmail.com",
+    "mobile_number": "077 2430892",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "of data science fundamentals, including data wrangling, feature engineering, and predictive analytics, as",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Keras",
+          "PyTorch",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "BeautifulSoup",
+          "Computer Vision",
+          "Deep Learning",
+          "Docker",
+          "GCP",
+          "Git",
+          "GitHub",
+          "Jupyter",
+          "Linux",
+          "Machine Learning",
+          "Matplotlib",
+          "NumPy",
+          "OpenCV",
+          "Pandas",
+          "Power BI",
+          "Scrapy",
+          "Seaborn",
+          "Tableau"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL",
+          "Oracle"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization",
+          "Feature Engineering",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Empirical Research on Market Preferences Apps in Google Play",
+        "project_description": " As part of a university project, I conducted empirical research on market preferences for apps in Google Play. Using a linear regression model, I analyzed app characteristics and installation rates to uncover patterns in customer demand and optimize app promotion strategies. This project provided actionable insights into factors influencing app popularity and engagement, with Python used for data processing, analysis, and model development. Technologies: Programming Language: Python Data Analysis Libraries: Pandas, NumPy, Scikit-Learn Visualization Tools: Matplotlib, Seaborn Statistical Techniques: Linear Regression Model",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "Go",
+          "C",
+          "Scikit-Learn",
+          "Pandas",
+          "Numpy",
+          "Matplotlib",
+          "Seaborn",
+          "Data Analysis",
+          "Regression"
+        ]
+      },
+      {
+        "project_name": "Music Genre Classification",
+        "project_description": " As a project, I explored various machine learning algorithms to classify ten different music genres using the GTZAN Dataset. This analysis aimed to deepen understanding of genre-specific characteristics and improve recognition accuracy through model evaluation and tuning. Python was utilized for implementing and optimizing the classification models. Technologies: Programming Language: Python Machine Learning Algorithms: k-Nearest Neighbors,Decision Trees,Random Forest, Data Analysis Libraries: Pandas, NumPy Machine Learning Libraries: Scikit-Learn",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "Go",
+          "C",
+          "Scikit-Learn",
+          "Machine Learning",
+          "Pandas",
+          "Numpy",
+          "Data Analysis",
+          "Classification"
+        ]
+      },
+      {
+        "project_name": "Enhancing Sentence",
+        "project_description": " As a Final research project, I developed a model trained on the LRW dataset to enhance sentence- level lip reading accuracy. The primary goal was to improve accessibility for deaf individuals and to explore potential applications in security. This project involved preprocessing video data, feature extraction, and implementing machine learning techniques to achieve higher recognition accuracy.. Technologies: Programming Language: Python Computer Vision Library: OpenCV Machine Learning Frameworks: TensorFlow, Keras Data Processing Libraries: Pandas, NumPy Visualization Tools: Matplotlib DATE OF BIRTH - 02/11/2000 | NATIONALITY - Sri Lankan | ETHNICITY – Sinhalese NON-RELATED REFEREES Mr. Balakumar Thurairasa - Course Director of Data Science at NIC, NIBM Mobile No. : 077 465 2621 | E-mail: balakumar@nibm.lk Ms. Dilini Wijewardena - Data Science & Analytics Engineer at SLT Mobile No. : 070 472 4764 | E-mail: dilini@slt.com.lk",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "Go",
+          "C",
+          "Tensorflow",
+          "Keras",
+          "Machine Learning",
+          "Computer Vision",
+          "Opencv",
+          "Pandas",
+          "Numpy",
+          "Matplotlib",
+          "Data Science"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "English Language Course (British Council) - 2016",
+      "High school",
+      "Sri Sumangala Balika National School",
+      "GCE A/L 2020 (ART Stream)"
+    ],
+    "all_skills": [
+      "AWS",
+      "Azure",
+      "BeautifulSoup",
+      "Classification",
+      "Computer Vision",
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Docker",
+      "Feature Engineering",
+      "GCP",
+      "Git",
+      "GitHub",
+      "Hadoop",
+      "Jupyter",
+      "Keras",
+      "Linux",
+      "Machine Learning",
+      "Matplotlib",
+      "MongoDB",
+      "MySQL",
+      "NumPy",
+      "OpenCV",
+      "Oracle",
+      "Pandas",
+      "Power BI",
+      "PyTorch",
+      "Python",
+      "R",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Scrapy",
+      "Seaborn",
+      "Spark",
+      "Tableau",
+      "TensorFlow"
+    ],
+    "num_skills": 38,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 3,
+    "evaluation_score": 72.0,
+    "skill_score": 45.6
+  },
+  {
+    "candidate_id": "CAND_EEA0C2D1",
+    "candidate_name": "Sudith Waas",
+    "email": "sudithgunawardhana@gmail.com",
+    "mobile_number": "+94 76 623 3920",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "b.sc. data science (honours) graduate",
+      "university": "",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Keras",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Docker",
+          "Excel",
+          "GitHub",
+          "Machine Learning",
+          "Matplotlib",
+          "NumPy",
+          "Pandas",
+          "Seaborn"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Data Science",
+          "Statistical Analysis"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "B.Sc. Honours Degree in Data Science (Second Class Upper Division)",
+      "Faculty of Science, University of Peradeniya",
+      "GPA - 3.61 (Completed)",
+      "English 70%",
+      "G.C.E. Advanced Level Examination 2018 (3158365)",
+      "1 A, 1 B & 1 C Physical Science stream (Vijaya National College, Matale)",
+      "G.C.E. Ordinary Level Examination 2014 (43615988)",
+      "2 A's, 4 B's 1 C & 2 S's (Vijayapala Maha Vidyalaya, Matale)",
+      "Leadership EXTRACURRICULAR ACTIVITIES",
+      "Analytical & Critical Thinking Editor (2024) at Data Science Society (DataEX), University of",
+      "Presentation",
+      "Former Treasurer (2023) at We Lead Career Skills Society, University of",
+      "DATA TOOLS AND LANGUAGES Organising Committee member in the project, We Lead “Career",
+      "Fiesta’23”, Career and Educational Fair 2023 organised by We Lead",
+      "Python Numpy Career Skills Society, University of Peradeniya",
+      "R Pandas PROJECTS",
+      "RStudio Matplotlib",
+      "Contextualized fake news detection using transformer models",
+      "SQL Seaborn (N-able (PVT) Ltd):",
+      "https://github.com/SudithWaas/DSC3263_Fake_News_Detection_Model",
+      "Microsoft Excel Tensorflow",
+      "A data-driven approach to addressing worker shortages and optimising",
+      "PowerBI Keras team dynamics in garment manufacturing",
+      "(final year research project)",
+      "Scikit-learn Docker",
+      "Dr. Ruwanthini Siyambalapitiya (PhD) Dr. Lakshika S. Nawarathna (PhD)",
+      "Big Data Analytics",
+      "Senior Lecturer Senior Lecturer",
+      "Artificial Intelligence and Expert Systems Department of Statistics & Computer Department of Statistics & Computer",
+      "Science Science",
+      "Machine Learning",
+      "Faculty of Science Faculty of Science",
+      "Neural Network University of Peradeniya University of Peradeniya",
+      "Advanced Database Management Systems",
+      "Phone: +94 76 899 5695 Phone: +94 76 755 2223",
+      "Email: ruwanthini@sci.pdn.ac.lk Email: lakshikas@sci.pdn.ac.lk"
+    ],
+    "all_skills": [
+      "Data Science",
+      "Docker",
+      "Excel",
+      "GitHub",
+      "Keras",
+      "Machine Learning",
+      "Matplotlib",
+      "NumPy",
+      "Pandas",
+      "Python",
+      "R",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Statistical Analysis",
+      "TensorFlow"
+    ],
+    "num_skills": 16,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 24.0,
+    "skill_score": 19.2
+  },
+  {
+    "candidate_id": "CAND_B8AC6392",
+    "candidate_name": "RIKHAZ AHAMED",
+    "email": "rikhazahamed300@gmail.com",
+    "mobile_number": "",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bachelor of science in artificial intelligence",
+      "university": "pak-austria fachhochschule institute of applied sciences and technology, pakistan",
+      "year": "2023"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "Flask",
+          "Flutter",
+          "Keras",
+          "React",
+          "Scikit-learn"
+        ],
+        "technologies": [
+          "Computer Vision",
+          "Deep Learning",
+          "Git",
+          "GitHub",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NLTK",
+          "NumPy",
+          "OpenCV",
+          "Pandas",
+          "Windows",
+          "YOLO"
+        ],
+        "database": [
+          "Oracle"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Regression",
+          "Supervised Learning"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Classification",
+      "Computer Vision",
+      "Deep Learning",
+      "Flask",
+      "Flutter",
+      "Git",
+      "GitHub",
+      "Java",
+      "Jupyter",
+      "Keras",
+      "Machine Learning",
+      "Matplotlib",
+      "NLTK",
+      "NumPy",
+      "OpenCV",
+      "Oracle",
+      "Pandas",
+      "Python",
+      "React",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Supervised Learning",
+      "Windows",
+      "YOLO"
+    ],
+    "num_skills": 25,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 37.5,
+    "skill_score": 30.0
+  },
+  {
+    "candidate_id": "CAND_993D510F",
+    "candidate_name": "SAAIHISHAN KIRUBAAHARAN",
+    "email": "saaihishandhoni@gmail.com",
+    "mobile_number": "+94 723682032",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bachelor of the science of engineering (hons)",
+      "university": "",
+      "year": "2019"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "MATLAB",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "PyTorch",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Deep Learning",
+          "Docker",
+          "Jupyter",
+          "Kubernetes",
+          "Linux",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "NLTK",
+          "NumPy",
+          "OCR",
+          "Pandas",
+          "Power BI",
+          "Seaborn",
+          "Tableau"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Classification",
+          "Data Analysis",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Stanford Engineering CS 229: Machine Learning | Open-Course Introduction to Agile development and Scrum | Credential",
+      "Stanford Engineering CS 230: Deep Learning | Open-Course Introduction to Software Engineering | Credential",
+      "Introduction to Containers w/ Docker, Kubernetes & Openshift | Credintial Introduction to Cloud Computing | Credential",
+      "Hands-on Introduction to Linux Commands and shell Scripting | Credintial Introduction to DevOps | Credential"
+    ],
+    "all_skills": [
+      "Classification",
+      "Data Analysis",
+      "Deep Learning",
+      "Docker",
+      "Jupyter",
+      "Kubernetes",
+      "Linux",
+      "MATLAB",
+      "Machine Learning",
+      "Matplotlib",
+      "NLP",
+      "NLTK",
+      "NumPy",
+      "OCR",
+      "Pandas",
+      "Power BI",
+      "PyTorch",
+      "Python",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Tableau",
+      "TensorFlow"
+    ],
+    "num_skills": 24,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 36.0,
+    "skill_score": 28.799999999999997
+  },
+  {
+    "candidate_id": "CAND_917512DC",
+    "candidate_name": "SANDUTHARI JAYASINGHE",
+    "email": "jmnsanduthari@gmail.com",
+    "mobile_number": "+94 71 131 8287",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "undergraduate 2022 - present",
+      "university": "an undergraduate studying data science at sri lanka institute of information",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Kotlin",
+          "PHP",
+          "Python",
+          "R"
+        ],
+        "frameworks": [
+          "React",
+          "Spring",
+          "Streamlit"
+        ],
+        "technologies": [
+          "Excel",
+          "Git",
+          "GitHub",
+          "Machine Learning",
+          "Postman",
+          "Power BI"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "|Physics",
+        "project_description": " Synthetic Cannabis Dispencery Database Sujatha Vidyalaya - Matara Analysis of the dataset to make a data warehouse. G.C.E. ORDINARY LEVEL EXAMINATION - 2017 A cube with OLAP Operations. 9 A’s Reports to show the results of the analysis numerically. Sujatha Vidyalaya - Matara Technologies used : SSMS, SSIS, SSAS, Power BI, Excel Book Recommendation System",
+        "duration": "Feb 2025 - June 2025",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C",
+          "Power Bi",
+          "Excel"
+        ]
+      },
+      {
+        "project_name": "",
+        "project_description": " Programming Languages Pre-processed and cleaned the data set. Python PHP Implemented recommendation logic. R JavaScript Java C# Technologies used : Python, Streamlit, MongoDB HTML Kotlin",
+        "duration": "July 2024 - Nov 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "Java",
+          "Javascript",
+          "C#",
+          "R",
+          "Php",
+          "Go",
+          "Kotlin",
+          "C",
+          "Streamlit",
+          "Mongodb"
+        ]
+      },
+      {
+        "project_name": "CSS Streamlit Customer Churn Prediction System",
+        "project_description": " Databases Pre-processed and cleaned the data set. MySQL Trained machine learning models. Hyper-parameter tuning for increasing the accuracy of the model. MongoDB Version Controlling Implemented frontend using streamlit. Git Github Technologies used : Python, Streamlit, Machine Learning Skill Sharing and Learning Management System",
+        "duration": "July 2024 - Nov 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "Sql",
+          "Go",
+          "C",
+          "Streamlit",
+          "Mysql",
+          "Mongodb",
+          "Machine Learning",
+          "Git",
+          "Github"
+        ]
+      },
+      {
+        "project_name": "",
+        "project_description": " Problem Solving Implemented CRUD operations for skill sharing. Critical Thinking Overcame various development challengers and resolved them. Creativity Organized Conducted API testing. Self-Motivated Technologies used : Spring-Boot, React.js, MongoDB, Postman Time Management Vehicle Repair & Services Management System",
+        "duration": "July 2024 - Nov 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "Go",
+          "C",
+          "React",
+          "Spring",
+          "Mongodb",
+          "Postman",
+          "Problem Solving",
+          "Critical Thinking",
+          "Time Management"
+        ]
+      },
+      {
+        "project_name": "",
+        "project_description": " Communication Skills Implemented CRUD operations for supplier management. Overcame various development challengers and resolved them. Python for Beginners (CODL - Conducted API testing. University of Moratuwa) Certificate for completion of Technologies used: MongoDB, ExpressJS, ReactJS, NodeJS, Postman Machine Learning course (Simplilearn) ACHIEVEMENTS Mr. N. A. N. J. Maduwansha Miss Uthpala Samarakoon BA (Hons) (USJ), MSc (Moratuwa) Senior lecturer, Senior Lecturer Participation in final round of Department of Social Statistics, SLIIT, Malabe Campus, Sri Lanka Mini Hackathon 6.0 conducted Faculty of Humanities and Social Sciences, uthpala.s@sliit.lk by SLIIT MS club. University of Sri Jayewardenepura Senior girl guide at Sujatha Tel - 0712642240 Vidyalaya. Email - jnuwan66@sjp.ac.lk",
+        "duration": "Feb 2024 - June2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "Go",
+          "C",
+          "React",
+          "Express",
+          "Mongodb",
+          "Machine Learning",
+          "Postman",
+          "Communication"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Overcame various development challengers and resolved them.",
+      "Python for Beginners (CODL -",
+      "Conducted API testing.",
+      "University of Moratuwa)",
+      "Machine Learning course",
+      "(Simplilearn)",
+      "ACHIEVEMENTS Mr. N. A. N. J. Maduwansha Miss Uthpala Samarakoon",
+      "BA (Hons) (USJ), MSc (Moratuwa) Senior lecturer, Senior Lecturer",
+      "Participation in final round of Department of Social Statistics, SLIIT, Malabe Campus, Sri Lanka",
+      "Mini Hackathon 6.0 conducted Faculty of Humanities and Social Sciences, uthpala.s@sliit.lk",
+      "by SLIIT MS club. University of Sri Jayewardenepura",
+      "Senior girl guide at Sujatha Tel - 0712642240",
+      "Vidyalaya. Email - jnuwan66@sjp.ac.lk"
+    ],
+    "all_skills": [
+      "Data Analysis",
+      "Data Science",
+      "Excel",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Kotlin",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "PHP",
+      "Postman",
+      "Power BI",
+      "Python",
+      "R",
+      "React",
+      "Spring",
+      "Streamlit"
+    ],
+    "num_skills": 19,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 5,
+    "evaluation_score": 53.5,
+    "skill_score": 22.8
+  },
+  {
+    "candidate_id": "CAND_84F88CA1",
+    "candidate_name": "Sasanka Akash Jayasuriya",
+    "email": "akashsasanka480@gmail.com",
+    "mobile_number": "0762115134",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "summary motivated and dedicated it undergraduate seeking an internship opportunity at a reputed",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React",
+          "Spring"
+        ],
+        "technologies": [
+          "Git",
+          "GitHub",
+          "Postman",
+          "REST API"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL",
+          "Oracle"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "HTML, CSS, JS-Great Learning",
+      "Personal Skills Understanding of Data Structures & Algorithms",
+      "Knowledgeable in Object-Oriented Programming (OOP) and Agile Methodologies",
+      "Proficient with development tools: VS Code, IntelliJ, Postman",
+      "Experienced in creating UML diagrams",
+      "Flexibility in adapting to new situations and challenges.",
+      "Effective communication and strong teamwork skills",
+      "Languages Sinhala (Native)"
+    ],
+    "all_skills": [
+      "Express",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "Oracle",
+      "PHP",
+      "Postman",
+      "Python",
+      "REST API",
+      "React",
+      "SQL",
+      "Spring"
+    ],
+    "num_skills": 16,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 24.0,
+    "skill_score": 19.2
+  },
+  {
+    "candidate_id": "CAND_AAEBD066",
+    "candidate_name": "Moor Street, Dehiwela - Mount Lavinia,",
+    "email": "shakeebahamed456@gmail.com",
+    "mobile_number": "+94 756444697",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) in financial mathematics and industrial statistics sep 2021 - present",
+      "university": "university of ruhuna",
+      "year": "2021"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Go",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Azure",
+          "Deep Learning",
+          "Excel",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "Neural Networks",
+          "NumPy",
+          "Pandas",
+          "Power BI",
+          "Seaborn",
+          "Tableau"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL",
+          "PostgreSQL"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Data Science",
+          "Data Visualization",
+          "Feature Engineering",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "1.The Complete SQL Bootcamp: Go From Zero to Hero : UC-829750aa-bb6b-4751-859e-75fe9aea7834",
+      "4. Supervised Machine Learning: Regression and Classification : https://coursera.org/verify/P3KL4ZJMZ56D"
+    ],
+    "all_skills": [
+      "Azure",
+      "Classification",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Excel",
+      "Feature Engineering",
+      "Go",
+      "Jupyter",
+      "Machine Learning",
+      "Matplotlib",
+      "MongoDB",
+      "MySQL",
+      "Neural Networks",
+      "NumPy",
+      "Pandas",
+      "PostgreSQL",
+      "Power BI",
+      "Python",
+      "R",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Tableau",
+      "TensorFlow"
+    ],
+    "num_skills": 26,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 39.0,
+    "skill_score": 31.2
+  },
+  {
+    "candidate_id": "CAND_0B8D1441",
+    "candidate_name": "SHASHINI KAVINDYA THENUWARA",
+    "email": "thenuwarashashini620@gmail.com",
+    "mobile_number": "0763087406",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "data science undergraduate | intern data analyst at",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Kotlin",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Scikit-learn",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "Deep Learning",
+          "Excel",
+          "GitHub",
+          "Machine Learning",
+          "NLP",
+          "NLTK",
+          "NumPy",
+          "Pandas",
+          "Power BI",
+          "Tableau"
+        ],
+        "database": [
+          "MySQL",
+          "Oracle"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Clustering",
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization",
+          "Regression",
+          "Time Series"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Knowledge of basic programming (C,C++ ,Java,Python,Kotlin,R )and OOP concepts",
+      "Artificial Intelligence and Machine Learning Concepts",
+      "Basic knowledge of python scientific stack(Numpy,pandas,sklearn,tensorflow,nltk)",
+      "PowerBI and Tableau",
+      "Data Structures",
+      "ORDB - Oracle",
+      "ETL Processes"
+    ],
+    "all_skills": [
+      "AWS",
+      "Azure",
+      "Classification",
+      "Clustering",
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Excel",
+      "GitHub",
+      "Java",
+      "Kotlin",
+      "Machine Learning",
+      "MySQL",
+      "NLP",
+      "NLTK",
+      "NumPy",
+      "Oracle",
+      "Pandas",
+      "Power BI",
+      "Python",
+      "R",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Streamlit",
+      "Tableau",
+      "TensorFlow",
+      "Time Series"
+    ],
+    "num_skills": 29,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 43.5,
+    "skill_score": 34.8
+  },
+  {
+    "candidate_id": "CAND_5FABDFCF",
+    "candidate_name": "SHEHAN",
+    "email": "shehan7776@gmail.com",
+    "mobile_number": "+94764362185",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "i am a passionate data science undergraduate with deep interest in the potential of machine",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "FastAPI",
+          "Flask",
+          "Scikit-learn",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "CI/CD",
+          "Deep Learning",
+          "Docker",
+          "Git",
+          "GitHub",
+          "Linux",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "NLTK",
+          "NumPy",
+          "Pandas"
+        ],
+        "database": [
+          "MongoDB"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Data Science",
+          "Data Visualization"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Microsoft Certified: Azure AI Fundamentals",
+      "MLOps Bootcamp: Mastering AI Operations for Success - AIOps -Udemy",
+      "Developed skills in Python for MLOps, ML model packaging & deployment, and experiment",
+      "tracking with MLflow. Skilled in Docker for scalable deployment and FastAPI, Streamlit, Flask for",
+      "ML applications. Implemented CI/CD pipelines using GitHub Actions & Jenkins and enhanced",
+      "monitoring with Prometheus & Grafana. Basic foundation in Linux for MLOps.",
+      "AI/ML Engineer - Stage 1 - SLIIT",
+      "Academy Accreditation - Databricks Fundamentals",
+      "Programming in Python - 2. Python Programming - University of Moratuwa",
+      "NEXTTECH Workshop in Data engineering and Data visualization organized by NEXT",
+      "[2025] Tensorflow 2: Deep Learning & Artificial Intelligence(Lazy Programmer Inc.) -",
+      "(Ongoing, Auditing)",
+      "Completed Deep Learning Crash Course for Beginners on freecodecamp.org Youtube",
+      "Completed RAG Fundamentals and Advanced Techniques – Full Course on",
+      "freecodecamp.org Youtube Channel",
+      "AWS Cloud computing course offered by AWS.",
+      "Azure Lab Activities using free student credits"
+    ],
+    "all_skills": [
+      "AWS",
+      "Azure",
+      "CI/CD",
+      "Classification",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Docker",
+      "FastAPI",
+      "Flask",
+      "Git",
+      "GitHub",
+      "Java",
+      "Linux",
+      "Machine Learning",
+      "Matplotlib",
+      "MongoDB",
+      "NLP",
+      "NLTK",
+      "NumPy",
+      "Pandas",
+      "Python",
+      "R",
+      "SQL",
+      "Scikit-learn",
+      "Streamlit",
+      "TensorFlow"
+    ],
+    "num_skills": 27,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 40.5,
+    "skill_score": 32.4
+  },
+  {
+    "candidate_id": "CAND_B9D160A4",
+    "candidate_name": "Shehan Navod Gunathilaka",
+    "email": "mdsngunathilaka@gmail.com",
+    "mobile_number": "+94 773916387",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "final-year data science undergraduate with hands-on experience in deploying ai solutions,",
+      "university": "",
+      "year": "2025"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "FastAPI",
+          "Flask",
+          "PyTorch",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Azure",
+          "Computer Vision",
+          "Docker",
+          "GCP",
+          "Git",
+          "GitHub",
+          "Machine Learning",
+          "NLP",
+          "OpenCV",
+          "Pandas",
+          "Power BI",
+          "REST API",
+          "SpaCy",
+          "Tableau",
+          "YOLO"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Classification",
+          "Data Science",
+          "Feature Engineering"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "• Google: Introduction to Generative AI, LLMs, Responsible AI (2025)",
+      "• Coursera: Python for Data Science, AI & Development",
+      "• Udemy: Power BI Developer & Rise in Data Analytics",
+      "Libraries – Frameworks: TensorFlow, PyTorch, Scikit-learn, Xgboost",
+      "Programming Languages : Python, Java,C++",
+      "Version control - Git",
+      "Visualization: Power BI, Tableau, Looker Studio",
+      "Cloud & Data: GCP, BigQuery, Azure, AWS, SQL Server, Graph Databases, Vector Database.",
+      "Others: MLOps, LLM, RAG architecture, NLP, Agentic AI, Open CV, Yolo, Docker, Transformer",
+      "Communication, Teamwork, Time Management, Leadership, Problem Solving",
+      "Visit: https: https://github.com/Sheha1218",
+      "Projects: COVID-19 AI Diagnostic System, Tea Leaf Disease Detection, Loan Prediction",
+      "Model, Agentic AI Autonomous Robots (Planned), LLM-Based Chatbot (Planned)",
+      "Nonrelated referees.",
+      "Ms.Dileesha Bandara. Ms Geethangi Peries.",
+      "Senior Data engineer. Information Technology Manager.",
+      "EY Sri Lanka. Sri Lanka Telecom.",
+      "+94 773916387 +94 716853590",
+      "dileeshabandara@gmail.com geethanginp@slt.com.lk"
+    ],
+    "all_skills": [
+      "AWS",
+      "Azure",
+      "Classification",
+      "Computer Vision",
+      "Data Science",
+      "Docker",
+      "FastAPI",
+      "Feature Engineering",
+      "Flask",
+      "GCP",
+      "Git",
+      "GitHub",
+      "Java",
+      "Machine Learning",
+      "NLP",
+      "OpenCV",
+      "Pandas",
+      "Power BI",
+      "PyTorch",
+      "Python",
+      "REST API",
+      "SQL",
+      "Scikit-learn",
+      "SpaCy",
+      "Tableau",
+      "TensorFlow",
+      "YOLO"
+    ],
+    "num_skills": 27,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 40.5,
+    "skill_score": 32.4
+  },
+  {
+    "candidate_id": "CAND_DCB6FEEF",
+    "candidate_name": "SHEHAN JAYASOORIYA",
+    "email": "vidanage_bvki@kdu.ac.lk",
+    "mobile_number": "",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "highly focused and motivated final-year computer science undergraduate with a strong passion for",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "SQL"
+        ],
+        "frameworks": [
+          "FastAPI",
+          "Keras",
+          "React",
+          "Scikit-learn",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Deep Learning",
+          "Git",
+          "GitHub",
+          "Jupyter",
+          "Linux",
+          "Machine Learning",
+          "Matplotlib",
+          "Neural Networks",
+          "NumPy",
+          "OpenCV",
+          "Pandas",
+          "Power BI",
+          "Seaborn",
+          "Tableau",
+          "YOLO"
+        ],
+        "database": [
+          "MySQL",
+          "PostgreSQL"
+        ],
+        "technical_skills": [
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "AWS",
+      "Data Science",
+      "Deep Learning",
+      "FastAPI",
+      "Git",
+      "GitHub",
+      "Java",
+      "Jupyter",
+      "Keras",
+      "Linux",
+      "Machine Learning",
+      "Matplotlib",
+      "MySQL",
+      "Neural Networks",
+      "NumPy",
+      "OpenCV",
+      "Pandas",
+      "PostgreSQL",
+      "Power BI",
+      "Python",
+      "React",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Streamlit",
+      "Tableau",
+      "TensorFlow",
+      "YOLO"
+    ],
+    "num_skills": 28,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 42.0,
+    "skill_score": 33.6
+  },
+  {
+    "candidate_id": "CAND_C1E072C7",
+    "candidate_name": "S I T H M A K A N A N A Y A K K A R A",
+    "email": "chamithusithmaka@gmail.com",
+    "mobile_number": "+94 76 433 5055",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "aspiring software engineering intern",
+      "university": "",
+      "year": "2022"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Kotlin",
+          "PHP",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Express",
+          "Node.js",
+          "React"
+        ],
+        "technologies": [
+          "Docker",
+          "Git",
+          "GitHub",
+          "Kubernetes",
+          "Machine Learning",
+          "Postman",
+          "Selenium"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL",
+          "SQLite"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "R / Rahula National School Godakawela",
+      "G.C.E. Ordinary Level Examination (2018) 2 A’s 2 B’s 5 C’s",
+      "G.C.E. Advanced Level Examination(Technology Stream with Information Technology 2021) 1 B’s 2 C’s",
+      "Languages Web Technologies Frameworks & Libraries",
+      "Java JavaScript C++ HTML Bootstrap React Node.js",
+      "Python Kotlin R CSS Express.js Selenium",
+      "C# C PHP Tailwind CSS Cypress",
+      "Development Tools & IDEs DevOps & Version Control",
+      "MySQL SQL Server SQL Server Python IDLE Git Kubernetes",
+      "SQLite Eclipse SSMS GitHub Postman",
+      "MongoDB R Studio Android Studio Docker Android Studio",
+      "Positive Leadership Qualities Artificial Intelligence and machine learning Engineer",
+      "Communication Skills Course at SLIIT(Stage 1)",
+      "Time Management",
+      "Problem Solving",
+      "Risk Management",
+      "Decision Making",
+      "Sithmaka Nanayakkara @ 2025"
+    ],
+    "all_skills": [
+      "Docker",
+      "Express",
+      "Git",
+      "GitHub",
+      "Java",
+      "JavaScript",
+      "Kotlin",
+      "Kubernetes",
+      "Machine Learning",
+      "MongoDB",
+      "MySQL",
+      "Node.js",
+      "PHP",
+      "Postman",
+      "Python",
+      "R",
+      "React",
+      "SQL",
+      "SQLite",
+      "Selenium"
+    ],
+    "num_skills": 20,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 30.0,
+    "skill_score": 24.0
+  },
+  {
+    "candidate_id": "CAND_95A84DD4",
+    "candidate_name": "SURABIGA THANGARAJAH",
+    "email": "surabythangarajah@gmail.com",
+    "mobile_number": "+94762739741",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "engineering undergraduate | earth resources engineering | university of moratuwa",
+      "university": "",
+      "year": "2021"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "PyTorch",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Excel",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "NumPy",
+          "Pandas",
+          "Seaborn",
+          "Tableau"
+        ],
+        "database": [
+          "MongoDB",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "Clustering",
+          "Data Analysis",
+          "Data Science",
+          "Data Visualization",
+          "Regression",
+          "Supervised Learning",
+          "Time Series"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "River water quality",
+        "project_description": "  Supervised learning & time series modeling.  Used GIS, RFR, LSTM, and SHAP to analyze land use impact on water quality.  Combined spatial and time-series data for predictive modeling.  Predicted future water quality trends based on land use patterns. Technical skills  Data Analysis and Machine Learning: Pandas, NumPy, Scikit-learn, TensorFlow, PyTorch, Natural Language Processing (NLP), K-Means Clustering, Linear Regression, ANN  Data Visualization: Tableau, Matplotlib, Seaborn, Excel (Pivot Tables, Power Query  Programming Languages: Python, R (Basics), SQL, NoSQL (MongoDB)  Database: MySQL, MongoDB  Tools & Platforms:Jupyter Notebook Volunteering and leadership experience",
+        "duration": "Aug 2024-Started",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "R",
+          "Sql",
+          "Go",
+          "C",
+          "Tensorflow",
+          "Pytorch",
+          "Scikit-Learn",
+          "Mysql",
+          "Mongodb",
+          "Machine Learning",
+          "Nlp",
+          "Jupyter",
+          "Pandas",
+          "Numpy",
+          "Matplotlib",
+          "Seaborn",
+          "Tableau",
+          "Excel",
+          "Data Analysis",
+          "Data Visualization",
+          "Time Series",
+          "Supervised Learning",
+          "Regression",
+          "Clustering",
+          "Leadership"
+        ]
+      },
+      {
+        "project_name": "1.Treasurer",
+        "project_description": "",
+        "duration": "2018",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": "2. Youth Forum Volunteer",
+        "project_description": "",
+        "duration": "2020",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": "3.IESL Student Chapter, University of Moratuwa",
+        "project_description": "",
+        "duration": "2022–2025",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": " Department Coordinator, Marketing Pillar",
+        "project_description": "",
+        "duration": "2022/23",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": " Supervisor, Digital Marketing Pillar",
+        "project_description": "",
+        "duration": "2023/24",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": " Chief Executive Officer",
+        "project_description": "",
+        "duration": "CEO), Mora Wings - Executive Committee (2024/25",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": "4.Member and Committee Member",
+        "project_description": "",
+        "duration": "2022–2025",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": "5.Active Volunteer",
+        "project_description": "",
+        "duration": "2022-2024",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": "6.Demonstrator",
+        "project_description": "",
+        "duration": "2023",
+        "complexity": "Medium",
+        "technologies_used": []
+      },
+      {
+        "project_name": "7.Volunteer",
+        "project_description": " Languages English: Professional working proficiency. Tamil: Native or bilingual proficiency. Sinhala: Elementary proficiency. Certifications Diploma in English: British way English academy, Jaffna. English Enrichment course: American corner, Jaffna. Business English course: American corner, Jaffna. Co-Counselling training certificate course: ICOF Jaffna.",
+        "duration": "2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Diploma in English: British way English academy, Jaffna.",
+      "English Enrichment course: American corner, Jaffna.",
+      "Business English course: American corner, Jaffna."
+    ],
+    "all_skills": [
+      "Clustering",
+      "Data Analysis",
+      "Data Science",
+      "Data Visualization",
+      "Excel",
+      "Jupyter",
+      "Machine Learning",
+      "Matplotlib",
+      "MongoDB",
+      "MySQL",
+      "NLP",
+      "NumPy",
+      "Pandas",
+      "PyTorch",
+      "Python",
+      "R",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "Supervised Learning",
+      "Tableau",
+      "TensorFlow",
+      "Time Series"
+    ],
+    "num_skills": 24,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 11,
+    "evaluation_score": 91.0,
+    "skill_score": 28.799999999999997
+  },
+  {
+    "candidate_id": "CAND_B4B4565B",
+    "candidate_name": "THARIN GEETHARATHNA",
+    "email": "tharinchammika@gmail.com",
+    "mobile_number": "+94 771414218",
+    "current_role": "Undergraduate",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "ai & data science undergraduate",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "JavaScript",
+          "Python",
+          "R"
+        ],
+        "frameworks": [],
+        "technologies": [
+          "Azure",
+          "Machine Learning"
+        ],
+        "database": [],
+        "technical_skills": [
+          "Data Science"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "my learning in practical, real-world scenarios.",
+      "Programming Languages & Frameworks: Python, Java, JavaFX, HTML, CSS, JavaScript, and R (via RStudio)",
+      "Cloud & AI Platforms: Microsoft Azure, Azure AI Services, Azure Machine Learning, and Azure AI Foundry",
+      "Microsoft Azure AI Engineer Associate (AI-102)",
+      "Microsoft Azure AI Fundamentals (AI-900)"
+    ],
+    "all_skills": [
+      "Azure",
+      "Data Science",
+      "Java",
+      "JavaScript",
+      "Machine Learning",
+      "Python",
+      "R"
+    ],
+    "num_skills": 7,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 10.5,
+    "skill_score": 8.4
+  },
+  {
+    "candidate_id": "CAND_E4BCCC69",
+    "candidate_name": "THARUSHA VIHANGA",
+    "email": "tharushavihanga2003@gmail.com",
+    "mobile_number": "+94 712717158",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "analysis, feature engineering, and predictive modeling. completed a final-year project on telecommunications",
+      "university": "",
+      "year": "2009"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Dart",
+          "JavaScript",
+          "MATLAB",
+          "PHP",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "FastAPI",
+          "Flask",
+          "Flutter",
+          "Keras",
+          "PyTorch",
+          "React",
+          "Scikit-learn",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "AWS",
+          "Computer Vision",
+          "Deep Learning",
+          "Docker",
+          "Git",
+          "GitHub",
+          "Hugging Face",
+          "Linux",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "NLTK",
+          "Neural Networks",
+          "NumPy",
+          "Pandas",
+          "Plotly",
+          "Postman",
+          "Seaborn"
+        ],
+        "database": [
+          "Firebase",
+          "MongoDB",
+          "MySQL",
+          "PostgreSQL",
+          "SQLite",
+          "Snowflake"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Data Science",
+          "Data Visualization",
+          "Feature Engineering",
+          "Regression",
+          "Supervised Learning",
+          "Unsupervised Learning"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Machine Learning Specialization, Stanford University, Deeplearning.ai",
+      "Supervised Machine Learning: Regression and Classification",
+      "Advanced Learning Algorithms (Artificial neural network)",
+      "Unsupervised Learning, Recommenders, Reinforcement Learning",
+      "AI/ML Engineer – Stage 1, SLIIT",
+      "Introduction to Artificial Intelligence (AI)/Machine Learning (ML)",
+      "Tools for ML",
+      "Guided Project on Computer Vision",
+      "Guided Project on Natural Language Processing (NLP)",
+      "Deep Learning: Getting Started, LinkedIn",
+      "Deep Learning with Python: Optimizing Deep Learning Models, LinkedIn",
+      "NLP with Python for Machine Learning Essential Training, LinkedIn",
+      "AI Workshop: Build a Neural Network with PyTorch Lightning, LinkedIn",
+      "ETL in Python and SQL, LinkedIn",
+      "Introduction to Large Language Models, LinkedIn",
+      "Introduction to Generative Adversarial Networks (GANs), LinkedIn",
+      "AI Workshop: Hands-on with GANs Using Dense Neural Networks, LinkedIn",
+      "AI Workshop: Build a Neural Network with PyTorch Lightning, LinkedIn",
+      "Foundations of Cybersecurity",
+      "Play It Safe: Manage Security Risks",
+      "Connect and Protect: Networks and Network Security",
+      "Tools of the Trade: Linux and SQL",
+      "Assets, Threats, and Vulnerabilities",
+      "Sound the Alarm: Detection and Response",
+      "Automate Cybersecurity Tasks with Python",
+      "Put It to Work: Prepare for Cybersecurity Jobs"
+    ],
+    "all_skills": [
+      "AWS",
+      "Airflow",
+      "Classification",
+      "Computer Vision",
+      "Dart",
+      "Data Science",
+      "Data Visualization",
+      "Deep Learning",
+      "Docker",
+      "FastAPI",
+      "Feature Engineering",
+      "Firebase",
+      "Flask",
+      "Flutter",
+      "Git",
+      "GitHub",
+      "Hugging Face",
+      "JavaScript",
+      "Keras",
+      "Linux",
+      "MATLAB",
+      "Machine Learning",
+      "Matplotlib",
+      "MongoDB",
+      "MySQL",
+      "NLP",
+      "NLTK",
+      "Neural Networks",
+      "NumPy",
+      "PHP",
+      "Pandas",
+      "Plotly",
+      "PostgreSQL",
+      "Postman",
+      "PyTorch",
+      "Python",
+      "R",
+      "React",
+      "Regression",
+      "SQL",
+      "SQLite",
+      "Scikit-learn",
+      "Seaborn",
+      "Snowflake",
+      "Spark",
+      "Streamlit",
+      "Supervised Learning",
+      "TensorFlow",
+      "Unsupervised Learning"
+    ],
+    "num_skills": 49,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 73.5,
+    "skill_score": 58.8
+  },
+  {
+    "candidate_id": "CAND_779086B8",
+    "candidate_name": "Viduni Herath",
+    "email": "hviduni@gmail.com",
+    "mobile_number": "0701855399",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) in information technology specializing in data science",
+      "university": "sri lanka institute of information technology, malabe [june 2021 – june 2025]",
+      "year": "2021"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Angular",
+          "Keras",
+          "Node.js",
+          "Scikit-learn",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Azure",
+          "Computer Vision",
+          "Deep Learning",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NumPy",
+          "Pandas",
+          "Seaborn"
+        ],
+        "database": [
+          "MongoDB"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Clustering",
+          "Data Science",
+          "Regression"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "Angular",
+      "Azure",
+      "Classification",
+      "Clustering",
+      "Computer Vision",
+      "Data Science",
+      "Deep Learning",
+      "Java",
+      "Jupyter",
+      "Keras",
+      "Machine Learning",
+      "Matplotlib",
+      "MongoDB",
+      "Node.js",
+      "NumPy",
+      "Pandas",
+      "Python",
+      "R",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Seaborn",
+      "TensorFlow"
+    ],
+    "num_skills": 23,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 34.5,
+    "skill_score": 27.599999999999998
+  },
+  {
+    "candidate_id": "CAND_F5B4C333",
+    "candidate_name": "VIMANSHA",
+    "email": "vimanshamj@gmail.com",
+    "mobile_number": "0712304489",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "b.sc. (hons.) in statistics and operations classify tweets as \"personal health mentions\" or \"non-",
+      "university": "faculty of science - university of peradeniya implemented lstm and bi-lstm neural networks,",
+      "year": "2021"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "frameworks": [
+          "Flask",
+          "Keras",
+          "React",
+          "Scikit-learn",
+          "Streamlit",
+          "TensorFlow"
+        ],
+        "technologies": [
+          "Azure",
+          "Deep Learning",
+          "Git",
+          "GitHub",
+          "Jupyter",
+          "Machine Learning",
+          "Matplotlib",
+          "NLP",
+          "Neural Networks",
+          "NumPy",
+          "Pandas",
+          "Power BI",
+          "Tableau"
+        ],
+        "database": [
+          "Snowflake"
+        ],
+        "technical_skills": [
+          "Classification",
+          "Regression",
+          "Time Series"
+        ],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [],
+    "certificates_or_qualifications": [
+      "Professional Purpose",
+      "Laptop Price Predictor",
+      "English Language Teaching Unit - University",
+      "Developed a machine learning-powered web",
+      "of Peradeniya •",
+      "application to predict laptop prices based on user inputs",
+      "(RAM, brand, OS, CPU), enhancing user decision-",
+      "making for tech purchases.",
+      "GCE Advanced Level (Physical Science)",
+      "Tools & Technologies: Python, Flask, Pandas, NumPy,",
+      "Ruwanwella Central College - 2019 •",
+      "Scikit-learn",
+      "Results: BBB",
+      "Fast Learning | Communication | STEMUP Educational Foundation",
+      "Community Leader",
+      "Teamwork | Analytical Thinking |",
+      "Aug 2023 – Present",
+      "Effective Time Management |",
+      "Engaging in various volunteering activities and leading",
+      "Adaptability | Project Management volunteers to support spreading STEM education",
+      "throughout the country.",
+      "REWARDS & INVOLVEMENTS Statistical Circle - University of Peradeniya",
+      "Society Member",
+      "The Rising Star Award 2023 – 2024",
+      "STEMUP Educational Foundation",
+      "2025 Operations Research Society - University of Peradeniya",
+      "Committee Member",
+      "1st place in Social Services Category 2021 – 2022",
+      "ACES Coders v10.0",
+      "2023 Sinhala"
+    ],
+    "all_skills": [
+      "Azure",
+      "Classification",
+      "Deep Learning",
+      "Flask",
+      "Git",
+      "GitHub",
+      "Jupyter",
+      "Keras",
+      "Machine Learning",
+      "Matplotlib",
+      "NLP",
+      "Neural Networks",
+      "NumPy",
+      "Pandas",
+      "Power BI",
+      "Python",
+      "R",
+      "React",
+      "Regression",
+      "SQL",
+      "Scikit-learn",
+      "Snowflake",
+      "Streamlit",
+      "Tableau",
+      "TensorFlow",
+      "Time Series"
+    ],
+    "num_skills": 26,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 0,
+    "evaluation_score": 39.0,
+    "skill_score": 31.2
+  },
+  {
+    "candidate_id": "CAND_806B84A6",
+    "candidate_name": "Wathila",
+    "email": "wathilaonelranaweera9@gmail.com",
+    "mobile_number": "+94 75 844 1413",
+    "current_role": "Student",
+    "target_role": "AI ML",
+    "current_employment": "",
+    "education": {
+      "degree": "bsc (hons) in computing – coventry university, uk",
+      "university": "",
+      "year": "2024"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "JavaScript",
+          "TypeScript"
+        ],
+        "frameworks": [
+          "Express",
+          "FastAPI",
+          "Node.js",
+          "React",
+          "Spring"
+        ],
+        "technologies": [
+          "AWS",
+          "Docker",
+          "Git",
+          "GitHub",
+          "Machine Learning",
+          "Postman"
+        ],
+        "database": [
+          "Firebase",
+          "MySQL"
+        ],
+        "technical_skills": [],
+        "soft_skills": []
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Winner – Zonal English Language Competitions",
+        "project_description": " Runner-up – Shakespeare Drama Competition (Role: Macbeth) Referees 📞 Ajith NuwanthiIaka | CEO, TTS Group, Maldives | +94 767274505 📞 Tharanga Fernando | Software Architect, Hayleys Group, Sri Lanka | +94 777723181",
+        "duration": "Kelaniya Zone) (2014, 2016–2018",
+        "complexity": "Medium",
+        "technologies_used": [
+          "R",
+          "C"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [],
+    "all_skills": [
+      "AWS",
+      "Docker",
+      "Express",
+      "FastAPI",
+      "Firebase",
+      "Git",
+      "GitHub",
+      "JavaScript",
+      "Machine Learning",
+      "MySQL",
+      "Node.js",
+      "Postman",
+      "React",
+      "Spring",
+      "TypeScript"
+    ],
+    "num_skills": 15,
+    "experience_months": 612,
+    "experience_level": "Mid Level",
+    "num_projects": 1,
+    "evaluation_score": 27.5,
+    "skill_score": 18.0
+  }
+]

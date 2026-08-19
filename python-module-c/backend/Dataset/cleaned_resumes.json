@@ -1,0 +1,1312 @@
+[
+  {
+    "candidate_id": "CAND_920D187A",
+    "candidate_name": "Dilaksan Thirugnanaselvam",
+    "mobile_number": "+94 0788702104",
+    "email": "thirudilak131@gmail.com",
+    "current_role": "AI Engineer Intern",
+    "target_role": "AI Engineer",
+    "current_employment": "StudentPod",
+    "education": {
+      "degree": "BSc (Hons) in Computer Science",
+      "university": "University of Vavuniya"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "Java",
+          "C++"
+        ],
+        "frameworks": [
+          "TensorFlow",
+          "PyTorch",
+          "scikit-learn"
+        ],
+        "technologies": [
+          "Streamlit",
+          "HTML",
+          "CSS",
+          "JavaScript",
+          "SQL"
+        ],
+        "technical_skills": [
+          "Data Analysis",
+          "Natural Language Processing (NLP)"
+        ],
+        "database": [
+          "not mentioned"
+        ],
+        "soft_skills": [
+          "not mentioned"
+        ]
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Chatbot Application",
+        "project_description": "Chatbot powered by Llama-2, developed in Python using Streamlit for intelligent interactions and a user-friendly interface.",
+        "duration": "May 2024 – June 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "Streamlit"
+        ]
+      },
+      {
+        "project_name": "Mobile Price Range Prediction",
+        "project_description": "Interactive dashboard using Streamlit, integrating TensorFlow-based ANN for dynamic mobile price predictions.",
+        "duration": "Aug 2024 – Sep 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Streamlit",
+          "TensorFlow"
+        ]
+      },
+      {
+        "project_name": "Airline Sentiment Analysis",
+        "project_description": "Preprocessed data, extracted features using TF-IDF, and trained Naive Bayes and Random Forest models with a Streamlit app for real-time sentiment analysis.",
+        "duration": "Aug 2024 – Sep 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "TF-IDF",
+          "Naive Bayes",
+          "Random Forest",
+          "Streamlit"
+        ]
+      },
+      {
+        "project_name": "Recipe Rendezvous: Generating AI-Powered Recipes",
+        "project_description": "App powered by a fine-tuned GPT-4 model, developed using Python and Streamlit, generating creative recipes based on available ingredients for chefs and home cooks.",
+        "duration": "Aug 2024 – Sep 2024",
+        "complexity": "High",
+        "technologies_used": [
+          "Python",
+          "Streamlit",
+          "GPT-4"
+        ]
+      },
+      {
+        "project_name": "PathfinderAI",
+        "project_description": "Intelligent career recommendations using user data, developed in Python with a Streamlit interface and leveraging the OpenAI API for analysis.",
+        "duration": "Sep 2024 – Oct 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Python",
+          "Streamlit",
+          "OpenAI API"
+        ]
+      },
+      {
+        "project_name": "Scholarship News Analytics and Deadline Tracker",
+        "project_description": "It uses GPT API to analyze scholarships and push updates to a Telegram channel, helping users track deadlines and discover opportunities with real-time notifications.",
+        "duration": "Oct 2024 – Nov 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "GPT API",
+          "Telegram"
+        ]
+      },
+      {
+        "project_name": "Can LLMs Master Linear Algebra? Investigating Large Language Models and the Development of a Specialized Model for Numerical Linear Algebra Mastery",
+        "project_description": "Evaluated LLMs like 01-preview and GPT-40 on linear algebra, fine-tuned models for abstract reasoning, leveraged FrontierMath benchmarks, and advanced AI reasoning for solving complex, real-world problems in high-precision mathematical domains.",
+        "duration": "Nov 2024 – Present",
+        "complexity": "High",
+        "technologies_used": [
+          "GPT-4",
+          "FrontierMath"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Become an AI Engineer: LinkedIn Learning Path",
+      "IBM AI Engineering Professional Certificate: IBM",
+      "Become an OCI Generative AI Professional: Oracle University AI/ML Engineer - Stage 1: SLITT",
+      "Azure Fundamentals: Microsoft Learn",
+      "Cloud Concepts: Microsoft Learn Student Ambassador Event",
+      "Google Analytics: Google (Beginners Advanced)",
+      "Python for Data Science: IBM",
+      "Getting Started with Deep Learning: IBM",
+      "LLMS: Udemy",
+      "Generative AI Certifications: Intel, IBM, Dev Town Bootcamp",
+      "Google exploreCSR Summer School: GeSSoMI 2024, University of Jaffna",
+      "LinkedIn Premium Voucher: Won on September 11, 2024"
+    ],
+    "all_skills": [
+      "C++",
+      "CSS",
+      "Data Analysis",
+      "Frontiermath",
+      "Gpt Api",
+      "Gpt-4",
+      "HTML",
+      "Java",
+      "JavaScript",
+      "NLP",
+      "Naive Bayes",
+      "Natural Language Processing (Nlp)",
+      "Openai Api",
+      "PyTorch",
+      "Python",
+      "Random Forest",
+      "SQL",
+      "Streamlit",
+      "Telegram",
+      "TensorFlow",
+      "Tf-Idf",
+      "scikit-learn"
+    ],
+    "num_skills": 22,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 7,
+    "evaluation_score": 36.0,
+    "skill_score": 26.0,
+    "date_uploaded": "2025-01-08T15:43:50.642177",
+    "status": "Pending"
+  },
+  {
+    "candidate_id": "CAND_B208BBBB",
+    "candidate_name": "Peshala Swarnamali Ariyarathna",
+    "mobile_number": "070 246 4883",
+    "email": "peshalaswarnamali2000@gmail.com",
+    "current_role": "Banker",
+    "target_role": "Data Analyst",
+    "current_employment": "Commercial Bank of Ceylon PLC",
+    "education": {
+      "degree": "Bachelor of Science (Honors) in Information Technology",
+      "university": "Vavuniya Campus, University of Jaffna"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "HTML",
+          "CSS",
+          "Java Script",
+          "Java",
+          "C++",
+          "C",
+          "PHP",
+          "Python"
+        ],
+        "frameworks": [
+          "Spring boot",
+          "Node JS",
+          "React JS",
+          "React Native"
+        ],
+        "technologies": [
+          "MS Office",
+          "Power BI",
+          "Jupyter Notebook",
+          "Matlab",
+          "Code-blocks",
+          "Visual Studio",
+          "Visual Studio Code",
+          "Spring Tool",
+          "Azure RP"
+        ],
+        "technical_skills": [
+          "not mentioned"
+        ],
+        "database": [
+          "not mentioned"
+        ],
+        "soft_skills": [
+          "Time Management",
+          "Social skills",
+          "Analytical thinking",
+          "Organizing"
+        ]
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Child Growth Indicator System (GIS) - Group project",
+        "project_description": "A pivotal tool designed to offer a holistic and user-friendly platform for monitoring a baby's health from birth through childhood",
+        "duration": "not mentioned",
+        "complexity": "High",
+        "technologies_used": [
+          "React JS",
+          "Node JS",
+          "Express JS",
+          "MySQL",
+          "Bootstrap"
+        ]
+      },
+      {
+        "project_name": "Gesture Recognition System - Individual project",
+        "project_description": "Designed gesture detection for multiple hand poses such as thumb-up, fingers-up, and specific finger combinations, triggering actions like slide navigation, start/end presentations, and exit commands.",
+        "duration": "not mentioned",
+        "complexity": "High",
+        "technologies_used": [
+          "Python",
+          "OpenCV",
+          "MediaPipe",
+          "PyAutoGUI",
+          "Tkinter"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "not mentioned"
+    ],
+    "all_skills": [
+      "Analytical Thinking",
+      "Azure Rp",
+      "Bootstrap",
+      "C",
+      "C++",
+      "CSS",
+      "Code-Blocks",
+      "Express Js",
+      "HTML",
+      "Java",
+      "JavaScript",
+      "Jupyter Notebook",
+      "Matlab",
+      "Mediapipe",
+      "Ms Office",
+      "MySQL",
+      "Node.js",
+      "Opencv",
+      "Organizing",
+      "PHP",
+      "Power Bi",
+      "Pyautogui",
+      "Python",
+      "React",
+      "React Native",
+      "Social Skills",
+      "Spring Boot",
+      "Spring Tool",
+      "Time Management",
+      "Tkinter",
+      "Visual Studio",
+      "Visual Studio Code"
+    ],
+    "num_skills": 32,
+    "experience_months": 12,
+    "experience_level": "Junior",
+    "num_projects": 2,
+    "evaluation_score": 52.0,
+    "skill_score": 42.0,
+    "date_uploaded": "2025-01-08T15:43:58.345205",
+    "status": "Pending"
+  },
+  {
+    "candidate_id": "CAND_15E5E1DE",
+    "candidate_name": "Anchana Rajakumaran",
+    "mobile_number": "+94 78 940 6150",
+    "email": "anchanaraj99@gmail.com",
+    "current_role": "not mentioned",
+    "target_role": "Software Developer",
+    "current_employment": "not mentioned",
+    "education": {
+      "degree": "BSc(Hons) in Information Technology",
+      "university": "University of Vavuniya, Sri Lanka"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "Java",
+          "C#"
+        ],
+        "frameworks": [
+          "Spring Boot",
+          "PHP",
+          "JavaScript",
+          "NodeJS",
+          "React-Native"
+        ],
+        "technologies": [
+          "HTML",
+          "CSS",
+          "Prolog"
+        ],
+        "technical_skills": [
+          "not mentioned"
+        ],
+        "database": [
+          "MySQL",
+          "MongoDB"
+        ],
+        "soft_skills": [
+          "Leadership",
+          "Good communication skill",
+          "Strong presentation skill",
+          "Teamwork"
+        ]
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Domain Specific Intelligent Chatbot for banks",
+        "project_description": "Developing a user-friendly chatbot focusing on customer support, implementing by using python libraries with NLP concepts.",
+        "duration": "November 2024 - Present",
+        "complexity": "High",
+        "technologies_used": [
+          "Python",
+          "NumPy",
+          "Pandas",
+          "Scikit-Learn",
+          "NLTK"
+        ]
+      },
+      {
+        "project_name": "Front-end Development for Travel guiding app, e-medicine app and PayWallet app",
+        "project_description": "Designed user-friendly frontend for each app, implemented using the functionalities offered by Azure RP9.",
+        "duration": "May 2024 - June 2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Azure RP9"
+        ]
+      },
+      {
+        "project_name": "Emotion Based Music Application",
+        "project_description": "Built a system that creates a personalized playlist, implemented dynamically adjusting the playlist to match the user’s mood, deployed the Spotify API for easy integration.",
+        "duration": "Sep 2023 – March 2024",
+        "complexity": "High",
+        "technologies_used": [
+          "Python",
+          "OpenCV",
+          "SpotifyAPI"
+        ]
+      },
+      {
+        "project_name": "Health Centre Management System",
+        "project_description": "Constructed a system for the health centre of our university, mainly focused on patient record maintenance, drug prescription and appointment making.",
+        "duration": "Jan 2023",
+        "complexity": "Medium",
+        "technologies_used": [
+          "HTML5",
+          "CSS",
+          "C-Sharp",
+          "MySQL"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "not mentioned"
+    ],
+    "all_skills": [
+      "Azure Rp9",
+      "C#",
+      "C-Sharp",
+      "CSS",
+      "Good Communication Skill",
+      "HTML",
+      "Html5",
+      "Java",
+      "JavaScript",
+      "Leadership",
+      "MongoDB",
+      "MySQL",
+      "Nltk",
+      "Node.js",
+      "NumPy",
+      "Opencv",
+      "PHP",
+      "Pandas",
+      "Prolog",
+      "Python",
+      "React-Native",
+      "Spotifyapi",
+      "Spring Boot",
+      "Strong Presentation Skill",
+      "Teamwork",
+      "scikit-learn"
+    ],
+    "num_skills": 26,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 4,
+    "evaluation_score": 49.0,
+    "skill_score": 39.0,
+    "date_uploaded": "2025-01-08T15:43:39.754846",
+    "status": "Pending"
+  },
+  {
+    "candidate_id": "CAND_B41CA43C",
+    "candidate_name": "Diluxshan Jogasinkam",
+    "mobile_number": "+94 0765679128",
+    "email": "dinulxshan110@gmail.com",
+    "current_role": "not mentioned",
+    "target_role": "Software Developer",
+    "current_employment": "not mentioned",
+    "education": {
+      "degree": "B.Sc (Honours) in Computer Science",
+      "university": "University of Vavuniya"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "HTML",
+          "CSS",
+          "JavaScript",
+          "C++",
+          "C"
+        ],
+        "frameworks": [
+          "Spring Boot",
+          "Bootstrap"
+        ],
+        "technologies": [
+          "MySQL",
+          "Git",
+          "GitHub"
+        ],
+        "technical_skills": [
+          "not mentioned"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "soft_skills": [
+          "not mentioned"
+        ]
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Identification of Sri Lankan Seagrass Species Underwater using Image Enhancement and Deep Learning Techniques",
+        "project_description": "Applying image enhancement and deep learning to identify and classify Sri Lankan seagrass species for ecological research.",
+        "duration": "Oct 2024 - present",
+        "complexity": "High",
+        "technologies_used": [
+          "Deep Learning",
+          "Image Enhancement"
+        ]
+      },
+      {
+        "project_name": "Customer Details Management System",
+        "project_description": "Building a system for managing customer details using Spring Boot, JSP, React, and MySQL, enabling efficient CRUD operations.",
+        "duration": "Nov 2024 - present",
+        "complexity": "High",
+        "technologies_used": [
+          "Spring Boot",
+          "JSP",
+          "React",
+          "MySQL"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "not mentioned"
+    ],
+    "all_skills": [
+      "Bootstrap",
+      "C",
+      "C++",
+      "CSS",
+      "Deep Learning",
+      "Git",
+      "GitHub",
+      "HTML",
+      "Image Enhancement",
+      "Java",
+      "JavaScript",
+      "Jsp",
+      "MySQL",
+      "Python",
+      "React",
+      "Spring Boot"
+    ],
+    "num_skills": 16,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 2,
+    "evaluation_score": 44.5,
+    "skill_score": 39.5,
+    "date_uploaded": "2025-01-08T15:43:46.419499",
+    "status": "Pending"
+  },
+  {
+    "candidate_id": "CAND_D41C2E0F",
+    "candidate_name": "Ilma Jiyadh",
+    "mobile_number": "+94769443202",
+    "email": "ilmaj17@gmail.com",
+    "current_role": "Data Scientist",
+    "target_role": "Data Scientist",
+    "current_employment": "Not Mentioned",
+    "education": {
+      "degree": "BSc Honours in Computer Science",
+      "university": "University of Vavuniya"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "R",
+          "Java",
+          "JavaScript",
+          "PHP",
+          "C/C++",
+          "Prolog"
+        ],
+        "frameworks": [
+          "Flask",
+          "Streamlit",
+          "Tensor Flow",
+          "Keras"
+        ],
+        "technologies": [
+          "Visual Studio",
+          "GIT",
+          "MATLAB",
+          "XAMPP Local Server",
+          "Figma",
+          "Azure"
+        ],
+        "technical_skills": [
+          "Data Visualization",
+          "Data Analysis"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "soft_skills": [
+          "Communication skills",
+          "Problem solving",
+          "Critical Thinking",
+          "Leadership",
+          "Attention to Detail",
+          "Adaptability",
+          "Learning agility",
+          "Writing and Documentation"
+        ]
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Sentiment Analysis of text",
+        "project_description": "Developed a machine learning model to analyze sentiment in text data using Logistic Regression from Sci-Kit learn.",
+        "duration": "Not Mentioned",
+        "complexity": "High",
+        "technologies_used": [
+          "Pandas",
+          "wordcloud",
+          "matplotlib",
+          "scikit-learn",
+          "NLTK",
+          "Regex"
+        ]
+      },
+      {
+        "project_name": "Car price prediction",
+        "project_description": "Deployed a machine learning model to predict the price of a car using Support Vector Machine.",
+        "duration": "Not Mentioned",
+        "complexity": "High",
+        "technologies_used": [
+          "Matplotlib",
+          "Plotly",
+          "Streamlit",
+          "SimpleImputer",
+          "OneHotEncoder",
+          "LabelEncoder",
+          "StandardScaler",
+          "Flask"
+        ]
+      },
+      {
+        "project_name": "Diabetic Retinopathy Classification",
+        "project_description": "Used OpenCV and Pillows for image manipulation, enhancement and basic image processing tasks.",
+        "duration": "Not Mentioned",
+        "complexity": "High",
+        "technologies_used": [
+          "OpenCV",
+          "Pillows",
+          "Random Forest",
+          "Decision Tree"
+        ]
+      },
+      {
+        "project_name": "University Sports Management System",
+        "project_description": "This Web application was developed using HTML, CSS, JavaScript & PHP.",
+        "duration": "Not Mentioned",
+        "complexity": "High",
+        "technologies_used": [
+          "HTML",
+          "CSS",
+          "JavaScript",
+          "PHP"
+        ]
+      },
+      {
+        "project_name": "UI for a Grocery Shopping App",
+        "project_description": "An interactive user interface was developed using AXURE RP and Figma.",
+        "duration": "Not Mentioned",
+        "complexity": "High",
+        "technologies_used": [
+          "AXURE RP",
+          "Figma"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "NLP and Text Mining for Beginners - Simplilearn",
+      "JavaScript Essentials 1 - Cisco Networking Academy with OpenEDG JavaScript Institute",
+      "Young Engineers Australia Inaugural Case Competition - 2020"
+    ],
+    "all_skills": [
+      "Adaptability",
+      "Attention To Detail",
+      "Axure Rp",
+      "Azure",
+      "C/C++",
+      "CSS",
+      "Ci/Cd Pipeline",
+      "Communication Skills",
+      "Critical Thinking",
+      "Data Analysis",
+      "Data Visualization",
+      "Decision Tree",
+      "Figma",
+      "Flask",
+      "Git",
+      "HTML",
+      "Java",
+      "JavaScript",
+      "Keras",
+      "Labelencoder",
+      "Leadership",
+      "Learning Agility",
+      "Matlab",
+      "Matplotlib",
+      "MySQL",
+      "Nltk",
+      "Onehotencoder",
+      "Opencv",
+      "PHP",
+      "Pandas",
+      "Pillows",
+      "Plotly",
+      "Problem Solving",
+      "Prolog",
+      "Python",
+      "R",
+      "Random Forest",
+      "Regex",
+      "Simpleimputer",
+      "Standardscaler",
+      "Streamlit",
+      "TensorFlow",
+      "Visual Studio",
+      "Wordcloud",
+      "Writing And Documentation",
+      "Xampp Local Server",
+      "scikit-learn"
+    ],
+    "num_skills": 47,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 5,
+    "evaluation_score": 41.0,
+    "skill_score": 31.0,
+    "date_uploaded": "2025-01-08T15:44:12.590503",
+    "status": "Pending"
+  },
+  {
+    "candidate_id": "CAND_82AFFC53",
+    "candidate_name": "Imalsha Nethmi Rodrigo",
+    "mobile_number": "077 2824902",
+    "email": "imalsharodrigo852@gmail.com",
+    "current_role": "not mentioned",
+    "target_role": "Web Developer / Software Quality Assurance",
+    "current_employment": "not mentioned",
+    "education": {
+      "degree": "Bachelor of Science (Honours) in Information Technology",
+      "university": "University of Vavuniya"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "Java",
+          "JavaScript"
+        ],
+        "frameworks": [
+          "React",
+          "Spring Boot"
+        ],
+        "technologies": [
+          "HTML",
+          "CSS",
+          "MongoDB",
+          "SQL"
+        ],
+        "technical_skills": [
+          "not mentioned"
+        ],
+        "database": [
+          "MySQL",
+          "MongoDB"
+        ],
+        "soft_skills": [
+          "Communication",
+          "Team work",
+          "Decision Making",
+          "Time Management",
+          "Analytical Thinking"
+        ]
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Ongoing Research in Developing a Machine Learning model for classifying and assessing the Edibility of Mushroom.",
+        "project_description": "4th year individual research",
+        "duration": "2024",
+        "complexity": "High",
+        "technologies_used": [
+          "not mentioned"
+        ]
+      },
+      {
+        "project_name": "Ongoing Project in Development of domain specific intelligent agent",
+        "project_description": "This project is an NLP based chatbot for sentiment analysis",
+        "duration": "2024",
+        "complexity": "High",
+        "technologies_used": [
+          "Python",
+          "Natural Language processing techniques"
+        ]
+      },
+      {
+        "project_name": "Ongoing Project in Developing E commerce web application",
+        "project_description": "It is a web application for online shoe center.",
+        "duration": "2024",
+        "complexity": "High",
+        "technologies_used": [
+          "React",
+          "Spring Boot",
+          "Java",
+          "MySQL"
+        ]
+      },
+      {
+        "project_name": "Student Database for the office of the proctor and Welfare University of Vavuniya",
+        "project_description": "Built a web application. Proctor can add all data of students and review.",
+        "duration": "2024",
+        "complexity": "High",
+        "technologies_used": [
+          "MongoDB",
+          "Express",
+          "React",
+          "Node js"
+        ]
+      },
+      {
+        "project_name": "Social media content analyzer to extract insights",
+        "project_description": "Built a web application, There are key steps like web scraping for Printrest, Captioning, Text data extraction.",
+        "duration": "2024",
+        "complexity": "High",
+        "technologies_used": [
+          "image analyzing techniques",
+          "CNN"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Course in English",
+      "Networking Essentials",
+      "Cyber Security",
+      "UI/UX Design",
+      "Introduction to software testing or software QA",
+      "Introduction Information Technology"
+    ],
+    "all_skills": [
+      "Analytical Thinking",
+      "CSS",
+      "Cnn",
+      "Communication",
+      "Decision Making",
+      "Express.js",
+      "HTML",
+      "Image Analyzing Techniques",
+      "Java",
+      "JavaScript",
+      "MongoDB",
+      "MySQL",
+      "Natural Language Processing Techniques",
+      "Node.js",
+      "Python",
+      "React",
+      "SQL",
+      "Spring Boot",
+      "Team Work",
+      "Time Management"
+    ],
+    "num_skills": 20,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 5,
+    "evaluation_score": 66.0,
+    "skill_score": 56.0,
+    "date_uploaded": "2025-01-08T15:44:07.198381",
+    "status": "Pending"
+  },
+  {
+    "candidate_id": "CAND_D92710F7",
+    "candidate_name": "Fathima Azka",
+    "mobile_number": "+94 75 256 0325",
+    "email": "f.azka629@gmail.com",
+    "current_role": "Data Entry Operator",
+    "target_role": "Quality Engineer",
+    "current_employment": "IMS Freelancing (Pvt) Ltd.",
+    "education": {
+      "degree": "Bachelor of Science Honours in Information Technology(R)",
+      "university": "University of Vavuniya"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "C/C++",
+          "Java",
+          "Python",
+          "JavaScript",
+          "HTML",
+          "CSS"
+        ],
+        "frameworks": [
+          "React.js",
+          "Spring Boot"
+        ],
+        "technologies": [
+          "Node.js",
+          "VSCode",
+          "GitHub"
+        ],
+        "technical_skills": [],
+        "database": [
+          "MongoDB",
+          "Relational Databases (MySQL)"
+        ],
+        "soft_skills": [
+          "Project Management",
+          "Effective Communication",
+          "Critical Thinking and Problem Solving",
+          "Leadership",
+          "Team Work",
+          "Time Management"
+        ]
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "VideoDigest",
+        "project_description": "Video Summarization App - App for summarizing YouTube and local video content",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Streamlit",
+          "AssemblyAI",
+          "Google Gemini AI"
+        ]
+      },
+      {
+        "project_name": "GiftBliss",
+        "project_description": "An E-Commerce Project - An online gift shop with a comprehensive delivery service",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "React.js",
+          "Spring Boot"
+        ]
+      },
+      {
+        "project_name": "Green Decor",
+        "project_description": "A plant selling mobile app with AR technology (Group Project) - Mobile application, built using the Flutter framework",
+        "duration": "",
+        "complexity": "Medium",
+        "technologies_used": [
+          "Flutter",
+          "AR technology"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "Java Script Essentials 1 (JSE) - Cisco",
+      "Introduction To Cybersecurity - Cisco",
+      "IEEEExtream 17.0 Coding Competition",
+      "Bootcamp on Learn DevOps for Web Development - devtown",
+      "Bootcamp on Learn Everything about AI - devtown"
+    ],
+    "all_skills": [
+      "Ar Technology",
+      "Assemblyai",
+      "C/C++",
+      "CSS",
+      "Critical Thinking And Problem Solving",
+      "Effective Communication",
+      "Flutter",
+      "GitHub",
+      "Google Gemini Ai",
+      "HTML",
+      "Java",
+      "JavaScript",
+      "Leadership",
+      "Microsoft Access",
+      "Microsoft Excel",
+      "MongoDB",
+      "Node.Js",
+      "Project Management",
+      "Python",
+      "React.Js",
+      "Relational Databases (Mysql)",
+      "Spring Boot",
+      "Streamlit",
+      "Team Work",
+      "Time Management",
+      "Vscode"
+    ],
+    "num_skills": 26,
+    "experience_months": 11,
+    "experience_level": "Entry Level",
+    "num_projects": 3,
+    "evaluation_score": 66.0,
+    "skill_score": 56.0,
+    "date_uploaded": "2025-01-08T15:44:01.787659",
+    "status": "Pending"
+  },
+  {
+    "candidate_id": "CAND_65DCABEC",
+    "candidate_name": "Tharsika Jagatheeswaran",
+    "mobile_number": "+94-770608607",
+    "email": "tharsikajagatheeswaran06@gmail.com",
+    "current_role": "Trainee",
+    "target_role": "Mobile Application Developer",
+    "current_employment": "Bank Of Ceylon",
+    "education": {
+      "degree": "BSc (Hons) in Computer Science",
+      "university": "University of Vavuniya"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Java",
+          "Python",
+          "C++",
+          "HTML",
+          "CSS",
+          "JavaScript",
+          "C",
+          "Dart"
+        ],
+        "frameworks": [
+          "Flutter"
+        ],
+        "technologies": [
+          "Visual Studio",
+          "Android Studio",
+          "Axure",
+          "XAMPP local server",
+          "VS Code"
+        ],
+        "technical_skills": [
+          "not mentioned"
+        ],
+        "database": [
+          "MySQL"
+        ],
+        "soft_skills": [
+          "Communication",
+          "Team leadership",
+          "Time management",
+          "Problem-solving"
+        ]
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Research Project",
+        "project_description": "crop segmentation and crop types classification using satellite images in Northern Province, Sri Lanka. I am in the early stage of this Research. It is designing and implementing U-Net and CNN-based models for satellite image analysis to segment and classify crop types like paddy and corn in Northern Province, Sri Lanka.",
+        "duration": "Nov 2024 - Present",
+        "complexity": "High",
+        "technologies_used": [
+          "U-Net",
+          "CNN"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "JavaScript Essential 1 (JSE)",
+      "Getting started with python",
+      "Python Data Structure"
+    ],
+    "all_skills": [
+      "Android Studio",
+      "Axure",
+      "C",
+      "C++",
+      "CSS",
+      "Cnn",
+      "Communication",
+      "Dart",
+      "Flutter",
+      "HTML",
+      "Java",
+      "JavaScript",
+      "MySQL",
+      "Problem-Solving",
+      "Python",
+      "Team Leadership",
+      "Time Management",
+      "U-Net",
+      "Visual Studio",
+      "Vs Code",
+      "Xampp Local Server"
+    ],
+    "num_skills": 21,
+    "experience_months": 6,
+    "experience_level": "Entry Level",
+    "num_projects": 1,
+    "evaluation_score": 34.0,
+    "skill_score": 29.0,
+    "date_uploaded": "2025-01-08T15:44:17.548445",
+    "status": "Pending"
+  },
+  {
+    "candidate_id": "CAND_4D33905C",
+    "candidate_name": "Kasthoori Chandran",
+    "mobile_number": "+94 0769764826",
+    "email": "kasthoorichandran39@gmail.com",
+    "current_role": "not mentioned",
+    "target_role": "Mobile App Developer",
+    "current_employment": "not mentioned",
+    "education": {
+      "degree": "BSc (Hons) in Information Technology",
+      "university": "Department of Physical Science, University of Vavuniya"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "C++",
+          "C",
+          "C#",
+          "Java",
+          "JavaScript",
+          "PHP",
+          "Python"
+        ],
+        "frameworks": [
+          "Spring Boot",
+          "React",
+          "React Native"
+        ],
+        "technologies": [
+          "Visual Studio Code",
+          "Visual Studio",
+          "GitHub",
+          "Figma",
+          "Axure RP"
+        ],
+        "technical_skills": [
+          "Mobile Application Development",
+          "Web Development"
+        ],
+        "database": [
+          "MySQL",
+          "MongoDB"
+        ],
+        "soft_skills": [
+          "not mentioned"
+        ]
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "Age Calculator",
+        "project_description": "Individual Project (When select our DOB its shown the age of that current time.)",
+        "duration": "2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "HTML",
+          "CSS",
+          "JavaScript"
+        ]
+      },
+      {
+        "project_name": "Student Profile Mobile Application",
+        "project_description": "Individual Project",
+        "duration": "2023",
+        "complexity": "Not Mentioned",
+        "technologies_used": [
+          "React"
+        ]
+      },
+      {
+        "project_name": "Simple To-Do Mobile Application",
+        "project_description": "Individual Project (manage the tasks(Add,Update,Delete,Marks as completed)",
+        "duration": "2024",
+        "complexity": "Medium",
+        "technologies_used": [
+          "React Native"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "not mentioned"
+    ],
+    "all_skills": [
+      "Axure Rp",
+      "C",
+      "C#",
+      "C++",
+      "CSS",
+      "Figma",
+      "GitHub",
+      "HTML",
+      "Java",
+      "JavaScript",
+      "Mobile Application Development",
+      "MongoDB",
+      "MySQL",
+      "PHP",
+      "Python",
+      "React",
+      "React Native",
+      "Spring Boot",
+      "Visual Studio",
+      "Visual Studio Code",
+      "Web Development"
+    ],
+    "num_skills": 21,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 3,
+    "evaluation_score": 47.5,
+    "skill_score": 37.5,
+    "date_uploaded": "2025-01-08T15:44:16.750405",
+    "status": "Pending"
+  },
+  {
+    "candidate_id": "CAND_7D53CBD3",
+    "candidate_name": "Jalaxshi Rajaratnam",
+    "mobile_number": "+94 761167149",
+    "email": "Gmail",
+    "current_role": "Not Mentioned",
+    "target_role": "UI/UX Designer",
+    "current_employment": "Not Mentioned",
+    "education": {
+      "degree": "BSc(Hons) in Computer Science",
+      "university": "University of Vavuniya"
+    },
+    "skills": [
+      {
+        "programming_languages": [
+          "Python",
+          "C++",
+          "C",
+          "Java",
+          "JavaScript"
+        ],
+        "frameworks": [
+          "HTML",
+          "CSS",
+          "Prolog",
+          "Flutter"
+        ],
+        "technologies": [
+          "Microsoft Office",
+          "Excel",
+          "PowerPoint",
+          "Figma",
+          "Adobe Xp",
+          "AxureRp",
+          "VScode",
+          "Sublime text",
+          "Jupyter Notebook",
+          "Pandas",
+          "MySQL"
+        ],
+        "technical_skills": [
+          "not mentioned"
+        ],
+        "database": [
+          "not mentioned"
+        ],
+        "soft_skills": [
+          "Communication",
+          "Networking skills",
+          "Analytical",
+          "Creativity",
+          "Problem solving",
+          "Critical thinking",
+          "Leadership"
+        ]
+      }
+    ],
+    "projects_and_technologies_involved": [
+      {
+        "project_name": "LO-FI website",
+        "project_description": "Group project, Built Using Php, HTML, CSS and Javascript",
+        "duration": "Not Mentioned",
+        "complexity": "Not Mentioned",
+        "technologies_used": [
+          "Php",
+          "HTML",
+          "CSS",
+          "Javascript"
+        ]
+      },
+      {
+        "project_name": "Automated Cashew Nut Grading Using Deep Learning Techniques",
+        "project_description": "This study aims to integrate advanced computer vision and deep learning techniques to develop an automated system for cashew nut grading (whole nuts, half splits, broken pieces, and diseased nuts).",
+        "duration": "Present",
+        "complexity": "High",
+        "technologies_used": [
+          "Deep Learning",
+          "Computer Vision",
+          "IoT"
+        ]
+      }
+    ],
+    "certificates_or_qualifications": [
+      "not mentioned"
+    ],
+    "all_skills": [
+      "Adobe Xp",
+      "Analytical",
+      "Axurerp",
+      "C",
+      "C++",
+      "CSS",
+      "Communication",
+      "Computer Vision",
+      "Creativity",
+      "Critical Thinking",
+      "Deep Learning",
+      "Excel",
+      "Figma",
+      "Flutter",
+      "HTML",
+      "Iot",
+      "Java",
+      "JavaScript",
+      "Jupyter Notebook",
+      "Leadership",
+      "Microsoft Office",
+      "MySQL",
+      "Networking Skills",
+      "PHP",
+      "Pandas",
+      "Powerpoint",
+      "Problem Solving",
+      "Prolog",
+      "Python",
+      "Sublime Text",
+      "Vscode"
+    ],
+    "num_skills": 31,
+    "experience_months": 0,
+    "experience_level": "Fresher",
+    "num_projects": 2,
+    "evaluation_score": 36.0,
+    "skill_score": 31.0,
+    "date_uploaded": "2025-01-08T15:44:10.332855",
+    "status": "Pending"
+  }
+]
