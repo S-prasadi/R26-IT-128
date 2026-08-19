@@ -15,7 +15,7 @@ The component combines:
 - a Next.js dashboard with rankings, warnings, and charts;
 - deduplicated user notifications for new early warnings.
 
-The current repository uses a generated, synthetic-but-realistic historical dataset for model development and demonstration. The weekly scraper is the extension point for replacing or appending real observations.
+The current repository uses a generated, synthetic-but-realistic historical dataset for model development and demonstration. `scraping/topjobs_scraper.py` (§4.1) is a real-data pilot that has begun appending real observations alongside it, on a small scale so far.
 
 ## 2. System architecture
 
@@ -67,6 +67,8 @@ The generated development dataset covers 57 skills and 131 weekly periods. Four 
 | `data/raw/local/topjobs_lk.csv` | Sri Lanka | TopJobs-style job demand index |
 
 `scraping/generate_trends_dataset.py` creates this reproducible demonstration data. Trend shapes include steady growth/decline, sigmoid adoption, and hype-cycle behavior. Noise and a 1–4 week global lead are added to make model testing realistic.
+
+**Real data pilot.** `scraping/topjobs_scraper.py` (added in the Phase 3 improvement work — see `docs/skill-forecasting-improvement-plan.md`) scrapes TopJobs.lk's two IT job categories for a real weekly skill-mention score, written to `data/raw/local/topjobs_lk_real.csv`. It never stores job titles, descriptions, or company names — only the aggregate `{skill: percentage of listings mentioning it}` result. `scraping/build_trends_dataset.py` merges these real rows into `weekly_skill_dataset.csv` alongside the synthetic data, adding a `provenance` column (`synthetic`, `real`, or `carried_forward` for skills the pilot scraper didn't observe in a given real week, so a partial scrape can't read as a false demand cliff for the rest). The dataset is therefore no longer purely synthetic, though real coverage starts small (one week, a handful of skills) and grows only as the scraper is re-run.
 
 ### 4.2 Dataset construction
 
@@ -507,7 +509,7 @@ The mock result contains React, TypeScript, Node.js, Python, Docker, and AWS, pl
 
 ## 15. Important limitations and improvement points
 
-- The development history is synthetic; research conclusions should clearly label it as such until replaced with verified real-source data.
+- The development history is almost entirely synthetic; a small real-data pilot (`scraping/topjobs_scraper.py`, `provenance` column) has started but currently covers a single week and a handful of skills. Research conclusions should clearly label the dataset as synthetic-dominant until real coverage grows substantially.
 - `current_weekly_demand` currently uses historical average demand, despite UI wording that says “now.” Use `last_actual_count` if the intended definition is the most recent week.
 - Personalization filters/ranks tracked skills; it does not yet use proficiency, assessments, or learning goals to adjust recommendations.
 - Forecast accuracy metrics and confidence intervals are not exposed to the integrated frontend.
