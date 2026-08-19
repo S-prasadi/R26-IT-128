@@ -1,9 +1,27 @@
+import codecs
+import functools
 import os
 import re
 from datetime import datetime
 
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 from docx import Document
+from pdf2image import convert_from_path
+
+from . import llm_structurer
+from .ocr import (
+    OCRError,
+    extract_text_from_image as _ocr_extract_text_from_image,
+    ocr_image,
+    text_quality,
+)
+
+
+class CVExtractionError(Exception):
+    """Raised when a CV file cannot be parsed into text. Callers should catch
+    this and return a clean 4xx error instead of letting the underlying
+    library exception crash the request."""
+    pass
 
 
 SKILL_ALIASES = {
@@ -207,72 +225,280 @@ SKILL_ALIASES = {
 SECTION_HEADERS = [
     "summary",
     "profile",
+    "objective",
+    "career objective",
+    "professional summary",
+    "personal profile",
+    "about me",
+
     "work experience",
     "experience",
     "professional experience",
     "employment history",
     "work history",
     "career history",
+    "relevant experience",
+
     "education",
     "academic background",
+    "academic qualifications",
+    "educational background",
+
     "projects",
     "project experience",
+    "personal projects",
+    "academic projects",
+    "key projects",
+
     "technical skills",
     "skills",
+    "key skills",
+    "core competencies",
+    "competencies",
+    "technical proficiencies",
+    "areas of expertise",
+
     "certifications",
     "certificates",
     "licenses",
     "licences",
+    "courses",
+    "trainings",
+    "training",
+    "professional development",
+
     "soft skills",
     "extra curricular activities",
     "extracurricular activities",
-    "references"
+    "references",
+
+    "achievements",
+    "accomplishments",
+    "awards",
+    "languages",
+    "publications",
+    "volunteer experience",
+    "activities",
+    "contact information",
+    "personal details",
+    "interests",
+    "hobbies"
 ]
 
 
+_MIN_DIRECT_TEXT_QUALITY = 55
+_MIN_DIRECT_TEXT_LENGTH = 120
+
+
+def _clean_extracted_text(text):
+    if not text:
+        return ""
+
+    text = re.sub(r"(\w)-\n(\w)", r"\1\2", text)  # de-hyphenate line-wrapped words
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+
+    return text.strip()
+
+
+def _looks_letter_spaced(text):
+    tokens = [t for t in text.split(" ") if t]
+    if len(tokens) < 10:
+        return False
+    single_char = sum(1 for t in tokens if len(t) == 1)
+    return single_char / len(tokens) > 0.4
+
+
+def _collapse_letter_spacing(text):
+    """Some PDF export pipelines (seen on a real resume-builder export)
+    position every glyph individually, which pypdf then extracts as a
+    single space between every letter ('D U L I N A') while still using a
+    wider gap at real word boundaries. Detect that pattern and collapse it
+    back into words; ordinary text is returned unchanged."""
+    if not _looks_letter_spaced(text):
+        return text
+
+    lines_out = []
+    for line in text.splitlines():
+        chunks = re.split(r" {2,}", line)
+        lines_out.append(" ".join(chunk.replace(" ", "") for chunk in chunks))
+
+    return "\n".join(lines_out)
+
+
+def _render_pdf_page(file_path, page_number):
+    images = convert_from_path(
+        file_path,
+        dpi=300,
+        fmt="png",
+        thread_count=2,
+        use_pdftocairo=True,
+        first_page=page_number,
+        last_page=page_number,
+    )
+
+    if not images:
+        raise OCRError(f"Could not render PDF page {page_number} to an image")
+
+    return images[0]
+
+
 def extract_text_from_pdf(file_path):
-    text = ""
+    try:
+        reader = PdfReader(file_path)
+    except Exception as error:
+        raise CVExtractionError(f"Could not read PDF file: {error}") from error
 
-    reader = PdfReader(file_path)
+    if reader.is_encrypted:
+        try:
+            decrypted = reader.decrypt("")
+        except Exception:
+            decrypted = 0
 
-    for page in reader.pages:
-        page_text = page.extract_text()
+        # decrypt()'s return value is the real success signal (0 = failed,
+        # matching pypdf.PasswordType.NOT_DECRYPTED) — is_encrypted stays
+        # True even after a successful decrypt, so re-checking it here would
+        # always (incorrectly) treat a correctly-decrypted PDF as unreadable.
+        if not decrypted:
+            raise CVExtractionError("This PDF is password-protected and cannot be read.")
 
-        if page_text:
-            text += page_text + "\n"
+    page_texts = []
+    page_methods = []
 
-    return text
+    for page_number, page in enumerate(reader.pages, start=1):
+        candidates = []
+
+        for mode in ("layout", "plain"):
+            try:
+                candidates.append(page.extract_text(extraction_mode=mode) or "")
+            except Exception:
+                try:
+                    candidates.append(page.extract_text() or "")
+                except Exception:
+                    candidates.append("")
+
+        candidates = [_collapse_letter_spacing(c) for c in candidates]
+
+        direct_text = max(candidates, key=text_quality, default="")
+        direct_quality = text_quality(direct_text)
+
+        if direct_quality >= _MIN_DIRECT_TEXT_QUALITY and len(direct_text) >= _MIN_DIRECT_TEXT_LENGTH:
+            page_texts.append(direct_text)
+            page_methods.append("text-layer")
+            continue
+
+        # Weak or missing text layer — render just this page and OCR it,
+        # then keep whichever of the two actually reads better.
+        try:
+            image = _render_pdf_page(file_path, page_number)
+            ocr_text, _metadata = ocr_image(image)
+        except Exception:
+            ocr_text = ""
+
+        if text_quality(ocr_text) > direct_quality:
+            page_texts.append(ocr_text)
+            page_methods.append("ocr")
+        else:
+            page_texts.append(direct_text)
+            page_methods.append("text-layer")
+
+    unique_methods = set(page_methods)
+    if len(unique_methods) > 1:
+        method = "mixed"
+    else:
+        method = next(iter(unique_methods), "text-layer")
+
+    return _clean_extracted_text("\n\n".join(t for t in page_texts if t)), method
 
 
 def extract_text_from_docx(file_path):
-    document = Document(file_path)
+    try:
+        document = Document(file_path)
+    except Exception as error:
+        raise CVExtractionError(f"Could not read DOCX file: {error}") from error
 
-    text = ""
+    try:
+        lines = [paragraph.text for paragraph in document.paragraphs]
 
-    for paragraph in document.paragraphs:
-        text += paragraph.text + "\n"
+        for table in document.tables:
+            for row in table.rows:
+                cells = []
+                for cell in row.cells:
+                    cell_text = cell.text.strip()
+                    # Merged cells repeat the same text for every column they
+                    # span — skip an immediate repeat rather than duplicating it.
+                    if not cell_text or (cells and cells[-1] == cell_text):
+                        continue
+                    cells.append(cell_text)
+                if cells:
+                    lines.append(" | ".join(cells))
 
-    return text
+        return _clean_extracted_text("\n".join(lines)), "direct"
+    except Exception as error:
+        raise CVExtractionError(f"Could not extract text from DOCX: {error}") from error
+
+
+_TXT_ENCODINGS = ["utf-8", "cp1252"]
 
 
 def extract_text_from_txt(file_path):
-    with open(file_path, "r", encoding="utf-8", errors="ignore") as file:
-        return file.read()
+    try:
+        with open(file_path, "rb") as file:
+            raw = file.read()
+    except OSError as error:
+        raise CVExtractionError(f"Could not read TXT file: {error}") from error
+
+    # BOM-marked encodings first: cp1252/latin-1 are single-byte codecs that
+    # "succeed" (silently, garbled) on almost any byte sequence, so a blind
+    # try-chain would never reach utf-16/utf-8-sig for content that actually
+    # is one of those — a real BOM is an unambiguous signal, check it first.
+    if raw.startswith(codecs.BOM_UTF8):
+        return _clean_extracted_text(raw.decode("utf-8-sig")), "direct"
+    if raw.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
+        return _clean_extracted_text(raw.decode("utf-16")), "direct"
+
+    for encoding in _TXT_ENCODINGS:
+        try:
+            return _clean_extracted_text(raw.decode(encoding)), "direct"
+        except (UnicodeDecodeError, UnicodeError):
+            continue
+
+    # latin-1 (last in the chain above) maps every byte, so this is
+    # unreachable in practice — kept as a safe terminal fallback.
+    return _clean_extracted_text(raw.decode("latin-1", errors="replace")), "direct"
+
+
+def extract_text_from_image(file_path):
+    try:
+        return _clean_extracted_text(_ocr_extract_text_from_image(file_path)), "ocr"
+    except OCRError as error:
+        raise CVExtractionError(str(error)) from error
 
 
 def extract_text_from_file(file_path):
+    """Extract text from a CV file. Returns (text, extraction_metadata),
+    where extraction_metadata is {"method": ..., "quality": ...} — method is
+    "text-layer"/"ocr"/"mixed" (PDF), "direct" (DOCX/TXT), "ocr" (image), or
+    "unsupported" if the extension isn't recognized."""
     extension = os.path.splitext(file_path)[1].lower()
 
-    if extension == ".pdf":
-        return extract_text_from_pdf(file_path)
+    try:
+        if extension == ".pdf":
+            text, method = extract_text_from_pdf(file_path)
+        elif extension == ".docx":
+            text, method = extract_text_from_docx(file_path)
+        elif extension == ".txt":
+            text, method = extract_text_from_txt(file_path)
+        elif extension in (".png", ".jpg", ".jpeg"):
+            text, method = extract_text_from_image(file_path)
+        else:
+            return "", {"method": "unsupported", "quality": 0.0}
+    except CVExtractionError:
+        raise
+    except Exception as error:
+        raise CVExtractionError(f"Unexpected error reading {extension} file: {error}") from error
 
-    if extension == ".docx":
-        return extract_text_from_docx(file_path)
-
-    if extension == ".txt":
-        return extract_text_from_txt(file_path)
-
-    return ""
+    return text, {"method": method, "quality": text_quality(text)}
 
 
 def normalize_text(text):
@@ -319,7 +545,59 @@ def extract_skills_from_text(text):
     return sorted(list(set(found_skills)))
 
 
-def split_into_sections(text):
+_HEADER_DECORATION_RE = re.compile(r"^\s*([0-9]{1,2}[\.\)]|[ivxIVX]{1,4}[\.\)]|[-*•])\s*")
+_HEADER_BANNER_RE = re.compile(r"^[-=*_~\s]+|[-=*_~\s]+$")
+_HEADER_TRAILING_COLON_RE = re.compile(r":\s*$")
+
+
+def _strip_header_decoration(line):
+    stripped = _HEADER_DECORATION_RE.sub("", line)
+    stripped = _HEADER_TRAILING_COLON_RE.sub("", stripped)
+    stripped = _HEADER_BANNER_RE.sub("", stripped)
+
+    return stripped.strip()
+
+
+def _looks_like_header_candidate(line):
+    if len(line) > 35:
+        return False
+
+    word_count = len(normalize_for_phrase(line).split())
+
+    if word_count == 0 or word_count > 4:
+        return False
+
+    if line.rstrip().endswith((".", ",", ";")):
+        return False
+
+    return True
+
+
+def _match_section_header(line):
+    """Return the SECTION_HEADERS entry a line matches, or None. Tries an
+    exact match first; only for short, punctuation-free, header-shaped lines
+    does it also try again after stripping numbering/bullets/banner symbols
+    — always as a full-line exact match, never a substring, so body text
+    that merely mentions a header word is never misdetected."""
+    normalized_line = normalize_for_phrase(line)
+
+    for header in SECTION_HEADERS:
+        if normalized_line == normalize_for_phrase(header):
+            return header
+
+    if not _looks_like_header_candidate(line):
+        return None
+
+    normalized_cleaned = normalize_for_phrase(_strip_header_decoration(line))
+
+    for header in SECTION_HEADERS:
+        if normalized_cleaned == normalize_for_phrase(header):
+            return header
+
+    return None
+
+
+def _split_into_sections_regex(text):
     lines = [line.strip() for line in text.splitlines() if line.strip()]
 
     sections = {}
@@ -327,14 +605,7 @@ def split_into_sections(text):
     sections[current_section] = []
 
     for line in lines:
-        normalized_line = normalize_for_phrase(line)
-
-        matched_header = None
-
-        for header in SECTION_HEADERS:
-            if normalized_line == normalize_for_phrase(header):
-                matched_header = header
-                break
+        matched_header = _match_section_header(line)
 
         if matched_header:
             current_section = matched_header
@@ -348,6 +619,24 @@ def split_into_sections(text):
         final_sections[section_name] = "\n".join(section_lines)
 
     return final_sections
+
+
+@functools.lru_cache(maxsize=8)
+def _resolve_sections(text):
+    """Prefer the local Ollama model's section split; fall back to the
+    regex/heuristic splitter when it's unreachable or returns nothing
+    usable. Cached so the 4 estimator functions below, which each call
+    split_into_sections independently on the same text, only trigger one
+    real Ollama call per CV rather than four."""
+    llm_sections = llm_structurer.structure_sections(text)
+    if llm_sections:
+        return llm_sections
+
+    return _split_into_sections_regex(text)
+
+
+def split_into_sections(text):
+    return _resolve_sections(text)
 
 
 def get_section_text(sections, possible_names):
@@ -422,7 +711,8 @@ def estimate_experience_months(text):
             "professional experience",
             "employment history",
             "work history",
-            "career history"
+            "career history",
+            "relevant experience"
         ]
     )
 
@@ -487,7 +777,10 @@ def estimate_project_count(text):
         sections,
         [
             "projects",
-            "project experience"
+            "project experience",
+            "personal projects",
+            "academic projects",
+            "key projects"
         ]
     )
 
@@ -530,7 +823,11 @@ def estimate_certificate_count(text):
             "certifications",
             "certificates",
             "licenses",
-            "licences"
+            "licences",
+            "courses",
+            "trainings",
+            "training",
+            "professional development"
         ]
     )
 
@@ -580,7 +877,15 @@ def estimate_ats_quality_score(text):
     if len(text) > 500:
         score += 20
 
-    if "summary" in sections or "profile" in sections:
+    if (
+        "summary" in sections
+        or "profile" in sections
+        or "objective" in sections
+        or "career objective" in sections
+        or "professional summary" in sections
+        or "personal profile" in sections
+        or "about me" in sections
+    ):
         score += 15
 
     if (
@@ -590,16 +895,36 @@ def estimate_ats_quality_score(text):
         or "employment history" in sections
         or "work history" in sections
         or "career history" in sections
+        or "relevant experience" in sections
     ):
         score += 15
 
-    if "education" in sections or "academic background" in sections:
+    if (
+        "education" in sections
+        or "academic background" in sections
+        or "academic qualifications" in sections
+        or "educational background" in sections
+    ):
         score += 10
 
-    if "projects" in sections or "project experience" in sections:
+    if (
+        "projects" in sections
+        or "project experience" in sections
+        or "personal projects" in sections
+        or "academic projects" in sections
+        or "key projects" in sections
+    ):
         score += 15
 
-    if "technical skills" in sections or "skills" in sections:
+    if (
+        "technical skills" in sections
+        or "skills" in sections
+        or "key skills" in sections
+        or "core competencies" in sections
+        or "competencies" in sections
+        or "technical proficiencies" in sections
+        or "areas of expertise" in sections
+    ):
         score += 15
 
     if (
@@ -607,6 +932,10 @@ def estimate_ats_quality_score(text):
         or "certificates" in sections
         or "licenses" in sections
         or "licences" in sections
+        or "courses" in sections
+        or "trainings" in sections
+        or "training" in sections
+        or "professional development" in sections
     ):
         score += 10
 

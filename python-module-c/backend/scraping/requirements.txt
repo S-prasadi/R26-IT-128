@@ -1,0 +1,11 @@
+requests
+beautifulsoup4
+easyocr
+pillow
+
+# utils/__init__.py imports all of cv_parser.py eagerly, which needs these
+# even though this scraper only calls extract_skills_from_text():
+PyPDF2
+python-docx
+dateparser
+pandas

@@ -1,0 +1,5 @@
+model,cv_mae_mean,cv_mae_std,cv_r2_mean,cv_r2_std
+Gradient Boosting,0.7481,0.0649,0.9929,0.0012
+Voting Ensemble,1.0152,0.0424,0.9876,0.001
+Extra Trees,1.3092,0.0448,0.9793,0.0015
+Random Forest,1.4057,0.0737,0.9775,0.0021
