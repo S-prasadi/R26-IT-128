@@ -257,7 +257,7 @@ export default function CareerPage() {
   // save, each persisting its own duplicate row to the prediction history.
   useEffect(() => {
     if (!loading && goal && predictSkills.length > 0 && !prediction && !predicting) {
-      runPrediction(true);
+      runPrediction(true, false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, goal, predictSkills.length, predicting]);
@@ -320,7 +320,12 @@ export default function CareerPage() {
 
   // silent = true suppresses toasts/errors (used for the automatic goal-path
   // preview triggered on save/load, as opposed to the user-initiated button).
-  async function runPrediction(silent = false) {
+  // persist = false marks the call as a preview (backend's `simulate` flag) so
+  // it doesn't write a new career_predictions row — otherwise the mount-time
+  // auto-preview below would insert a fresh near-duplicate snapshot on every
+  // single page visit, which made deleted history cards look like they'd come
+  // back (a new lookalike row replaced the one that was actually deleted).
+  async function runPrediction(silent = false, persist = true) {
     if (predictSkills.length === 0) {
       if (!silent) toast.error("Add at least one language to predict your path");
       return;
@@ -332,6 +337,7 @@ export default function CareerPage() {
         experience_months: expMonths,
         num_projects:      numProjects,
         skills:            predictSkills,
+        ...(persist ? {} : { simulate: true }),
       });
       setPrediction(res.data.data);
       setSimResult(null);

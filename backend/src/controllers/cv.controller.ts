@@ -74,7 +74,10 @@ export const cvController = {
     if (!jobText && req.file) {
       const normalizedMime = normalizeMimeType(req.file.mimetype);
       try {
-        const { extracted_text } = await interviewService.extractDocumentText(req.file.buffer, normalizedMime);
+        const { extracted_text } = await interviewService.extractDocumentText(req.file.buffer, normalizedMime, {
+          timeoutMs: 300000,
+          throwOnUnreachable: true,
+        });
         jobText = extracted_text.trim();
       } catch {
         res.status(422).json({ success: false, message: "Could not extract text from the uploaded file. Please paste the job description as text instead." });

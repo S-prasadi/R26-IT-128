@@ -26,15 +26,21 @@ const MOCK_CV_ANALYSIS = {
     { skill: "Node.js",    verified: false, confidence: 0.40, evidence_url: null },
   ],
   job_matches: [
-    { title: "Frontend Developer",     company: "99x Technology",  match_pct: 88, skill_gaps: ["Redux","Jest"] },
-    { title: "Full-Stack Engineer",    company: "WSO2",            match_pct: 76, skill_gaps: ["Java","Kubernetes"] },
-    { title: "React Developer",        company: "IFS",             match_pct: 82, skill_gaps: ["Docker"] },
+    { title: "Frontend Developer",     company: "99x Technology",  match_pct: 88, skill_gaps: ["Redux","Jest"], percentile: null as number | null, percentile_label: null as string | null },
+    { title: "Full-Stack Engineer",    company: "WSO2",            match_pct: 76, skill_gaps: ["Java","Kubernetes"], percentile: null as number | null, percentile_label: null as string | null },
+    { title: "React Developer",        company: "IFS",             match_pct: 82, skill_gaps: ["Docker"], percentile: null as number | null, percentile_label: null as string | null },
   ],
   suggestions: [
     { section: "skills",     issue: "Missing quantified metrics",       fix_example: "Add: 'Improved page load by 40% using React lazy loading'" },
     { section: "experience", issue: "Action verbs are weak",            fix_example: "Replace 'worked on' with 'engineered', 'delivered', 'optimised'" },
     { section: "summary",    issue: "Summary too generic",              fix_example: "Mention specific technologies and measurable outcomes" },
   ],
+  ats_score: null as number | null,
+  percentile: null as number | null,
+  percentile_label: null as string | null,
+  // Module C is unreachable — distinguishes fake demo matches above from a
+  // real analysis, same pattern MOCK_JOB_COMPARISON already uses below.
+  unavailable: true,
 };
 
 const MOCK_JOB_COMPARISON = {
@@ -45,6 +51,8 @@ const MOCK_JOB_COMPARISON = {
   closest_role: null as string | null,
   predicted_score: null as number | null,
   predicted_level: null as string | null,
+  percentile: null as number | null,
+  percentile_label: null as string | null,
   recommendations: ["Module C is unavailable — start it to compare this CV against the job post."],
   unavailable: true,
 };
@@ -190,7 +198,12 @@ export const cvService = {
         `${pythonUrls.moduleD()}/extract-cv`,
         { file_b64, mimetype: file.mimetype },
         emptyResult,
-        { timeoutMs: 180000 }
+        // 300s, not 180s: Module D's startup hook now warms EasyOCR + Ollama
+        // so a cold-start no longer stacks onto a real request, but a real
+        // multi-page scanned CV (OCR + local-LLM structuring) can still
+        // legitimately take a few minutes on CPU — this is safety margin,
+        // not a substitute for the warm-up.
+        { timeoutMs: 300000 }
       ) as { raw_text: string; sections: Record<string, unknown>; extraction?: Record<string, unknown> };
     } catch (extractErr: any) {
       // Module D returned an HTTP error (e.g. 422 — could not extract text).
@@ -211,17 +224,22 @@ export const cvService = {
     };
     if (links.github)   cvUpdate.github_url   = links.github;
     if (links.linkedin) cvUpdate.linkedin_url = links.linkedin;
-    await supabaseAdmin.from("cvs").update(cvUpdate).eq("id", cvId);
+    const { error: cvUpdateError } = await supabaseAdmin.from("cvs").update(cvUpdate).eq("id", cvId);
+    // Must not fail silently: this write is what makes the upload durable —
+    // a swallowed error here previously meant the file looked uploaded for
+    // the rest of the session but reverted to the upload prompt on reload.
+    if (cvUpdateError) throw new AppError(`Failed to save uploaded CV: ${cvUpdateError.message}`, HTTP_STATUS.INTERNAL_SERVER_ERROR);
 
     // Auto-save extracted sections so data is preserved without a manual Save click
     await supabaseAdmin.from("cv_sections").delete().eq("cv_id", cvId);
-    await supabaseAdmin.from("cv_sections").insert([
+    const { error: sectionsError } = await supabaseAdmin.from("cv_sections").insert([
       { cv_id: cvId, section_type: "summary",    content: { text: sections.summary ?? "" },                              order_index: 0 },
       { cv_id: cvId, section_type: "experience", content: { entries: sections.experience ?? [] },                        order_index: 1 },
       { cv_id: cvId, section_type: "education",  content: { entries: sections.education  ?? [] },                        order_index: 2 },
       { cv_id: cvId, section_type: "skills",     content: { skills:  sections.skills     ?? emptySkills },               order_index: 3 },
       { cv_id: cvId, section_type: "projects",   content: { entries: sections.projects   ?? [] },                        order_index: 4 },
     ]);
+    if (sectionsError) console.warn(`[CV] Failed to auto-save extracted sections for ${cvId}: ${sectionsError.message}`);
 
     progressService.updateProgress(userId, "cv", 30).catch(() => {});
 
@@ -312,11 +330,46 @@ export const cvService = {
       matchScore = Math.round(top.reduce((s: number, m: any) => s + (m.match_pct ?? 0), 0) / top.length);
     }
 
+    // Overall percentile: same top-3 aggregation as matchScore, for
+    // consistency. The label is reused verbatim from the #1 job match rather
+    // than synthesized here — Module C already wrote a well-formed sentence
+    // for that specific role, and an aggregate across roles has no single
+    // natural sentence of its own.
+    let overallPercentile: number | null = null;
+    if (result.job_matches?.length) {
+      const withPercentile = result.job_matches.slice(0, 3).filter((m: any) => m.percentile != null);
+      if (withPercentile.length) {
+        overallPercentile = Math.round(
+          withPercentile.reduce((s: number, m: any) => s + m.percentile, 0) / withPercentile.length
+        );
+      }
+    }
+    const overallPercentileLabel: string | null = result.job_matches?.[0]?.percentile_label ?? null;
+
+    // callPython returns the fallback object *by reference* when the service is
+    // unreachable, so identity is a reliable "this is mock data" check. Mock
+    // analysis must never be persisted as if it were a real verification result
+    // — a reader of the column has no other way to tell the difference.
+    const isMockResult = result === MOCK_CV_ANALYSIS;
+    if (isMockResult) {
+      console.warn(`[CV] Module C unreachable for ${cvId} — returning mock analysis without persisting it`);
+    }
+
     // Store analysis results back into DB when the columns are present.
+    // ats_score is intentionally not written here: the `cvs.ats_score`
+    // column referenced in migration 0013 was never actually applied to
+    // the live database (PostgREST reports "Could not find the 'ats_score'
+    // column of 'cvs' in the schema cache" on every analyze call) — until
+    // that migration is (re)applied, skip persisting it rather than fail
+    // this update on every analysis.
     const { error: cvUpdateError } = await supabaseAdmin.from("cvs").update({
-      match_score: matchScore,
-      bert_skills: result.extracted_skills,
-      github_verified_skills: result.github_verified,
+      match_score: isMockResult ? null : matchScore,
+      bert_skills: isMockResult ? null : result.extracted_skills,
+      // Module C's view only. GitHub-API-derived verification lives in
+      // github_api_verified_skills (migration 0031), written by githubService.
+      github_verified_skills: isMockResult ? null : result.github_verified,
+      percentile: isMockResult ? null : overallPercentile,
+      percentile_label: isMockResult ? null : overallPercentileLabel,
     }).eq("id", cvId);
     if (cvUpdateError) {
       console.warn(`[CV] Failed to persist analysis metrics for ${cvId}: ${cvUpdateError.message}`);
@@ -328,11 +381,13 @@ export const cvService = {
     if (result.job_matches?.length) {
       const { error: jmError } = await supabaseAdmin.from("cv_job_matches").insert(
         result.job_matches.map((m: any) => ({
-          cv_id:      cvId,
-          job_title:  m.title ?? m.job_title ?? "Unknown role",
-          company:    m.company ?? null,
-          match_pct:  m.match_pct ?? null,
-          skill_gaps: m.skill_gaps ?? [],
+          cv_id:            cvId,
+          job_title:        m.title ?? m.job_title ?? "Unknown role",
+          company:          m.company ?? null,
+          match_pct:        m.match_pct ?? null,
+          skill_gaps:       m.skill_gaps ?? [],
+          percentile:       m.percentile ?? null,
+          percentile_label: m.percentile_label ?? null,
         }))
       );
       if (jmError) console.error(`[CV] job_matches insert failed: ${jmError.message}`);
@@ -484,11 +539,18 @@ export const cvService = {
         const forecast = await callPython(
           `${pythonUrls.moduleA()}/forecast`,
           { user_id: userId, skills: comparison.missing_skills },
-          { trending: [], matched: false }
-        ) as { matched: boolean; trending: Array<{ skill: string; predicted_weekly_demand: number; velocity: string }> };
+          { trending: { established: [], emerging: [] }, matched: false }
+        ) as {
+          matched: boolean;
+          trending: {
+            established: Array<{ skill: string; predicted_weekly_demand: number; velocity: string }>;
+            emerging: Array<{ skill: string; predicted_weekly_demand: number; velocity: string }>;
+          };
+        };
         if (forecast.matched) {
           const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
-          const byName = new Map(forecast.trending.map((t) => [norm(t.skill), t]));
+          const allTrending = [...forecast.trending.established, ...forecast.trending.emerging];
+          const byName = new Map(allTrending.map((t) => [norm(t.skill), t]));
           missingWithDemand = (comparison.missing_skills ?? []).map((skill) => {
             const t = byName.get(norm(skill));
             return t

@@ -6,8 +6,12 @@ with realistic noise (random walk + momentum). Appends to all 4 raw source
 CSVs, rebuilds weekly_skill_dataset.csv, then calls predict.py to update
 forecasts.csv.
 
-In a real deployment this script would scrape TopJobs.lk / LinkedIn etc.
-and write the same CSV format. The pipeline below is identical either way.
+This script simulates the local TopJobs.lk source; scraping/topjobs_scraper.py
+(Phase 3 pilot) is the real counterpart, currently covering TopJobs.lk's two
+IT categories on a small scale. LinkedIn and Google Trends have no accessible
+bulk API and remain simulated -- see docs/skill-forecasting-review-report.md
+Area 3 for why. Real and simulated rows coexist, tagged via the `provenance`
+column build_trends_dataset.py adds when merging them.
 
 Usage:
   python scraping/weekly_scraper.py           # generate 1 next week
@@ -163,18 +167,24 @@ def rebuild_dataset():
 
 
 def update_forecasts():
-    print("\n  Updating forecasts via predict.py ...")
+    # Runs model/forecasting.py's full refit rather than predict.py's incremental
+    # update -- predict.py is a separate, older implementation that has none of
+    # Phase 4a's fixes (confidence-interval trend gating, growth_score, the
+    # endpoint-anomaly guard that keeps a single scale-mismatched real-data week
+    # from corrupting every skill's forecast). A full refit costs under 2s for
+    # 57 skills, so there's no performance reason to keep the incremental path.
+    print("\n  Updating forecasts via model/forecasting.py ...")
     result = subprocess.run(
-        [sys.executable, os.path.join(BASE, "predict.py")],
+        [sys.executable, os.path.join(BASE, "model", "forecasting.py")],
         capture_output=True, text=True
     )
     if result.returncode != 0:
-        print("  ERROR in predict.py:")
+        print("  ERROR in model/forecasting.py:")
         print(result.stderr[-800:])
         return False
     for line in result.stdout.strip().splitlines():
-        if any(k in line for k in ["Forecast saved", "FORECAST SUMMARY",
-                                    "Rising", "Falling", "Total skills"]):
+        if any(k in line for k in ["Forecasted", "Trend breakdown",
+                                    "rising", "falling", "stable"]):
             print(f"  {line.strip()}")
     return True
 

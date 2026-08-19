@@ -10,6 +10,19 @@ import type {
   ResetPasswordDto,
 } from "../validations/auth.validation";
 
+// Every new auth.users row gets the default 'user' role from the
+// handle_new_user() DB trigger, including admin/manager accounts created via
+// seedAdmin() — so an admin's `roles` array is really ['user', 'admin'], and
+// picking roles[0] picks whichever the DB happens to return first, not the
+// most-privileged one. This ranks by privilege instead, so a dual-role admin
+// is reported as "admin", not arbitrarily as "user" (which previously locked
+// admins out of the admin-only login page's role check).
+const ROLE_PRIORITY = ["admin", "manager", "user"];
+function primaryRole(roles: string[]): string {
+  for (const r of ROLE_PRIORITY) if (roles.includes(r)) return r;
+  return roles[0] ?? "user";
+}
+
 export const authService = {
   async register(dto: RegisterDto) {
     console.log(`[Auth] Register attempt for email: ${dto.email}`);
@@ -58,7 +71,7 @@ export const authService = {
         id: data.user.id,
         email: data.user.email ?? "",
         name: dto.full_name ?? data.user.email ?? "",
-        role: roles2[0] ?? "user",
+        role: primaryRole(roles2),
         roles: roles2,
         permissions: perms2,
         is_active: true,
@@ -102,7 +115,7 @@ export const authService = {
         id: data.user.id,
         email: profile?.email ?? data.user.email ?? "",
         name: profile?.full_name ?? (data.user.user_metadata?.full_name as string | undefined) ?? data.user.email ?? "",
-        role: roles[0] ?? "user",
+        role: primaryRole(roles),
         roles,
         permissions,
         is_active: profile?.is_active ?? true,

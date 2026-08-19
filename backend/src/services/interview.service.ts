@@ -226,7 +226,17 @@ export const interviewService = {
     );
   },
 
-  async extractDocumentText(fileBuffer: Buffer, mimetype: string): Promise<{ extracted_text: string }> {
+  /** opts is forwarded to callPython as-is; omit it to keep the existing
+   *  default behavior (60s timeout, silent empty-text fallback on timeout —
+   *  relied on by the interview-document-upload caller for graceful
+   *  degradation). Pass { timeoutMs, throwOnUnreachable: true } when the
+   *  caller needs a real error instead of a silently-empty result — see
+   *  cv.controller.ts's attachJobPost. */
+  async extractDocumentText(
+    fileBuffer: Buffer,
+    mimetype: string,
+    opts?: { timeoutMs?: number; throwOnUnreachable?: boolean }
+  ): Promise<{ extracted_text: string }> {
     const normalizedMime = normalizeMimeType(mimetype);
 
     if (normalizedMime === "text/plain") {
@@ -237,7 +247,8 @@ export const interviewService = {
     const result = await callPython(
       `${pythonUrls.moduleD()}/extract-ocr`,
       { file_b64, mimetype: normalizedMime },
-      { text: "" }
+      { text: "" },
+      opts
     ) as { text: string };
     return { extracted_text: result.text ?? "" };
   },

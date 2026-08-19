@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { PiqChartContainer, PiqTooltip, PIQ_COLORS } from "@/components/piq/charts";
 import { PiqBtn, PiqSpinner, PiqStatCard } from "@/components/piq/primitives";
 import { PageHeader } from "@/components/common/PageHeader";
 import { cvService } from "@/services/cv.service";
@@ -93,18 +95,28 @@ export default function CVPage() {
       // immediately without re-running Module C.
       const restoredAnalysis = {
         extracted_skills: (cv.bert_skills as CVAnalysisResult["extracted_skills"]) ?? [],
-        github_verified:  (cv.github_verified_skills as CVAnalysisResult["github_verified"]) ?? [],
+        // Prefer verification derived from the real GitHub API (migration 0031)
+        // over Module C's CV-analysis view; fall back when GitHub isn't connected.
+        github_verified:
+          (cv.github_api_verified_skills as CVAnalysisResult["github_verified"])
+          ?? (cv.github_verified_skills as CVAnalysisResult["github_verified"])
+          ?? [],
         job_matches: (cv.job_matches ?? []).map((m) => ({
-          title:      m.job_title,
-          company:    m.company ?? "",
-          match_pct:  m.match_pct,
-          skill_gaps: m.skill_gaps ?? [],
+          title:            m.job_title,
+          company:          m.company ?? "",
+          match_pct:        m.match_pct,
+          skill_gaps:       m.skill_gaps ?? [],
+          percentile:       m.percentile ?? null,
+          percentile_label: m.percentile_label ?? null,
         })),
         suggestions: (cv.suggestions ?? []).map((s) => ({
           section:     s.section_type ?? "summary",
           issue:       s.issue,
           fix_example: s.fix_example ?? "",
         })),
+        ats_score:        cv.ats_score ?? null,
+        percentile:       cv.percentile ?? null,
+        percentile_label: cv.percentile_label ?? null,
       };
       setAnalysis(
         restoredAnalysis.extracted_skills.length ||
@@ -306,12 +318,24 @@ export default function CVPage() {
 
   function handleApplySuggestion(s: { section: string; fix_example: string }) {
     const sec = s.section as SectionType;
-    const fix = s.fix_example;
-    if (sec === "experience" && structuredSections.experience.length > 0) {
-      const updated = structuredSections.experience.map((e, i) =>
-        i === 0 ? { ...e, bullets: [...e.bullets, fix] } : e
-      );
-      setStructuredSections((prev) => ({ ...prev, experience: updated }));
+    const fix = s.fix_example?.trim();
+    // Nothing to apply — surface this instead of silently adding a blank
+    // entry (e.g. an invisible chip in Skills > Other) while still claiming
+    // success.
+    if (!fix) {
+      toast.error("This suggestion has no fix to apply");
+      return;
+    }
+    let applied = true;
+    if (sec === "experience") {
+      if (structuredSections.experience.length > 0) {
+        const updated = structuredSections.experience.map((e, i) =>
+          i === 0 ? { ...e, bullets: [...e.bullets, fix] } : e
+        );
+        setStructuredSections((prev) => ({ ...prev, experience: updated }));
+      } else {
+        applied = false;
+      }
     } else if (sec === "summary") {
       setStructuredSections((prev) => ({ ...prev, summary: prev.summary ? `${prev.summary}\n\n${fix}` : fix }));
     } else if (sec === "skills") {
@@ -321,6 +345,12 @@ export default function CVPage() {
     } else if (sec === "projects") {
       const newProj: CVProjectEntry = { name: "New Project", description: fix, tech_stack: [] };
       setStructuredSections((prev) => ({ ...prev, projects: [newProj, ...prev.projects] }));
+    } else {
+      applied = false;
+    }
+    if (!applied) {
+      toast.error("Couldn't apply this suggestion automatically — add it manually in the editor");
+      return;
     }
     setActiveSection(sec);
     setStep("CV Editor");
@@ -577,21 +607,61 @@ export default function CVPage() {
                     <PiqBtn size="sm" variant="secondary" onClick={handleAnalyse} disabled={analysing}>↻ Re-analyse CV</PiqBtn>
                   </div>
 
+                  {analysis.unavailable && (
+                    <div style={{ marginBottom: 16, padding: "10px 14px", borderRadius: "var(--radius)", background: "var(--amberD, #451a03)20", border: "1px solid var(--amber)40", fontSize: 13, color: "var(--amber)" }}>
+                      Module C was unavailable — the results below are placeholder demo data, not a real analysis of this CV. Re-analyse once Module C is running.
+                    </div>
+                  )}
+
                   {/* Insights */}
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px,1fr))", gap: 16, marginBottom: 24 }}>
                     {analysis.job_matches?.length > 0 && (() => {
                       const top = analysis.job_matches.slice(0, 3);
                       const avg = Math.round(top.reduce((s, m) => s + m.match_pct, 0) / top.length);
                       return (
-                        <div style={{ background: "var(--surf2)", borderRadius: "var(--radius)", border: "1px solid var(--border)", padding: 16, minHeight: 200, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                          <div style={{ fontSize: 12, color: "var(--text3)", marginBottom: 8 }}>Average Match Score</div>
-                          <div style={{ fontSize: 40, fontWeight: 700, color: avg >= 80 ? "var(--teal)" : avg >= 60 ? "var(--amber)" : "var(--rose)" }}>{avg}</div>
-                          <div style={{ fontSize: 12, color: "var(--text3)" }}>/ 100</div>
-                          <div style={{ fontSize: 12, color: "var(--text2)", marginTop: 8 }}>Across the top matching roles</div>
-                        </div>
+                        <PiqStatCard
+                          label="Average Match Score"
+                          value={`${avg}`}
+                          sub={
+                            analysis.percentile != null
+                              ? `/ 100 · higher than ${analysis.percentile}% of applicants`
+                              : "/ 100 · across the top matching roles"
+                          }
+                          icon="chart"
+                          color={avg >= 80 ? "var(--teal)" : avg >= 60 ? "var(--amber)" : "var(--rose)"}
+                        />
                       );
                     })()}
                   </div>
+
+                  {/* Match vs. relative percentile, per role */}
+                  {analysis.job_matches?.some((m) => m.percentile != null) && (
+                    <div style={{ marginBottom: 24 }}>
+                      <SectionLabel>Match Score vs. Relative Percentile</SectionLabel>
+                      <PiqChartContainer height={220}>
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart
+                            data={analysis.job_matches.slice(0, 5).map((m) => ({
+                              role: m.title.length > 14 ? m.title.slice(0, 14) + "…" : m.title,
+                              match_pct: m.match_pct,
+                              percentile: m.percentile ?? undefined,
+                            }))}
+                            margin={{ top: 4, right: 8, left: -20, bottom: 0 }}
+                            barGap={4}
+                            barCategoryGap="30%"
+                          >
+                            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                            <XAxis dataKey="role" tick={{ fontSize: 11, fill: "var(--text3)" }} axisLine={false} tickLine={false} />
+                            <YAxis tick={{ fontSize: 11, fill: "var(--text3)" }} axisLine={false} tickLine={false} domain={[0, 100]} />
+                            <Tooltip content={<PiqTooltip />} cursor={{ fill: "var(--surf2)" }} />
+                            <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
+                            <Bar dataKey="match_pct"  name="Match %"                 fill={PIQ_COLORS.accent} radius={[3, 3, 0, 0]} />
+                            <Bar dataKey="percentile" name="Percentile vs. others"   fill={PIQ_COLORS.teal}   radius={[3, 3, 0, 0]} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </PiqChartContainer>
+                    </div>
+                  )}
 
                   {/* Extracted Skills */}
                   <SectionLabel>Extracted Skills</SectionLabel>
@@ -623,9 +693,12 @@ export default function CVPage() {
                             </div>
                           )}
                         </div>
-                        <div style={{ textAlign: "right", flexShrink: 0 }}>
+                        <div style={{ textAlign: "right", flexShrink: 0, maxWidth: 160 }}>
                           <div style={{ fontSize: 24, fontWeight: 700, color: scoreColor(m.match_pct) }}>{m.match_pct}%</div>
                           <div style={{ fontSize: 12, color: "var(--text3)" }}>match</div>
+                          {m.percentile_label && (
+                            <div style={{ fontSize: 11, color: "var(--text2)", marginTop: 4 }}>{m.percentile_label}</div>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -797,6 +870,7 @@ function JobPostResult({ post, onApply, onDelete }: {
             Compared {new Date(post.created_at).toLocaleString()}
             {c.closest_role && <> · closest role blueprint: {c.closest_role}</>}
             {c.predicted_level && <> · readiness: {c.predicted_level}{c.predicted_score != null ? ` (${Math.round(c.predicted_score)})` : ""}</>}
+            {c.percentile_label && <> · {c.percentile_label}</>}
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>

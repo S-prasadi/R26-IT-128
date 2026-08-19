@@ -90,7 +90,7 @@ The backend acts as the **orchestration layer** — it handles auth, data persis
 | Database | Supabase (PostgreSQL, Row Level Security, Auth, Storage) |
 | Python AI (Module A) | FastAPI, Uvicorn, pandas, statsmodels (ARIMA/ES), scikit-learn, joblib, APScheduler |
 | Python AI (Module B) | FastAPI, Uvicorn, scikit-learn, sentence-transformers (`all-MiniLM-L6-v2`), PyTorch, NumPy, pandas, joblib, networkx |
-| Python AI (Module C) | Flask, flask-cors, pandas, scikit-learn (**pinned 1.6.1**), joblib, PyPDF2, python-docx, dateparser, requests |
+| Python AI (Module C) | Flask, flask-cors, pandas, scikit-learn (**pinned 1.6.1**), joblib, pypdf, python-docx, dateparser, requests, EasyOCR, pdf2image, Pillow, opencv-python-headless (own OCR pipeline), local Ollama (own LLM section structuring — independent of Module D) |
 | Python AI (Module D) | FastAPI, Uvicorn, EasyOCR, pypdf, pdf2image, Pillow, OpenCV, NumPy, TensorFlow/Keras, httpx (local Ollama API), Jinja2 |
 | AI Models | Local Ollama — `gemma4:e2b` by default via `http://127.0.0.1:11434`; pre-trained Keras emotion model (7-class facial expression recognition); pre-trained scikit-learn CV-scoring regressor; ARIMA/Exponential-Smoothing skill-demand forecasts |
 
@@ -241,6 +241,18 @@ export OLLAMA_MODEL=gemma4:e2b                  # default, override to use a dif
 > 1. Install from [ollama.com](https://ollama.com) and make sure it's running (`ollama serve`)
 > 2. Pull the default model: `ollama pull gemma4:e2b`
 > 3. No token or account needed — everything runs locally and CV data never leaves the machine
+
+### Python Module C — environment variables (shell, optional)
+
+Module C has its own independent OCR + LLM-structuring pipeline (not a dependency on Module D) and reads the same `OLLAMA_BASE_URL`/`OLLAMA_MODEL` variable names, plus one of its own:
+
+```bash
+export OLLAMA_BASE_URL=http://127.0.0.1:11434   # default, same as Module D
+export OLLAMA_MODEL=gemma4:e2b                  # default, same as Module D
+export OCR_USE_GPU=false                        # default; set true only on a CUDA-capable machine
+```
+
+See [`python-module-c/README.md`](python-module-c/README.md#configuration-environment-variables) for details.
 
 ---
 
@@ -415,7 +427,9 @@ Starts on **http://localhost:8003**. Key endpoints:
 
 > **Important — scikit-learn version pin:** the model file `cv_job_score_model.pkl` was trained with **scikit-learn 1.6.1**. `requirements.txt` pins this version; installing a newer scikit-learn (e.g. 1.9.x) fails to unpickle the model with `Can't get attribute '_RemainderColsList'`.
 
-> **What Module C does NOT provide:** GitHub-verified skills come back empty (`github_verified: []`) — GitHub verification is a separate feature. Job matches are **roles** (the `title`), with `company` set to a `"Market Estimate"` placeholder. Image CVs (PNG/JPG) can't be analysed (no OCR) — upload a text-based PDF/DOCX/TXT.
+> **What Module C does NOT provide:** GitHub-verified skills come back empty (`github_verified: []`) — GitHub verification is a separate feature. Job matches are **roles** (the `title`), with `company` set to a `"Market Estimate"` placeholder.
+>
+> **OCR:** Module C has its own OCR pipeline (EasyOCR + pdf2image), independent of Module D — image CVs (PNG/JPG) and scanned PDFs *can* be analysed. It's slow on CPU (a single scanned page takes roughly 45-80s; see [`python-module-c/README.md`](python-module-c/README.md#known-limitations) for measured numbers and the `OCR_USE_GPU` env var) and OCR accuracy is naturally imperfect on multi-column layouts — text-based PDF/DOCX/TXT is still faster and more reliable.
 
 ---
 
@@ -638,15 +652,21 @@ The **CV page → Analyse step** scores a CV against job roles.
    24 role profiles with its pre-trained model, returning:
      - extracted_skills[]  name, proficiency_label, confidence
      - ats_score           0–100 CV-quality score
-     - job_matches[]       role title, match_pct, missing skill_gaps (ranked)
-     - suggestions[]       skills to improve / learn
-     - github_verified[]   empty (separate feature)
+     - job_matches[]       role title, match_pct, missing skill_gaps (ranked),
+                            + percentile / percentile_label — how match_pct
+                            compares to a historical distribution of scored
+                            CVs for that role (omitted below 5 samples)
+     - suggestions[]       skills to improve / learn, generated from the #1
+                            job match only
+     - github_verified[]   empty (separate feature — see "Verify Projects")
 5. Backend stores results in cvs / cv_job_matches / cv_suggestions and sends a
    "CV Analysis Complete" notification
 6. Frontend renders the ATS gauge, skills, role matches, and suggestions
 ```
 
 If Module C is down, the backend serves a mock analysis so the UI still works.
+
+For what every number and chart on the Analysis page actually means (proficiency vs. confidence, match % vs. percentile, the "Compare With a Real Job Post" panel's separate scoring engine), see [docs/components/cv-analysis.md §9](docs/components/cv-analysis.md#9-understanding-the-results-what-each-number-and-chart-means).
 
 ### Interview Simulator — Document Upload Flow
 
@@ -809,7 +829,7 @@ cd frontend && npm run type-check
 | `pip install` takes very long or fails on TensorFlow | TensorFlow + PyTorch (easyocr dependency) are ~1–2 GB total. Ensure a stable internet connection and at least 3 GB free disk space. |
 | Port 8001/8003/8004 already in use | Run `lsof -ti:<port> \| xargs kill -9` to free the port, then restart the service. |
 | Module C fails to start with `Can't get attribute '_RemainderColsList'` | scikit-learn version mismatch — the model needs **1.6.1**. Run `pip install "scikit-learn==1.6.1"` in `python-module-c/backend/venv`. |
-| CV analysis returns "Could not read text from this CV" | The file is an image (PNG/JPG) or a scanned PDF — Module C has no OCR. Upload a text-based PDF, DOCX, or TXT. |
+| CV analysis returns "Could not read text from this CV" | Module C has its own OCR (image/scanned-PDF) fallback now, so this should be rare — check the file isn't corrupted, empty, or password-protected with a non-empty password (those return a specific error). If it's a large scanned file, note OCR takes 45-80s/page on CPU — it may still be processing rather than having failed. |
 | GitHub-verified skills section is empty on the CV page | Expected — Module C does not produce GitHub verification; that is a separate feature. |
 | Skill forecast / CV analysis shows obviously fake data (React/TypeScript/Node mock) | The corresponding Python module (A on :8001 / C on :8003) is not running — start it. |
 | Skill/CV data didn't update after starting the module | No backend restart needed (URLs are read per request) — just click Run Forecast / Analyse again. |

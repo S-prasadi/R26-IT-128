@@ -171,7 +171,27 @@ The backend is built so that **the app never crashes** in that case. If it tries
 
 > **Why this matters for you as a student:** if you ever see obviously fake results (like "React, TypeScript, Node.js" every single time), it usually means **your Python service isn't running**. Start it, click the button again, and you'll see real results. Each module's doc explains exactly what its fake data looks like.
 
-> **Note on Module B (Career Predictor):** at the moment the backend is *always* using mock data for career predictions, because Module B isn't fully wired up yet. See [career-prediction.md](career-prediction.md).
+> **Note on Module B (Career Predictor):** Module B is now a real, trained model (not a stand-in) — a Logistic Regression classifier over 153 target roles, started automatically by `run-all.sh` on port 8002. Unlike the other three modules, Career's main prediction call does **not** fall back to mock data if Module B is down: it fails cleanly with an "offline" error and the page shows a red status badge, rather than quietly showing fake paths that look real. See [career-prediction.md](career-prediction.md).
+
+---
+
+## Further reading — deeper technical docs
+
+Each module's page above is the primary reference for that module. Beyond them, the project has accumulated a set of focused technical/audit documents — written when a module got a deeper review, a model comparison, or a bug-hunt pass — that go into more depth than the module docs need to. Worth knowing they exist:
+
+**Module A — Skill Forecasting:**
+- [`skill-forecasting-review-report.md`](../skill-forecasting-review-report.md) — a supervisor review of the forecasting model, checked point-by-point against the code.
+- [`skill-forecasting-improvement-plan.md`](../skill-forecasting-improvement-plan.md) — the phase-by-phase build log acting on that review (backtest harness, model comparison, real-data pilot, taxonomy).
+- [`skill-forecasting-model-comparison.md`](../skill-forecasting-model-comparison.md) — the full ARIMA vs. SARIMA vs. Holt-Winters vs. XGBoost bake-off.
+- [`skill-intelligence-gap-analysis.md`](../skill-intelligence-gap-analysis.md) — a separate audit of the rest of the `/skill` page (GitHub verification trust/correctness, master catalog, assessments).
+
+**Module C — CV Analysis:**
+- [`cv-ocr-gap-analysis.md`](../cv-ocr-gap-analysis.md) — what was missing from Module C's own text-extraction pipeline, and why it mattered.
+- [`cv-ocr-pipeline-implementation-plan.md`](../cv-ocr-pipeline-implementation-plan.md) — the phase-by-phase build of Module C's own OCR + LLM-structuring pipeline.
+- [`../../python-module-c/IMPROVEMENT_PLAN.md`](../../python-module-c/IMPROVEMENT_PLAN.md) and [`EVALUATION_SUMMARY.md`](../../python-module-c/EVALUATION_SUMMARY.md) — the model-comparison, relative-evaluation, and demo work done in response to a supervisor review of the CV-scoring model.
+- [`../../python-module-c/TRAINING_GUIDE.md`](../../python-module-c/TRAINING_GUIDE.md) — a from-scratch explainer of what "training a model" means, written around this module's own notebook.
+
+These are working documents (phase logs, review responses, honest findings-as-you-go), not polished references — read the relevant module doc above first, then dip into these for the *why* behind a specific design decision or the exact numbers behind a claim.
 
 ---
 

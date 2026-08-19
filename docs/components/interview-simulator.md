@@ -310,6 +310,10 @@ Module D is unusually robust:
 
 The mock data lives in `mockQuestions()` / `MOCK_RESPONSE_ANALYSIS` (backend service) and `_scoring_fallback()` / `_heuristic_score()` (Module D `main.py`).
 
+**Startup now warms both slow dependencies before accepting requests.** EasyOCR's reader and a minimal Ollama call are both triggered once at process startup (`_get_ocr_reader()`, `_ollama_json(...)` in `main.py`'s `_startup()`), not on the first real `/extract-cv`/`/extract-ocr`/`/generate-questions` call. Both take tens of seconds to cold-load on CPU; previously, a real user's first document upload or first question-generation call could stack both costs at once and blow past the Node backend's timeout, which then silently fell back to an empty/mock result while Module D kept working in the background. Warm-up is best-effort (a failure is logged, not fatal) — if it fails, the first real request just pays the cost itself instead of the server refusing to start.
+
+**A text-extraction quality fix also landed here**, shared with Module C's OCR work: some PDF export pipelines position every glyph individually, which `pypdf` then extracts as a space between every letter (`"D U L I N A"`). Module D now detects and collapses this (`_looks_letter_spaced`/`_collapse_letter_spacing` in `main.py`) before scoring which extraction mode to keep — relevant here for the optional **document upload** step (§3), so a job description or resume PDF using this kind of export isn't mistakenly read as garbled text.
+
 > Tip: to enable real AI scoring, install [Ollama](https://ollama.com), run `ollama serve`, and pull the default model with `ollama pull gemma4:e2b`. If questions look generic (not tailored) or feedback says "AI unavailable", Ollama isn't running or the model isn't pulled. If the webcam chip never changes, check the browser gave camera permission.
 
 ---
