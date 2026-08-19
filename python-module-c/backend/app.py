@@ -11,17 +11,27 @@ from flask_cors import CORS
 
 from utils.cv_parser import (
     extract_text_from_file,
-    build_cv_data_from_text
+    build_cv_data_from_text,
+    CVExtractionError
 )
 
 from utils.cv_parser import extract_skills_from_text
+from utils import llm_structurer, ocr
+from utils.ocr import text_quality
 
 from utils.scoring import (
     build_feature_row,
     get_level,
     generate_recommendations,
+    generate_recommendations_detailed,
     normalize_skill,
     display_skill
+)
+
+from utils.relative_eval import (
+    load_score_distributions,
+    percentile_for_score,
+    percentile_label
 )
 
 
@@ -35,7 +45,10 @@ MODEL_FOLDER = os.path.join(BASE_DIR, "models")
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-MODEL_PATH = os.path.join(MODEL_FOLDER, "cv_job_score_model.pkl")
+# v2 (tuned Gradient Boosting) — see IMPROVEMENT_PLAN.md Phase 2/6 and
+# models/model_registry.json. v1 (cv_job_score_model.pkl) is kept on disk,
+# retired but not deleted, so this swap is trivially reversible.
+MODEL_PATH = os.path.join(MODEL_FOLDER, "cv_job_score_model_v2.pkl")
 PROFILE_PATH = os.path.join(MODEL_FOLDER, "job_role_profiles.json")
 
 
@@ -43,6 +56,15 @@ score_model = joblib.load(MODEL_PATH)
 
 with open(PROFILE_PATH, "r", encoding="utf-8") as file:
     job_role_profiles = json.load(file)
+
+score_distributions = load_score_distributions()
+
+# Load the OCR reader and warm the local Ollama model now, not on the first
+# real request — EasyOCR's Reader() and Ollama's model load each take real
+# time on CPU, and stacking both onto a real user's first upload would make
+# it look like the service hung. Best-effort (see ocr.warm_up/llm_structurer.warm_up).
+ocr.warm_up()
+llm_structurer.warm_up()
 
 
 @app.route("/", methods=["GET"])
@@ -82,18 +104,21 @@ def analyze_cv():
 
     uploaded_file = request.files["cv_file"]
 
-    allowed_extensions = [".pdf", ".docx", ".txt"]
+    allowed_extensions = [".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg"]
     file_extension = os.path.splitext(uploaded_file.filename)[1].lower()
 
     if file_extension not in allowed_extensions:
         return jsonify({
-            "error": "Only PDF, DOCX, and TXT files are allowed"
+            "error": "Only PDF, DOCX, TXT, PNG, and JPG files are allowed"
         }), 400
 
     file_path = os.path.join(UPLOAD_FOLDER, uploaded_file.filename)
     uploaded_file.save(file_path)
 
-    cv_text = extract_text_from_file(file_path)
+    try:
+        cv_text, extraction = extract_text_from_file(file_path)
+    except CVExtractionError as error:
+        return jsonify({"error": str(error)}), 400
 
     if cv_text.strip() == "":
         return jsonify({
@@ -119,10 +144,14 @@ def analyze_cv():
 
     recommendations = generate_recommendations(comparison)
 
+    percentile = percentile_for_score(selected_role, predicted_score, score_distributions)
+
     return jsonify({
         "selected_role": selected_role,
         "predicted_score": predicted_score,
         "predicted_level": predicted_level,
+        "percentile": percentile,
+        "percentile_label": percentile_label(percentile),
 
         "extracted_skills": cv_data["cleaned_all_skills"],
 
@@ -141,7 +170,9 @@ def analyze_cv():
         "num_certificates": cv_data["num_certificates"],
         "ats_quality_score": cv_data["evaluation_score"],
 
-        "recommendations": recommendations
+        "recommendations": recommendations,
+
+        "extraction": extraction
     })
 
 
@@ -168,29 +199,42 @@ def download_cv(file_url):
     return tmp.name, ext
 
 
+_RESOLVABLE_EXTENSIONS = (".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg")
+
+
 def _resolve_cv_text(body):
     """Resolve the CV text for /analyze.
 
     Prefers `cv_text` (already extracted by Module D's OCR pipeline at upload
-    time — this module's own extractor, PyPDF2, cannot read scanned/image CVs).
-    Falls back to downloading `file_url` and extracting text-based files.
-    Returns (cv_text, error_response_or_None).
+    time, if that ran). Falls back to downloading `file_url` and extracting
+    it with this module's own pipeline (pypdf/python-docx, plus its own OCR
+    fallback for scanned/image content — see utils/ocr.py).
+    Returns (cv_text, extraction_metadata, error_response_or_None).
     """
     cv_text = (body.get("cv_text") or "").strip()
     if cv_text:
-        return cv_text, None
+        # Already extracted upstream (by Module D, before this ever reaches
+        # Module C) — score what we received, don't claim to know how it
+        # was extracted.
+        return cv_text, {"method": "upstream", "quality": text_quality(cv_text)}, None
 
     file_url = body.get("file_url")
     if not file_url:
-        return "", (jsonify({"error": "cv_text or file_url is required"}), 400)
+        return "", {"method": "none", "quality": 0.0}, (jsonify({"error": "cv_text or file_url is required"}), 400)
 
     try:
         path, ext = download_cv(file_url)
     except Exception as error:
-        return "", (jsonify({"error": f"Could not download CV: {error}"}), 400)
+        return "", {"method": "none", "quality": 0.0}, (jsonify({"error": f"Could not download CV: {error}"}), 400)
 
     try:
-        return (extract_text_from_file(path) if ext in (".pdf", ".docx", ".txt") else ""), None
+        if ext not in _RESOLVABLE_EXTENSIONS:
+            return "", {"method": "none", "quality": 0.0}, None
+        try:
+            cv_text, extraction = extract_text_from_file(path)
+            return cv_text, extraction, None
+        except CVExtractionError as error:
+            return "", {"method": "none", "quality": 0.0}, (jsonify({"error": str(error)}), 400)
     finally:
         try:
             os.unlink(path)
@@ -202,7 +246,7 @@ def _resolve_cv_text(body):
 def analyze_for_backend():
     """Adapter called by the Node backend. Input: { cv_id, cv_text?, file_url?, github_url }."""
     body = request.get_json(silent=True) or {}
-    cv_text, error = _resolve_cv_text(body)
+    cv_text, extraction, error = _resolve_cv_text(body)
     if error:
         return error
 
@@ -218,6 +262,7 @@ def analyze_for_backend():
                 "issue": "Could not read text from this CV.",
                 "fix_example": "Upload a text-based PDF, DOCX, or TXT CV for full analysis.",
             }],
+            "extraction": extraction,
         })
 
     cv_data = build_cv_data_from_text(cv_text)
@@ -236,13 +281,18 @@ def analyze_for_backend():
 
     # 3. map -> backend contract
     label = _LEVEL_LABEL.get(cv_data["experience_level"], "Intermediate")
-    matched_req = set(best_cmp["matched_required_skills"])
-    matched_pref = set(best_cmp["matched_preferred_skills"])
+    # matched_required_skills/matched_preferred_skills come back through
+    # display_skill() (title-cased, e.g. "PyTorch"), while cleaned_all_skills
+    # is the lowercase canonical form (e.g. "pytorch") — compare normalized
+    # forms on both sides or this membership check never matches.
+    matched_req = {normalize_skill(s) for s in best_cmp["matched_required_skills"]}
+    matched_pref = {normalize_skill(s) for s in best_cmp["matched_preferred_skills"]}
 
     def confidence_for(skill):
-        if skill in matched_req:
+        normalized = normalize_skill(skill)
+        if normalized in matched_req:
             return 0.9
-        if skill in matched_pref:
+        if normalized in matched_pref:
             return 0.75
         return 0.6
 
@@ -251,21 +301,23 @@ def analyze_for_backend():
         for s in cv_data["cleaned_all_skills"]
     ]
 
-    job_matches = [
-        {
+    job_matches = []
+    for role, score, comparison in ranked[:5]:
+        percentile = percentile_for_score(role, score, score_distributions)
+        job_matches.append({
             "title": role,
             # honest label: these come from the 24 curated role blueprints,
             # not from live job postings
             "company": "Market blueprint",
             "match_pct": int(round(score)),
             "skill_gaps": comparison["missing_required_skills"],
-        }
-        for role, score, comparison in ranked[:5]
-    ]
+            "percentile": percentile,
+            "percentile_label": percentile_label(percentile),
+        })
 
     suggestions = [
-        {"section": "skills", "issue": rec, "fix_example": ""}
-        for rec in generate_recommendations(best_cmp)
+        {"section": "skills", "issue": rec["issue"], "fix_example": rec["fix_example"]}
+        for rec in generate_recommendations_detailed(best_cmp)
     ]
 
     return jsonify({
@@ -274,6 +326,7 @@ def analyze_for_backend():
         "ats_score": int(round(cv_data["evaluation_score"])),
         "job_matches": job_matches,
         "suggestions": suggestions,
+        "extraction": extraction,
     })
 
 
@@ -321,6 +374,7 @@ def compare_job():
     # Readiness prediction: score the CV against the closest role blueprint
     closest_role = _closest_role(job_skills)
     predicted_score, predicted_level, role_recommendations = None, None, []
+    percentile, percentile_text = None, None
     if closest_role:
         cv_data = build_cv_data_from_text(cv_text)
         cv_data["candidate_id"] = "LIVE_USER"
@@ -329,6 +383,8 @@ def compare_job():
         predicted_score = round(float(score_model.predict(pd.DataFrame([feature_row]))[0]), 2)
         predicted_level = get_level(predicted_score)
         role_recommendations = generate_recommendations(comparison)
+        percentile = percentile_for_score(closest_role, predicted_score, score_distributions)
+        percentile_text = percentile_label(percentile)
 
     gap_recommendations = [
         f"Add or strengthen {display_skill(skill)} — it is required by this job post."
@@ -343,6 +399,8 @@ def compare_job():
         "closest_role": closest_role,
         "predicted_score": predicted_score,
         "predicted_level": predicted_level,
+        "percentile": percentile,
+        "percentile_label": percentile_text,
         "recommendations": (gap_recommendations + role_recommendations)[:6],
     })
 
