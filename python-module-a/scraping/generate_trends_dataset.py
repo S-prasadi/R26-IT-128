@@ -505,6 +505,60 @@ SKILL_DEFS = {
 }
 
 
+# ── Skill taxonomy (Phase 4b) ───────────────────────────────────────────────────
+# Technical subtype for each of the 57 tracked skills -- language / framework /
+# platform / practice. Kept as a separate mapping rather than a key on each
+# SKILL_DEFS entry: same information, without touching 57 already-verified
+# dict literals. "language" = a general-purpose or query language you write
+# code in; "framework" = a named library/framework built on top of a language;
+# "platform" = a runtime, database, cloud, or infrastructure product you
+# deploy on/to; "practice" = a discipline or methodology, not a single product
+# (mirrors the Technology/Tool/Competency split added to the Supabase catalog
+# in the same phase, at a finer grain for this already-100%-technical list).
+
+SKILL_SUBTYPES = {
+    # Languages
+    "python": "language", "java": "language", "javascript": "language",
+    "typescript": "language", "go": "language", "rust": "language",
+    "php": "language", "csharp": "language", "cpp": "language",
+    "kotlin": "language", "swift": "language", "ruby": "language",
+    "scala": "language", "dart": "language",
+    # Frameworks
+    "react": "framework", "angular": "framework", "vue": "framework",
+    "next.js": "framework", "svelte": "framework", "tailwind": "framework",
+    "graphql": "framework", "django": "framework", "flask": "framework",
+    "fastapi": "framework", "spring": "framework", "laravel": "framework",
+    "tensorflow": "framework", "pytorch": "framework", "scikit-learn": "framework",
+    "langchain": "framework", "flutter": "framework", "react native": "framework",
+    # Platforms
+    "nodejs": "platform", "dotnet": "platform", "aws": "platform",
+    "azure": "platform", "google cloud": "platform", "docker": "platform",
+    "kubernetes": "platform", "terraform": "platform", "postgresql": "platform",
+    "mysql": "platform", "mongodb": "platform", "redis": "platform",
+    "elasticsearch": "platform", "android": "platform", "ios": "platform",
+    # Practices
+    "machine learning": "practice", "deep learning": "practice",
+    "data science": "practice", "data engineering": "practice", "llm": "practice",
+    "devops": "practice", "cybersecurity": "practice", "blockchain": "practice",
+    "microservices": "practice", "agile": "practice",
+}
+
+TAXONOMY_OUT = os.path.join(BASE, "../data/output/skill_taxonomy.csv")
+
+
+def write_skill_taxonomy():
+    os.makedirs(os.path.dirname(TAXONOMY_OUT), exist_ok=True)
+    rows = [
+        {"skill": skill, "subtype": SKILL_SUBTYPES.get(skill, "unclassified")}
+        for skill in SKILL_DEFS
+    ]
+    pd.DataFrame(rows).sort_values(["subtype", "skill"]).to_csv(TAXONOMY_OUT, index=False)
+    unclassified = [r["skill"] for r in rows if r["subtype"] == "unclassified"]
+    if unclassified:
+        print(f"  WARNING: no subtype assigned for: {unclassified}")
+    print(f"  Saved skill taxonomy ({len(rows)} skills) -> {TAXONOMY_OUT}")
+
+
 # ── Trend shape builder ───────────────────────────────────────────────────────
 
 def build_base_series(spec):
@@ -661,6 +715,9 @@ def main():
     llm = df[df["skill"] == "llm"].sort_values("week")
     print("  First 6:", llm["trend_index"].head(6).tolist())
     print("  Last  6:", llm["trend_index"].tail(6).tolist())
+
+    print()
+    write_skill_taxonomy()
 
     print("\n  Done. Next step:")
     print("    python scraping/build_trends_dataset.py")

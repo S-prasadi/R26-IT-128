@@ -1,344 +1,344 @@
 {
   "java": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 132,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "javascript": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "rising"
   },
   "react": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "rising"
   },
   "python": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 132,
+    "last_week": "2026-W33",
+    "trend": "rising"
   },
   "nodejs": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "aws": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 132,
+    "last_week": "2026-W33",
+    "trend": "rising"
   },
   "mysql": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "falling"
   },
   "dotnet": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 132,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "docker": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "rising"
   },
   "csharp": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 132,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "angular": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 132,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "php": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "falling"
   },
   "devops": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 132,
+    "last_week": "2026-W33",
+    "trend": "falling"
   },
   "android": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "azure": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "spring": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "agile": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "data science": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "postgresql": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "machine learning": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "mongodb": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "flutter": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "react native": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "cybersecurity": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 132,
+    "last_week": "2026-W33",
+    "trend": "falling"
   },
   "kubernetes": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "laravel": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "falling"
   },
   "google cloud": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "blockchain": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "typescript": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "deep learning": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "tensorflow": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "next.js": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "django": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "data engineering": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "cpp": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "vue": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "rising"
   },
   "microservices": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "terraform": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "flask": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "falling"
   },
   "redis": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "ios": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "pytorch": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "rising"
   },
   "tailwind": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "kotlin": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "stable"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "rising"
   },
   "elasticsearch": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "dart": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "go": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "scikit-learn": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "graphql": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "rust": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "swift": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "ruby": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "scala": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "fastapi": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "rising"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "stable"
   },
   "svelte": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
     "trend": "stable"
   },
   "llm": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "rising"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "stable"
   },
   "langchain": {
-    "method": "ARIMA",
-    "data_points": 130,
-    "last_week": "2026-W25",
-    "trend": "rising"
+    "method": "ES",
+    "data_points": 133,
+    "last_week": "2026-W33",
+    "trend": "stable"
   }
 }

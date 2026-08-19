@@ -10,10 +10,12 @@ Then prints a unified summary report.
 
 Usage:
   python model/pipeline.py
+  python model/pipeline.py --backtest   # also run the walk-forward backtest
 """
 
 import os
 import sys
+import argparse
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -33,7 +35,7 @@ def print_section(title: str):
     print("=" * 55)
 
 
-def run():
+def run(run_backtest: bool = False):
     print("\n" + "#" * 55)
     print("#   Component 1 - Skill Forecasting Engine Pipeline  #")
     print("#" * 55)
@@ -49,6 +51,12 @@ def run():
     # ── Step 3: Clustering ─────────────────────────────────────
     print_section("Step 3 / 3: Skill Clustering & Bundle Analysis")
     clusters_df, bundles_df = clustering.run()
+
+    # ── Optional: Backtest Evaluation ───────────────────────────
+    if run_backtest:
+        print_section("Step 4: Backtest Evaluation")
+        import backtest
+        backtest.run()
 
     # ── Final Report ───────────────────────────────────────────
     print_section("FINAL SUMMARY REPORT")
@@ -89,8 +97,15 @@ def run():
     print("  lead_lag_analysis.csv  - global-local skill signals")
     print("  skill_clusters.csv     - semantic skill groupings")
     print("  skill_bundles.csv      - trending co-skill pairs")
+    if run_backtest:
+        print("  backtest_report.csv    - walk-forward backtest, per skill/origin/step")
+        print("  backtest_summary.csv   - aggregated backtest accuracy, per skill")
     print()
 
 
 if __name__ == "__main__":
-    run()
+    parser = argparse.ArgumentParser(description="Component 1 - Skill Forecasting Engine Pipeline")
+    parser.add_argument("--backtest", action="store_true",
+                         help="Also run the walk-forward backtest after training")
+    args = parser.parse_args()
+    run(run_backtest=args.backtest)

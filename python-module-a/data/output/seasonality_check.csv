@@ -1,0 +1,58 @@
+skill,n_diffed,strongest_lag,strongest_acf,threshold,acf_lag_4,acf_lag_13,acf_lag_26,acf_lag_52,verdict
+java,130,34,0.201,0.175,0.007,0.005,-0.115,0.045,no consistent seasonality
+javascript,130,9,0.168,0.175,-0.025,-0.083,0.033,0.021,no consistent seasonality
+react,130,9,-0.26,0.175,-0.096,-0.026,-0.024,0.088,no consistent seasonality
+python,130,15,-0.202,0.175,-0.086,-0.044,0.037,0.129,no consistent seasonality
+nodejs,130,42,0.199,0.175,0.094,-0.171,0.1,-0.135,no consistent seasonality
+aws,130,10,-0.241,0.175,0.074,0.143,0.087,0.063,no consistent seasonality
+mysql,130,3,-0.253,0.175,0.218,0.107,0.017,0.119,no consistent seasonality
+dotnet,130,18,-0.186,0.175,0.004,0.038,-0.028,-0.136,no consistent seasonality
+docker,130,6,0.196,0.175,0.004,-0.057,0.008,-0.078,no consistent seasonality
+csharp,130,6,-0.244,0.175,0.129,-0.095,-0.045,0.076,no consistent seasonality
+angular,130,16,0.21,0.175,0.192,-0.117,-0.008,0.039,no consistent seasonality
+php,130,14,-0.196,0.175,-0.178,0.125,0.032,0.067,no consistent seasonality
+devops,130,5,-0.198,0.175,0.047,0.002,-0.002,-0.103,no consistent seasonality
+android,130,5,-0.256,0.175,0.176,0.024,-0.026,0.11,no consistent seasonality
+azure,130,33,0.264,0.175,-0.042,-0.248,0.032,-0.012,possible signal
+spring,130,24,0.269,0.175,0.096,0.084,-0.054,0.011,possible signal
+agile,130,15,0.239,0.175,-0.053,-0.034,0.009,0.094,no consistent seasonality
+data science,130,5,0.201,0.175,0.015,-0.104,0.099,0.138,no consistent seasonality
+postgresql,130,52,-0.201,0.175,-0.023,0.095,-0.057,-0.201,no consistent seasonality
+machine learning,130,6,-0.159,0.175,-0.075,0.011,-0.014,-0.08,no consistent seasonality
+mongodb,130,26,-0.197,0.175,0.042,-0.103,-0.197,-0.018,no consistent seasonality
+flutter,130,18,0.267,0.175,-0.166,0.115,0.003,-0.027,possible signal
+react native,130,31,0.235,0.175,0.033,0.136,0.06,0.051,no consistent seasonality
+cybersecurity,130,27,0.209,0.175,0.07,0.007,-0.128,-0.074,no consistent seasonality
+kubernetes,130,5,-0.259,0.175,0.157,-0.097,0.042,-0.093,no consistent seasonality
+laravel,130,21,0.209,0.175,-0.043,0.006,0.101,-0.056,no consistent seasonality
+google cloud,130,38,-0.201,0.175,0.123,0.037,-0.033,-0.02,no consistent seasonality
+blockchain,130,5,0.195,0.175,-0.107,-0.125,-0.131,-0.065,no consistent seasonality
+typescript,130,8,-0.19,0.175,-0.035,-0.062,-0.033,0.135,no consistent seasonality
+deep learning,130,15,0.291,0.175,-0.065,0.005,-0.246,0.011,possible signal
+tensorflow,130,20,0.268,0.175,0.057,0.069,0.006,-0.119,possible signal
+next.js,130,5,-0.191,0.175,0.012,0.041,0.009,-0.003,no consistent seasonality
+django,130,2,0.291,0.175,0.033,0.018,-0.063,0.055,possible signal
+data engineering,130,15,-0.157,0.175,0.091,0.051,-0.055,0.087,no consistent seasonality
+cpp,130,2,-0.215,0.175,0.108,-0.027,0.09,0.064,no consistent seasonality
+vue,130,47,-0.212,0.175,-0.084,0.158,-0.036,0.015,no consistent seasonality
+microservices,130,3,0.293,0.175,-0.073,0.054,0.014,-0.005,possible signal
+terraform,130,21,0.237,0.175,-0.098,-0.056,0.095,-0.022,no consistent seasonality
+flask,130,18,0.186,0.175,-0.051,-0.032,0.002,-0.085,no consistent seasonality
+redis,130,17,0.316,0.175,0.08,0.102,0.071,-0.007,possible signal
+ios,130,45,0.185,0.175,-0.13,0.003,-0.004,0.107,no consistent seasonality
+pytorch,130,9,0.222,0.175,0.041,0.068,-0.073,-0.044,no consistent seasonality
+tailwind,130,37,0.233,0.175,-0.043,-0.1,-0.039,-0.011,no consistent seasonality
+kotlin,130,12,-0.239,0.175,-0.16,0.037,-0.109,-0.009,no consistent seasonality
+elasticsearch,130,35,-0.317,0.175,-0.012,-0.031,0.097,0.018,possible signal
+dart,130,26,0.265,0.175,-0.062,-0.049,0.265,-0.028,possible signal
+go,130,45,0.222,0.175,-0.021,-0.023,0.075,0.093,no consistent seasonality
+scikit-learn,130,17,0.272,0.175,0.107,0.109,-0.101,-0.12,possible signal
+graphql,130,23,0.238,0.175,-0.055,0.043,-0.022,0.062,no consistent seasonality
+rust,130,2,0.266,0.175,0.077,0.129,0.06,-0.097,possible signal
+swift,130,20,0.206,0.175,-0.151,-0.087,-0.04,-0.056,no consistent seasonality
+ruby,130,13,-0.244,0.175,-0.106,-0.244,0.224,0.021,no consistent seasonality
+scala,130,18,0.209,0.175,-0.03,0.039,-0.092,0.001,no consistent seasonality
+fastapi,130,13,-0.27,0.175,0.002,-0.27,0.016,-0.013,possible signal
+svelte,130,8,-0.177,0.175,-0.099,-0.025,0.13,0.146,no consistent seasonality
+llm,130,33,-0.318,0.175,0.074,0.121,0.024,-0.184,possible signal
+langchain,130,38,-0.183,0.175,-0.021,-0.111,-0.18,0.082,no consistent seasonality

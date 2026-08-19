@@ -16,6 +16,12 @@ Sources consumed:
   data/raw/local/trends_lk.csv         -> google_trends_lk
   data/raw/local/topjobs_lk.csv        -> topjobs_lk
 
+If data/raw/local/topjobs_lk_real.csv exists (from scraping/topjobs_scraper.py,
+Phase 3), its rows are merged into weekly_skill_dataset.csv for (week, skill)
+pairs that don't already have a synthetic row, tagged provenance="real". All
+synthetic rows are tagged provenance="synthetic". A real row overwriting an
+existing synthetic (week, skill) pair is logged, never silent.
+
 Usage:
   python scraping/build_trends_dataset.py
 """
@@ -109,6 +115,95 @@ def build_weekly_dataset(df: pd.DataFrame) -> pd.DataFrame:
     return weekly.sort_values(["week", "count"], ascending=[True, False]).reset_index(drop=True)
 
 
+# ── Step 3: Merge real pilot data (Phase 3) ───────────────────────────────────
+
+REAL_DATA_PATH = os.path.join(BASE, "data", "raw", "local", "topjobs_lk_real.csv")
+
+
+def load_real_data() -> pd.DataFrame:
+    """Rows scraped by scraping/topjobs_scraper.py, if any have been collected yet."""
+    if not os.path.exists(REAL_DATA_PATH):
+        return pd.DataFrame(columns=["week", "skill", "count", "co_skills", "provenance"])
+    real = pd.read_csv(REAL_DATA_PATH)
+    real = real.rename(columns={"trend_index": "count"})
+    real["count"]     = real["count"].round(2)
+    # Co-occurrence isn't tracked by the pilot scraper (it only keeps aggregate
+    # counts, never per-listing skill sets) -- left empty rather than guessed.
+    real["co_skills"] = "[]"
+    return real[["week", "skill", "count", "co_skills", "provenance"]]
+
+
+def merge_real_data(weekly_df: pd.DataFrame) -> pd.DataFrame:
+    weekly_df = weekly_df.copy()
+    weekly_df["provenance"] = "synthetic"
+
+    real_df = load_real_data()
+    if real_df.empty:
+        return weekly_df
+
+    existing_keys = set(zip(weekly_df["week"], weekly_df["skill"]))
+    new_rows, overwritten = [], []
+
+    for _, row in real_df.iterrows():
+        key = (row["week"], row["skill"])
+        if key in existing_keys:
+            mask = (weekly_df["week"] == row["week"]) & (weekly_df["skill"] == row["skill"])
+            weekly_df.loc[mask, "count"]      = row["count"]
+            weekly_df.loc[mask, "provenance"] = "real"
+            overwritten.append(key)
+        else:
+            new_rows.append(row)
+
+    if overwritten:
+        preview = overwritten[:5]
+        more    = f" (+{len(overwritten) - 5} more)" if len(overwritten) > 5 else ""
+        print(f"  NOTE: {len(overwritten)} (week,skill) row(s) already had synthetic data "
+              f"and were overwritten with real values: {preview}{more}")
+
+    if new_rows:
+        new_weeks = sorted({r["week"] for r in new_rows})
+        print(f"  Merged {len(new_rows)} new real-data row(s) (provenance=real) for week(s): {new_weeks}")
+        weekly_df = pd.concat([weekly_df, pd.DataFrame(new_rows)], ignore_index=True)
+        weekly_df = backfill_partial_weeks(weekly_df, new_weeks)
+
+    return weekly_df
+
+
+def backfill_partial_weeks(weekly_df: pd.DataFrame, new_weeks: list) -> pd.DataFrame:
+    """A newly-introduced week only has real rows for the skills the scraper
+    actually found that week (often a handful, not all 57). Every other skill
+    would otherwise have NO row for that week -- and forecasting.py's series
+    builder treats a missing week as count=0, turning a partial pilot scrape
+    into a fake demand cliff at the end of every untouched skill's history.
+    Carry each untouched skill's last known value forward instead, tagged
+    provenance="carried_forward" so it's never mistaken for a real observation.
+    """
+    all_skills   = set(weekly_df["skill"].unique())
+    backfilled   = []
+    weekly_sorted = weekly_df.sort_values("week")
+
+    for week in new_weeks:
+        covered = set(weekly_df.loc[weekly_df["week"] == week, "skill"])
+        missing = all_skills - covered
+        for skill in missing:
+            prior = weekly_sorted[(weekly_sorted["skill"] == skill) & (weekly_sorted["week"] < week)]
+            if prior.empty:
+                continue
+            last = prior.iloc[-1]
+            backfilled.append({
+                "week": week, "skill": skill, "count": last["count"],
+                "co_skills": last.get("co_skills", "[]"), "provenance": "carried_forward",
+            })
+
+    if backfilled:
+        print(f"  Carried forward last known value for {len(backfilled)} skill/week pair(s) "
+              f"not covered by the real scrape (provenance=carried_forward) -- avoids a false "
+              f"zero-demand cliff for skills the pilot scraper didn't observe.")
+        weekly_df = pd.concat([weekly_df, pd.DataFrame(backfilled)], ignore_index=True)
+
+    return weekly_df
+
+
 # ── Step 4: Build jobs_with_skills (weighted rows) ────────────────────────────
 
 def build_jobs_with_skills(df: pd.DataFrame) -> pd.DataFrame:
@@ -158,10 +253,16 @@ def run():
     # 2. Weekly dataset
     print("\n  Building weekly_skill_dataset.csv ...")
     weekly_df = build_weekly_dataset(df)
+
+    # 3. Merge in real pilot data, if any has been scraped (Phase 3)
+    print("\n  Checking for real pilot data (scraping/topjobs_scraper.py) ...")
+    weekly_df = merge_real_data(weekly_df)
+
     weekly_df.to_csv(DATASET_OUT, index=False)
-    print(f"  Saved {len(weekly_df):,} rows -> {DATASET_OUT}")
+    print(f"\n  Saved {len(weekly_df):,} rows -> {DATASET_OUT}")
     print(f"  Skills: {weekly_df['skill'].nunique()}   "
-          f"Weeks: {weekly_df['week'].nunique()}")
+          f"Weeks: {weekly_df['week'].nunique()}   "
+          f"Real rows: {(weekly_df['provenance'] == 'real').sum()}")
 
     # 4. Jobs with skills
     print("\n  Building jobs_with_skills.csv ...")

@@ -7466,3 +7466,60 @@ week,skill,trend_index,source
 2026-W26,blockchain,13.1,google_trends_global
 2026-W26,microservices,36.6,google_trends_global
 2026-W26,agile,39.4,google_trends_global
+2026-W27,python,79.1,google_trends_global
+2026-W27,java,55.4,google_trends_global
+2026-W27,javascript,53.9,google_trends_global
+2026-W27,typescript,70.0,google_trends_global
+2026-W27,go,37.2,google_trends_global
+2026-W27,rust,26.7,google_trends_global
+2026-W27,php,39.4,google_trends_global
+2026-W27,csharp,35.1,google_trends_global
+2026-W27,cpp,25.6,google_trends_global
+2026-W27,kotlin,25.9,google_trends_global
+2026-W27,swift,13.3,google_trends_global
+2026-W27,ruby,5.5,google_trends_global
+2026-W27,scala,8.0,google_trends_global
+2026-W27,dart,16.1,google_trends_global
+2026-W27,react,57.3,google_trends_global
+2026-W27,angular,21.7,google_trends_global
+2026-W27,vue,16.1,google_trends_global
+2026-W27,next.js,46.0,google_trends_global
+2026-W27,svelte,14.5,google_trends_global
+2026-W27,tailwind,46.9,google_trends_global
+2026-W27,graphql,18.8,google_trends_global
+2026-W27,nodejs,43.1,google_trends_global
+2026-W27,django,38.0,google_trends_global
+2026-W27,flask,30.1,google_trends_global
+2026-W27,fastapi,33.6,google_trends_global
+2026-W27,spring,24.5,google_trends_global
+2026-W27,dotnet,27.6,google_trends_global
+2026-W27,laravel,22.3,google_trends_global
+2026-W27,aws,50.7,google_trends_global
+2026-W27,azure,61.8,google_trends_global
+2026-W27,google cloud,41.9,google_trends_global
+2026-W27,docker,65.6,google_trends_global
+2026-W27,kubernetes,47.4,google_trends_global
+2026-W27,terraform,24.3,google_trends_global
+2026-W27,postgresql,47.3,google_trends_global
+2026-W27,mysql,31.9,google_trends_global
+2026-W27,mongodb,20.6,google_trends_global
+2026-W27,redis,16.2,google_trends_global
+2026-W27,elasticsearch,24.7,google_trends_global
+2026-W27,machine learning,70.2,google_trends_global
+2026-W27,deep learning,38.6,google_trends_global
+2026-W27,data science,53.3,google_trends_global
+2026-W27,data engineering,55.4,google_trends_global
+2026-W27,tensorflow,10.6,google_trends_global
+2026-W27,pytorch,45.4,google_trends_global
+2026-W27,scikit-learn,28.5,google_trends_global
+2026-W27,llm,69.8,google_trends_global
+2026-W27,langchain,49.3,google_trends_global
+2026-W27,flutter,39.3,google_trends_global
+2026-W27,react native,22.5,google_trends_global
+2026-W27,android,29.8,google_trends_global
+2026-W27,ios,17.5,google_trends_global
+2026-W27,devops,46.4,google_trends_global
+2026-W27,cybersecurity,57.0,google_trends_global
+2026-W27,blockchain,14.0,google_trends_global
+2026-W27,microservices,38.1,google_trends_global
+2026-W27,agile,40.1,google_trends_global

@@ -1,0 +1,58 @@
+skill,subtype
+angular,framework
+django,framework
+fastapi,framework
+flask,framework
+flutter,framework
+graphql,framework
+langchain,framework
+laravel,framework
+next.js,framework
+pytorch,framework
+react,framework
+react native,framework
+scikit-learn,framework
+spring,framework
+svelte,framework
+tailwind,framework
+tensorflow,framework
+vue,framework
+cpp,language
+csharp,language
+dart,language
+go,language
+java,language
+javascript,language
+kotlin,language
+php,language
+python,language
+ruby,language
+rust,language
+scala,language
+swift,language
+typescript,language
+android,platform
+aws,platform
+azure,platform
+docker,platform
+dotnet,platform
+elasticsearch,platform
+google cloud,platform
+ios,platform
+kubernetes,platform
+mongodb,platform
+mysql,platform
+nodejs,platform
+postgresql,platform
+redis,platform
+terraform,platform
+agile,practice
+blockchain,practice
+cybersecurity,practice
+data engineering,practice
+data science,practice
+deep learning,practice
+devops,practice
+llm,practice
+machine learning,practice
+microservices,practice

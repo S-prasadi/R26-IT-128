@@ -1,0 +1,291 @@
+skill,variant,folds,n_points,mae,rmse,mape,mape_excluded_zero_actuals
+agile,arima_es,31,124,7.054,8.961,5.69,0
+agile,holt_winters_full,31,124,7.126,8.974,5.68,0
+agile,naive,31,124,11.073,13.552,8.83,0
+agile,sarima,31,124,7.04,9.108,5.68,0
+agile,xgboost,31,124,8.106,10.058,6.51,0
+android,arima_es,31,124,7.552,9.613,5.93,0
+android,holt_winters_full,31,124,7.385,9.554,5.74,0
+android,naive,31,124,9.444,11.621,7.52,0
+android,sarima,31,124,7.177,8.683,5.67,0
+android,xgboost,31,124,7.909,9.868,6.29,0
+angular,arima_es,31,124,7.383,9.917,5.15,0
+angular,holt_winters_full,31,124,7.282,9.751,5.03,0
+angular,naive,31,124,9.379,11.409,6.51,0
+angular,sarima,31,124,6.735,8.241,4.73,0
+angular,xgboost,31,124,7.624,9.551,5.36,0
+aws,arima_es,31,124,6.525,8.028,3.18,0
+aws,holt_winters_full,31,124,6.381,7.722,3.14,0
+aws,naive,31,124,7.468,9.445,3.64,0
+aws,sarima,31,124,6.342,7.835,3.08,0
+aws,xgboost,31,124,7.427,9.321,3.59,0
+azure,arima_es,31,124,6.868,8.526,4.18,0
+azure,holt_winters_full,31,124,6.625,8.279,4.09,0
+azure,naive,31,124,9.185,11.335,5.59,0
+azure,sarima,31,124,7.158,8.699,4.37,0
+azure,xgboost,31,124,7.44,9.191,4.54,0
+blockchain,arima_es,31,124,8.391,10.971,8.87,0
+blockchain,holt_winters_full,31,124,7.847,10.351,8.06,0
+blockchain,naive,31,124,10.137,12.805,10.55,0
+blockchain,sarima,31,124,9.538,13.329,9.98,0
+blockchain,xgboost,31,124,10.434,13.275,10.96,0
+cpp,arima_es,31,124,7.822,10.627,10.12,0
+cpp,holt_winters_full,31,124,7.792,10.459,9.93,0
+cpp,naive,31,124,8.79,11.089,11.36,0
+cpp,sarima,31,124,7.216,9.114,9.44,0
+cpp,xgboost,31,124,7.707,10.106,9.94,0
+csharp,arima_es,31,124,7.592,9.761,4.52,0
+csharp,holt_winters_full,31,124,7.456,9.719,4.42,0
+csharp,naive,31,124,8.323,10.709,4.93,0
+csharp,sarima,31,124,7.348,9.215,4.39,0
+csharp,xgboost,31,124,8.196,10.133,4.88,0
+cybersecurity,arima_es,31,124,7.214,9.077,5.0,0
+cybersecurity,holt_winters_full,31,124,6.667,8.406,4.71,0
+cybersecurity,naive,31,124,8.581,10.607,5.91,0
+cybersecurity,sarima,31,124,7.408,9.332,5.15,0
+cybersecurity,xgboost,31,124,8.743,10.926,6.08,0
+dart,arima_es,31,124,7.229,9.147,11.4,0
+dart,holt_winters_full,31,124,7.02,8.916,11.24,0
+dart,naive,31,124,8.992,11.651,14.41,0
+dart,sarima,31,124,7.271,9.12,11.45,0
+dart,xgboost,31,124,8.832,10.719,13.76,0
+data engineering,arima_es,31,124,7.217,8.672,6.4,0
+data engineering,holt_winters_full,31,124,6.501,8.203,5.95,0
+data engineering,naive,31,124,9.145,11.209,8.21,0
+data engineering,sarima,31,124,7.554,8.948,6.73,0
+data engineering,xgboost,31,124,8.376,10.127,7.44,0
+data science,arima_es,31,124,7.992,11.659,5.38,0
+data science,holt_winters_full,31,124,7.635,11.358,5.24,0
+data science,naive,31,124,9.427,11.775,6.26,0
+data science,sarima,31,124,7.295,8.948,4.78,0
+data science,xgboost,31,124,8.965,10.621,5.94,0
+deep learning,arima_es,31,124,7.133,8.77,6.15,0
+deep learning,holt_winters_full,31,124,6.872,8.377,5.98,0
+deep learning,naive,31,124,9.056,11.825,7.87,0
+deep learning,sarima,31,124,7.142,8.787,6.15,0
+deep learning,xgboost,31,124,8.99,11.067,7.66,0
+devops,arima_es,31,124,7.734,9.889,4.98,0
+devops,holt_winters_full,31,124,7.646,9.934,4.9,0
+devops,naive,31,124,9.597,11.894,6.18,0
+devops,sarima,31,124,7.674,9.926,4.94,0
+devops,xgboost,31,124,9.003,11.413,5.75,0
+django,arima_es,31,124,6.943,8.671,7.58,0
+django,holt_winters_full,31,124,7.043,9.05,7.8,0
+django,naive,31,124,8.992,11.727,9.8,0
+django,sarima,31,124,7.122,8.878,7.83,0
+django,xgboost,31,124,7.997,9.803,8.73,0
+docker,arima_es,31,124,7.829,11.262,4.19,0
+docker,holt_winters_full,31,124,7.615,10.949,4.1,0
+docker,naive,31,124,9.258,11.371,4.95,0
+docker,sarima,31,124,7.186,9.325,3.83,0
+docker,xgboost,31,124,8.669,11.099,4.63,0
+dotnet,arima_es,31,124,7.608,9.589,4.73,0
+dotnet,holt_winters_full,31,124,8.034,10.292,4.93,0
+dotnet,naive,31,124,9.694,12.208,6.03,0
+dotnet,sarima,31,124,7.233,8.995,4.49,0
+dotnet,xgboost,31,124,8.909,10.644,5.56,0
+elasticsearch,arima_es,31,124,6.511,7.857,9.53,0
+elasticsearch,holt_winters_full,31,124,7.008,8.576,10.2,0
+elasticsearch,naive,31,124,8.952,11.177,13.02,0
+elasticsearch,sarima,31,124,6.63,8.12,9.69,0
+elasticsearch,xgboost,31,124,7.879,9.752,11.58,0
+fastapi,arima_es,31,124,8.658,10.786,11.02,0
+fastapi,holt_winters_full,31,124,8.398,10.267,10.71,0
+fastapi,naive,31,124,8.75,10.955,10.91,0
+fastapi,sarima,31,124,8.82,10.807,10.88,0
+fastapi,xgboost,31,124,9.645,12.431,12.01,0
+flask,arima_es,31,124,6.77,8.453,11.24,0
+flask,holt_winters_full,31,124,7.0,8.705,11.32,0
+flask,naive,31,124,9.782,11.779,15.82,0
+flask,sarima,31,124,6.558,8.061,10.9,0
+flask,xgboost,31,124,7.353,9.421,12.2,0
+flutter,arima_es,31,124,6.285,7.712,4.23,0
+flutter,holt_winters_full,31,124,6.123,7.468,4.17,0
+flutter,naive,31,124,7.54,9.12,5.13,0
+flutter,sarima,31,124,6.239,7.692,4.2,0
+flutter,xgboost,31,124,7.626,9.358,5.12,0
+go,arima_es,31,124,7.319,9.538,8.38,0
+go,holt_winters_full,31,124,6.701,8.872,7.91,0
+go,naive,31,124,10.145,12.802,11.36,0
+go,sarima,31,124,7.516,9.488,8.58,0
+go,xgboost,31,124,8.644,10.952,9.69,0
+google cloud,arima_es,31,124,7.239,9.448,6.44,0
+google cloud,holt_winters_full,31,124,7.553,9.592,6.84,0
+google cloud,naive,31,124,9.71,11.968,8.61,0
+google cloud,sarima,31,124,7.313,9.265,6.5,0
+google cloud,xgboost,31,124,8.248,10.858,7.28,0
+graphql,arima_es,31,124,6.201,8.214,8.31,0
+graphql,holt_winters_full,31,124,6.172,8.135,8.49,0
+graphql,naive,31,124,8.105,9.806,10.79,0
+graphql,sarima,31,124,5.981,7.521,7.81,0
+graphql,xgboost,31,124,6.711,8.672,8.65,0
+ios,arima_es,31,124,6.554,7.959,8.84,0
+ios,holt_winters_full,31,124,6.305,8.005,8.5,0
+ios,naive,31,124,7.702,9.844,10.17,0
+ios,sarima,31,124,6.67,8.18,8.93,0
+ios,xgboost,31,124,7.416,9.335,10.0,0
+java,arima_es,31,124,7.363,9.23,2.82,0
+java,holt_winters_full,31,124,7.101,8.881,2.71,0
+java,naive,31,124,9.073,11.038,3.45,0
+java,sarima,31,124,7.293,9.093,2.79,0
+java,xgboost,31,124,8.502,10.332,3.26,0
+javascript,arima_es,31,124,6.548,8.698,2.64,0
+javascript,holt_winters_full,31,124,6.532,8.611,2.62,0
+javascript,naive,31,124,9.145,11.509,3.67,0
+javascript,sarima,31,124,5.999,7.939,2.43,0
+javascript,xgboost,31,124,6.927,8.703,2.79,0
+kotlin,arima_es,31,124,5.928,7.989,8.39,0
+kotlin,holt_winters_full,31,124,6.002,8.265,8.61,0
+kotlin,naive,31,124,7.008,8.645,9.98,0
+kotlin,sarima,31,124,5.472,7.187,7.7,0
+kotlin,xgboost,31,124,6.894,8.726,9.73,0
+kubernetes,arima_es,31,124,7.92,13.305,6.61,0
+kubernetes,holt_winters_full,31,124,7.238,13.025,6.13,0
+kubernetes,naive,31,124,8.097,10.277,6.71,0
+kubernetes,sarima,31,124,6.752,8.57,5.57,0
+kubernetes,xgboost,31,124,8.616,10.527,7.06,0
+langchain,arima_es,31,124,8.787,11.55,14.1,0
+langchain,holt_winters_full,31,124,7.747,9.858,12.93,0
+langchain,naive,31,124,9.04,11.962,13.18,0
+langchain,sarima,31,124,8.212,10.998,12.03,0
+langchain,xgboost,31,124,8.342,11.275,12.58,0
+laravel,arima_es,31,124,6.401,7.927,7.65,0
+laravel,holt_winters_full,31,124,6.166,7.738,7.28,0
+laravel,naive,31,124,7.774,9.786,9.02,0
+laravel,sarima,31,124,6.646,8.2,7.92,0
+laravel,xgboost,31,124,8.178,10.114,9.78,0
+llm,arima_es,31,124,10.028,12.837,11.66,0
+llm,holt_winters_full,31,124,9.11,11.308,11.15,0
+llm,naive,31,124,10.29,12.892,11.78,0
+llm,sarima,31,124,9.84,12.42,11.02,0
+llm,xgboost,31,124,10.502,13.608,12.6,0
+machine learning,arima_es,31,124,7.348,8.833,4.19,0
+machine learning,holt_winters_full,31,124,6.751,8.228,3.94,0
+machine learning,naive,31,124,9.548,11.598,5.41,0
+machine learning,sarima,31,124,7.594,9.195,4.36,0
+machine learning,xgboost,31,124,8.308,10.104,4.76,0
+microservices,arima_es,31,124,5.992,7.717,6.32,0
+microservices,holt_winters_full,31,124,5.902,7.646,6.27,0
+microservices,naive,31,124,7.919,10.152,8.39,0
+microservices,sarima,31,124,5.952,7.645,6.27,0
+microservices,xgboost,31,124,7.487,9.496,7.89,0
+mongodb,arima_es,31,124,6.59,8.161,5.83,0
+mongodb,holt_winters_full,31,124,6.548,8.212,5.8,0
+mongodb,naive,31,124,8.387,10.577,7.39,0
+mongodb,sarima,31,124,6.472,8.164,5.75,0
+mongodb,xgboost,31,124,7.866,10.266,7.04,0
+mysql,arima_es,31,124,7.272,9.292,4.41,0
+mysql,holt_winters_full,31,124,6.991,9.191,4.2,0
+mysql,naive,31,124,8.573,11.084,5.16,0
+mysql,sarima,31,124,6.673,8.349,4.06,0
+mysql,xgboost,31,124,7.715,9.705,4.71,0
+next.js,arima_es,31,124,7.037,9.043,5.98,0
+next.js,holt_winters_full,31,124,6.477,8.22,5.67,0
+next.js,naive,31,124,8.427,10.548,7.13,0
+next.js,sarima,31,124,6.966,8.845,5.88,0
+next.js,xgboost,31,124,8.156,10.332,6.89,0
+nodejs,arima_es,31,124,6.367,7.994,3.5,0
+nodejs,holt_winters_full,31,124,6.644,8.441,3.62,0
+nodejs,naive,31,124,8.46,10.654,4.65,0
+nodejs,sarima,31,124,6.603,8.297,3.63,0
+nodejs,xgboost,31,124,6.631,8.38,3.66,0
+php,arima_es,31,124,6.997,8.775,5.82,0
+php,holt_winters_full,31,124,6.445,8.152,5.29,0
+php,naive,31,124,9.024,11.328,7.42,0
+php,sarima,31,124,7.077,8.886,5.86,0
+php,xgboost,31,124,8.51,10.641,7.21,0
+postgresql,arima_es,31,124,6.058,7.436,4.28,0
+postgresql,holt_winters_full,31,124,5.657,7.108,4.02,0
+postgresql,naive,31,124,7.194,8.974,5.12,0
+postgresql,sarima,31,124,6.267,7.512,4.45,0
+postgresql,xgboost,31,124,6.959,8.856,4.9,0
+python,arima_es,31,124,7.926,10.36,2.95,0
+python,holt_winters_full,31,124,6.955,9.329,2.63,0
+python,naive,31,124,8.371,10.249,3.1,0
+python,sarima,31,124,7.335,9.125,2.68,0
+python,xgboost,31,124,7.722,9.765,2.85,0
+pytorch,arima_es,31,124,7.371,9.386,6.59,0
+pytorch,holt_winters_full,31,124,6.635,8.378,6.07,0
+pytorch,naive,31,124,8.532,10.949,7.58,0
+pytorch,sarima,31,124,7.719,9.684,7.01,0
+pytorch,xgboost,31,124,8.908,11.452,7.77,0
+react,arima_es,31,124,6.973,10.136,3.02,0
+react,holt_winters_full,31,124,7.073,10.213,3.05,0
+react,naive,31,124,8.516,10.465,3.68,0
+react,sarima,31,124,6.147,7.455,2.67,0
+react,xgboost,31,124,6.844,8.363,2.96,0
+react native,arima_es,31,124,6.039,7.727,6.23,0
+react native,holt_winters_full,31,124,5.588,7.266,5.74,0
+react native,naive,31,124,8.387,10.184,8.59,0
+react native,sarima,31,124,9.554,28.997,9.62,0
+react native,xgboost,31,124,6.91,8.927,7.18,0
+redis,arima_es,31,124,6.696,8.298,7.68,0
+redis,holt_winters_full,31,124,6.806,8.196,7.9,0
+redis,naive,31,124,7.71,9.724,8.81,0
+redis,sarima,31,124,6.745,8.391,7.72,0
+redis,xgboost,31,124,7.677,9.629,8.55,0
+ruby,arima_es,31,124,6.339,8.042,19.56,0
+ruby,holt_winters_full,31,124,6.195,7.798,18.57,0
+ruby,naive,31,124,8.218,10.262,25.53,0
+ruby,sarima,31,124,6.39,7.901,19.82,0
+ruby,xgboost,31,124,7.571,9.333,23.77,0
+rust,arima_es,31,124,6.308,8.274,11.19,0
+rust,holt_winters_full,31,124,6.191,8.067,11.17,0
+rust,naive,31,124,7.645,9.884,13.6,0
+rust,sarima,31,124,6.181,7.823,10.91,0
+rust,xgboost,31,124,7.219,9.186,12.54,0
+scala,arima_es,31,124,6.648,9.355,20.57,0
+scala,holt_winters_full,31,124,6.663,9.424,20.53,0
+scala,naive,31,124,7.75,9.637,23.27,0
+scala,sarima,31,124,5.968,7.315,18.69,0
+scala,xgboost,31,124,7.154,8.693,22.5,0
+scikit-learn,arima_es,31,124,7.151,9.152,10.51,0
+scikit-learn,holt_winters_full,31,124,7.175,8.984,10.89,0
+scikit-learn,naive,31,124,8.669,11.025,12.85,0
+scikit-learn,sarima,31,124,7.044,9.543,10.44,0
+scikit-learn,xgboost,31,124,7.638,9.45,11.34,0
+spring,arima_es,31,124,6.786,8.542,5.15,0
+spring,holt_winters_full,31,124,6.695,8.447,5.0,0
+spring,naive,31,124,8.581,11.131,6.44,0
+spring,sarima,31,124,6.882,8.768,5.22,0
+spring,xgboost,31,124,7.995,10.184,6.07,0
+svelte,arima_es,31,124,6.068,8.154,17.36,0
+svelte,holt_winters_full,31,124,5.821,7.667,17.09,0
+svelte,naive,31,124,7.605,9.677,22.61,0
+svelte,sarima,31,124,6.285,8.397,18.25,0
+svelte,xgboost,31,124,6.591,8.589,19.16,0
+swift,arima_es,31,124,6.612,8.378,13.7,0
+swift,holt_winters_full,31,124,6.683,8.578,13.47,0
+swift,naive,31,124,7.823,10.062,15.85,0
+swift,sarima,31,124,6.245,7.844,13.02,0
+swift,xgboost,31,124,7.69,9.646,16.07,0
+tailwind,arima_es,31,124,8.622,13.979,8.41,0
+tailwind,holt_winters_full,31,124,7.84,13.488,7.84,0
+tailwind,naive,31,124,8.839,11.448,8.24,0
+tailwind,sarima,31,124,7.538,9.708,6.96,0
+tailwind,xgboost,31,124,8.724,10.824,8.05,0
+tensorflow,arima_es,31,124,6.913,8.765,7.74,0
+tensorflow,holt_winters_full,31,124,7.019,8.953,7.88,0
+tensorflow,naive,31,124,8.766,11.253,9.79,0
+tensorflow,sarima,31,124,7.042,8.96,7.86,0
+tensorflow,xgboost,31,124,7.806,9.516,8.84,0
+terraform,arima_es,31,124,7.58,10.254,8.66,0
+terraform,holt_winters_full,31,124,7.358,10.082,8.61,0
+terraform,naive,31,124,8.508,10.751,9.57,0
+terraform,sarima,31,124,7.057,8.802,7.93,0
+terraform,xgboost,31,124,8.359,10.333,9.34,0
+typescript,arima_es,31,124,8.044,10.335,5.58,0
+typescript,holt_winters_full,31,124,7.543,9.894,5.38,0
+typescript,naive,31,124,9.008,11.23,6.38,0
+typescript,sarima,31,124,7.66,9.495,5.21,0
+typescript,xgboost,31,124,9.727,12.037,6.65,0
+vue,arima_es,31,124,7.303,9.679,11.22,0
+vue,holt_winters_full,31,124,7.396,9.794,11.16,0
+vue,naive,31,124,9.194,11.35,14.13,0
+vue,sarima,31,124,6.743,8.582,10.44,0
+vue,xgboost,31,124,7.975,9.762,12.44,0
+__overall__,arima_es,31,7068,7.152,9.415,7.58,0
+__overall__,holt_winters_full,31,7068,6.932,9.166,7.41,0
+__overall__,naive,31,7068,8.725,10.993,9.17,0
+__overall__,sarima,31,7068,7.062,9.624,7.44,0
+__overall__,xgboost,31,7068,8.052,10.155,8.51,0
