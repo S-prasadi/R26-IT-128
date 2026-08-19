@@ -31,11 +31,17 @@ export interface PaginatedResponse<T> extends ApiResponse<T[]> {
 }
 
 // --- Skills ---
+/** Classification axis from migration 0029, independent of `category`. */
+export type SkillType = "technology" | "tool" | "competency";
+
 export interface Skill {
   id: string;
   name: string;
+  /** Functional grouping: Frontend, Backend, DevOps, Soft Skills, … */
   category: string;
   description?: string;
+  /** Null for rows added before/outside the 0029 taxonomy backfill. */
+  type?: SkillType | null;
 }
 
 export interface UserSkill {
@@ -279,7 +285,15 @@ export interface CV {
   summary?: string;
   match_score?: number;
   bert_skills?: object[];
+  /** Module C's CV-analysis view of verified skills. */
   github_verified_skills?: object[];
+  /** Verified against the real GitHub API by githubService (migration 0031). */
+  github_api_verified_skills?: object[];
+  /** Heuristic ATS structural score from Module C's /analyze response. */
+  ats_score?: number | null;
+  /** How this CV's overall score compares to other applicants (migration 0032). */
+  percentile?: number | null;
+  percentile_label?: string | null;
   project_verification?: CVProjectVerification | null;
   file_url?: string;
   created_at: string;
@@ -300,6 +314,9 @@ export interface CVJobMatch {
   match_pct: number;
   skill_gaps?: string[];
   source_url?: string;
+  /** How this role's match compares to other applicants (migration 0032). */
+  percentile?: number | null;
+  percentile_label?: string | null;
 }
 
 export interface CVSuggestion {
@@ -313,8 +330,20 @@ export interface CVSuggestion {
 export interface CVAnalysisResult {
   extracted_skills: Array<{ name: string; proficiency_label: string; confidence: number }>;
   github_verified: Array<{ skill: string; verified: boolean; confidence: number }>;
-  job_matches: Array<{ title: string; company: string; match_pct: number; skill_gaps: string[] }>;
+  job_matches: Array<{
+    title: string;
+    company: string;
+    match_pct: number;
+    skill_gaps: string[];
+    percentile?: number | null;
+    percentile_label?: string | null;
+  }>;
   suggestions: Array<{ section: string; issue: string; fix_example: string }>;
+  ats_score?: number | null;
+  percentile?: number | null;
+  percentile_label?: string | null;
+  /** True when Module C was unreachable and this is placeholder demo data. */
+  unavailable?: boolean;
 }
 
 export interface CVProjectVerification {
@@ -346,6 +375,8 @@ export interface CVJobPost {
     closest_role: string | null;
     predicted_score: number | null;
     predicted_level: string | null;
+    percentile?: number | null;
+    percentile_label?: string | null;
     recommendations: string[];
     unavailable?: boolean;
   };

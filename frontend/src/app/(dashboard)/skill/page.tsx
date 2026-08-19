@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { PiqBtn, PiqSpinner, PiqStatCard } from "@/components/piq/primitives";
+import { PiqBtn, PiqModal, PiqSpinner, PiqStatCard } from "@/components/piq/primitives";
 import { PageHeader } from "@/components/common/PageHeader";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { skillService } from "@/services/skill.service";
 import { githubService } from "@/services/github.service";
 import type { Skill, UserSkill, SkillForecast, SkillAssessment } from "@/types";
@@ -22,6 +23,22 @@ const PROF_COLORS: Record<string, string> = {
 const VELOCITY_ICON: Record<string, string>  = { rising: "▲", stable: "→", falling: "▼" };
 const VELOCITY_COLOR: Record<string, string> = { rising: "var(--teal)", stable: "var(--text2)", falling: "var(--rose)" };
 
+// Skill catalog `type` axis (migration 0029) — independent of `category`.
+const TYPE_FILTERS = ["All", "technology", "tool", "competency"] as const;
+type TypeFilter = (typeof TYPE_FILTERS)[number];
+const TYPE_LABELS: Record<string, string> = {
+  All: "All types", technology: "Technologies", tool: "Tools", competency: "Competencies",
+};
+
+const ASSESSMENTS_PAGE_SIZE = 10;
+
+/** Renders a stored timestamp, or an em dash if it isn't a usable date. */
+function formatDate(value?: string): string {
+  if (!value) return "—";
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? "—" : d.toLocaleDateString();
+}
+
 export default function SkillPage() {
   const [tab, setTab]                         = useState<Tab>("My Skills");
   const [userSkills, setUserSkills]           = useState<UserSkill[]>([]);
@@ -39,26 +56,39 @@ export default function SkillPage() {
   const [assessmentSaving, setAssessmentSaving] = useState(false);
   const [githubStatus, setGithubStatus]       = useState<{ connected: boolean; github_username?: string } | null>(null);
   const [githubVerifying, setGithubVerifying] = useState(false);
+  const [catalogSearch, setCatalogSearch]     = useState("");
+  const [catalogType, setCatalogType]         = useState<TypeFilter>("All");
+  const [assessmentsShown, setAssessmentsShown] = useState(ASSESSMENTS_PAGE_SIZE);
+  const [confirmDisconnect, setConfirmDisconnect] = useState(false);
+  const [disconnecting, setDisconnecting]     = useState(false);
+  const [pendingRemoval, setPendingRemoval]   = useState<UserSkill | null>(null);
+  const [removing, setRemoving]               = useState(false);
 
   useEffect(() => {
     async function load() {
       setLoading(true);
-      try {
-        const [userRes, masterRes, assessRes, ghRes] = await Promise.all([
-          skillService.getUserSkills(),
-          skillService.listMaster(),
-          skillService.getAssessments(),
-          githubService.getStatus(),
-        ]);
-        setUserSkills(userRes.data.data ?? []);
-        setMasterSkills(masterRes.data.data ?? []);
-        setAssessments(assessRes.data.data ?? []);
-        setGithubStatus(ghRes.data.data);
-      } catch {
-        toast.error("Failed to load skills");
-      } finally {
-        setLoading(false);
-      }
+      // allSettled, not all: these four are independent, so one failing endpoint
+      // shouldn't blank out the other three (and the user should be told which
+      // one actually failed).
+      const [userRes, masterRes, assessRes, ghRes] = await Promise.allSettled([
+        skillService.getUserSkills(),
+        skillService.listMaster(),
+        skillService.getAssessments(),
+        githubService.getStatus(),
+      ]);
+
+      const failed: string[] = [];
+      if (userRes.status === "fulfilled") setUserSkills(userRes.value.data.data ?? []);
+      else failed.push("your skills");
+      if (masterRes.status === "fulfilled") setMasterSkills(masterRes.value.data.data ?? []);
+      else failed.push("the skill catalog");
+      if (assessRes.status === "fulfilled") setAssessments(assessRes.value.data.data ?? []);
+      else failed.push("assessments");
+      if (ghRes.status === "fulfilled") setGithubStatus(ghRes.value.data.data);
+      else failed.push("GitHub status");
+
+      if (failed.length) toast.error(`Couldn't load ${failed.join(", ")}. Other data loaded normally.`);
+      setLoading(false);
     }
     load();
   }, []);
@@ -86,12 +116,21 @@ export default function SkillPage() {
   }
 
   async function handleDisconnectGitHub() {
+    setDisconnecting(true);
     try {
       await githubService.disconnect();
       setGithubStatus({ connected: false });
-      toast.success("GitHub disconnected");
+      // The backend clears github_verified/confidence_score on disconnect, so
+      // mirror that locally instead of leaving stale "✓ GitHub" badges behind.
+      setUserSkills((prev) =>
+        prev.map((s) => ({ ...s, github_verified: false, confidence_score: undefined }))
+      );
+      setConfirmDisconnect(false);
+      toast.success("GitHub disconnected — verification badges cleared");
     } catch {
       toast.error("Failed to disconnect GitHub");
+    } finally {
+      setDisconnecting(false);
     }
   }
 
@@ -136,13 +175,20 @@ export default function SkillPage() {
     }
   }
 
-  async function handleRemoveSkill(id: string) {
+  async function handleRemoveSkill() {
+    if (!pendingRemoval) return;
+    const id = pendingRemoval.id;
+    setRemoving(true);
     try {
       await skillService.deleteUserSkill(id);
       setUserSkills((prev) => prev.filter((s) => s.id !== id));
+      setPendingRemoval(null);
       toast.success("Skill removed");
-    } catch {
-      toast.error("Failed to remove skill");
+    } catch (error: unknown) {
+      const apiError = error as { response?: { data?: { message?: string } } };
+      toast.error(apiError.response?.data?.message ?? "Failed to remove skill");
+    } finally {
+      setRemoving(false);
     }
   }
 
@@ -202,7 +248,20 @@ export default function SkillPage() {
 
   const addedIds    = new Set(userSkills.map((s) => s.skill_id));
   const available   = masterSkills.filter((s) => !addedIds.has(s.id));
-  const categories  = [...new Set(masterSkills.map((s) => s.category))].sort();
+  // Categories for the Add-Skill dropdown come from what's actually *available*,
+  // otherwise a fully-added category renders as an empty <optgroup> header.
+  const addableCategories = [...new Set(available.map((s) => s.category))].sort();
+
+  const catalogQuery    = catalogSearch.trim().toLowerCase();
+  const catalogFiltered = masterSkills.filter((s) => {
+    if (catalogType !== "All" && s.type !== catalogType) return false;
+    if (!catalogQuery) return true;
+    return s.name.toLowerCase().includes(catalogQuery)
+      || s.category.toLowerCase().includes(catalogQuery)
+      || (s.description?.toLowerCase().includes(catalogQuery) ?? false);
+  });
+  const catalogCategories = [...new Set(catalogFiltered.map((s) => s.category))].sort();
+  const visibleAssessments = assessments.slice(0, assessmentsShown);
 
   return (
     <div style={{ maxWidth: 960, margin: "0 auto" }}>
@@ -252,7 +311,7 @@ export default function SkillPage() {
                       <PiqBtn size="sm" variant="secondary" onClick={handleVerifySkills} disabled={githubVerifying}>
                         {githubVerifying ? "Verifying…" : "Verify Skills"}
                       </PiqBtn>
-                      <PiqBtn size="sm" variant="outline" onClick={handleDisconnectGitHub}>Disconnect</PiqBtn>
+                      <PiqBtn size="sm" variant="outline" onClick={() => setConfirmDisconnect(true)}>Disconnect</PiqBtn>
                     </>
                   ) : (
                     <PiqBtn size="sm" onClick={handleConnectGitHub}>Connect GitHub</PiqBtn>
@@ -275,7 +334,7 @@ export default function SkillPage() {
                           <div style={{ fontWeight: 600 }}>{us.skills?.name ?? "—"}</div>
                           <div style={{ fontSize: 12, color: "var(--text2)", marginTop: 2 }}>{us.skills?.category}</div>
                         </div>
-                        <button onClick={() => handleRemoveSkill(us.id)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 18 }}>×</button>
+                        <button onClick={() => setPendingRemoval(us)} title={`Remove ${us.skills?.name ?? "skill"}`} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 18 }}>×</button>
                       </div>
                       <div style={{ marginTop: 10, display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
                         <select
@@ -291,7 +350,17 @@ export default function SkillPage() {
                           {PROF_LABELS.map((p) => <option key={p} value={p}>{p}</option>)}
                         </select>
                         {us.github_verified && (
-                          <span style={{ fontSize: 11, color: "var(--teal)", background: "var(--tealD)", padding: "2px 8px", borderRadius: 20 }}>✓ GitHub</span>
+                          <span
+                            title={
+                              typeof us.confidence_score === "number"
+                                ? `Verified from your GitHub repositories — ${Math.round(us.confidence_score * 100)}% of your analysed code`
+                                : "Verified from your GitHub repositories"
+                            }
+                            style={{ fontSize: 11, color: "var(--teal)", background: "var(--tealD)", padding: "2px 8px", borderRadius: 20 }}
+                          >
+                            ✓ GitHub
+                            {typeof us.confidence_score === "number" && ` · ${Math.round(us.confidence_score * 100)}%`}
+                          </span>
                         )}
                       </div>
                     </div>
@@ -299,40 +368,6 @@ export default function SkillPage() {
                 </div>
               )}
 
-              {showAddModal && (
-                <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}>
-                  <div style={{ background: "var(--surf)", borderRadius: "var(--radius)", padding: 24, width: 360, border: "1px solid var(--border2)" }}>
-                    <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 16 }}>Add Skill</div>
-                    <label style={{ fontSize: 13, color: "var(--text2)", display: "block", marginBottom: 4 }}>Skill</label>
-                    <select value={addSkillId} onChange={(e) => setAddSkillId(e.target.value)}
-                      style={{ width: "100%", padding: "8px 10px", borderRadius: "var(--radius)", border: "1px solid var(--border2)", background: "var(--surf2)", color: "var(--text)", fontSize: 14, marginBottom: 14 }}>
-                      <option value="">Select a skill…</option>
-                      {categories.map((cat) => (
-                        <optgroup key={cat} label={cat}>
-                          {available.filter((s) => s.category === cat).map((s) => (
-                            <option key={s.id} value={s.id}>{s.name}</option>
-                          ))}
-                        </optgroup>
-                      ))}
-                    </select>
-                    <label style={{ fontSize: 13, color: "var(--text2)", display: "block", marginBottom: 6 }}>Proficiency</label>
-                    <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
-                      {PROF_LABELS.map((p) => (
-                        <button key={p} onClick={() => setAddProf(p)} style={{
-                          flex: 1, padding: "6px 0", borderRadius: "var(--radius)", cursor: "pointer",
-                          border: `1px solid ${addProf === p ? PROF_COLORS[p] : "var(--border)"}`,
-                          background: addProf === p ? `${PROF_COLORS[p]}20` : "transparent",
-                          color: addProf === p ? PROF_COLORS[p] : "var(--text2)", fontSize: 13,
-                        }}>{p}</button>
-                      ))}
-                    </div>
-                    <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                      <PiqBtn variant="secondary" onClick={() => setShowAddModal(false)}>Cancel</PiqBtn>
-                      <PiqBtn onClick={handleAddSkill} disabled={!addSkillId}>Add</PiqBtn>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
@@ -358,9 +393,9 @@ export default function SkillPage() {
                       Forecast for {forecast.matched_skills.length} of your skills: {forecast.matched_skills.join(", ")}
                     </div>
                   )}
-                  <SectionLabel>Trending Skills — Predicted Weekly Job-Ad Demand (next 4 weeks)</SectionLabel>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(190px,1fr))", gap: 10, marginBottom: 28 }}>
-                    {forecast.trending.map((item) => (
+                  <SectionLabel>Established &amp; Growing — Predicted Weekly Job-Ad Demand (next 4 weeks)</SectionLabel>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(190px,1fr))", gap: 10, marginBottom: 20 }}>
+                    {forecast.trending.established.map((item) => (
                       <div key={item.skill} style={{ background: "var(--surf2)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: 14 }}>
                         <div style={{ fontWeight: 600 }}>{item.skill}</div>
                         <div style={{ fontSize: 12, color: "var(--text2)", marginTop: 2 }}>#{item.rank} {forecast.matched ? "of your skills" : "in market"}</div>
@@ -374,6 +409,28 @@ export default function SkillPage() {
                       </div>
                     ))}
                   </div>
+
+                  {forecast.trending.emerging.length > 0 && (
+                    <>
+                      <SectionLabel>Emerging — Small Now, Growing Fastest</SectionLabel>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(190px,1fr))", gap: 10, marginBottom: 28 }}>
+                        {forecast.trending.emerging.map((item) => (
+                          <div key={item.skill} style={{ background: "var(--surf2)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: 14 }}>
+                            <div style={{ fontWeight: 600 }}>{item.skill}</div>
+                            <div style={{ fontSize: 12, color: "var(--text2)", marginTop: 2 }}>#{item.rank} {forecast.matched ? "of your skills" : "in market"}</div>
+                            <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                              <span style={{ fontSize: 22, fontWeight: 700, color: "var(--accent)" }}>{item.predicted_weekly_demand}</span>
+                              <span style={{ fontSize: 13, color: VELOCITY_COLOR[item.velocity], fontWeight: 600 }}>
+                                {VELOCITY_ICON[item.velocity]} {Math.abs(item.change_pct)}%
+                              </span>
+                            </div>
+                            <div style={{ fontSize: 11, color: "var(--text3)", marginTop: 2 }}>job ads / week · now {item.current_weekly_demand}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
                   <SectionLabel>Early Warnings — Global Trends Reach Sri Lanka Later</SectionLabel>
                   <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                     {forecast.early_warnings.map((w) => (
@@ -383,6 +440,9 @@ export default function SkillPage() {
                           <span style={{ fontSize: 13, color: "var(--text2)", marginLeft: 12 }}>
                             Global demand leads the local market by ~{w.weeks_ahead} week{w.weeks_ahead !== 1 ? "s" : ""} (correlation {w.correlation})
                           </span>
+                          {w.interpretation && (
+                            <div style={{ fontSize: 12, color: "var(--text3)", marginTop: 4 }}>{w.interpretation}</div>
+                          )}
                         </div>
                         <span style={{ fontSize: 13, color: "var(--amber)", padding: "2px 10px", borderRadius: 20, border: "1px solid oklch(85% 0.15 75 / 30%)", whiteSpace: "nowrap" }}>
                           ~{w.weeks_ahead} weeks lead
@@ -397,7 +457,7 @@ export default function SkillPage() {
                     <PiqChartContainer height={240}>
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart
-                          data={forecast.trending.map((item) => ({
+                          data={[...forecast.trending.established, ...forecast.trending.emerging].map((item) => ({
                             skill:    item.skill.length > 12 ? item.skill.slice(0, 12) + "…" : item.skill,
                             current:  item.current_weekly_demand,
                             forecast: item.predicted_weekly_demand,
@@ -538,7 +598,7 @@ export default function SkillPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {assessments.map((a) => (
+                    {visibleAssessments.map((a) => (
                       <tr key={a.id} style={{ borderBottom: "1px solid var(--border2)" }}>
                         <td style={{ padding: "10px 12px", fontWeight: 500 }}>{a.skills?.name ?? "—"}</td>
                         <td style={{ padding: "10px 12px", color: "var(--text2)" }}>{a.skills?.category}</td>
@@ -546,12 +606,22 @@ export default function SkillPage() {
                           <span style={{ fontWeight: 700, color: a.score >= 80 ? "var(--teal)" : a.score >= 60 ? "var(--amber)" : "var(--rose)" }}>{a.score}</span>
                           <span style={{ color: "var(--text3)", fontSize: 12 }}>/100</span>
                         </td>
-                        <td style={{ padding: "10px 12px", color: "var(--text2)" }}>{new Date(a.assessed_at).toLocaleDateString()}</td>
+                        <td style={{ padding: "10px 12px", color: "var(--text2)" }}>{formatDate(a.assessed_at)}</td>
                         <td style={{ padding: "10px 12px", color: "var(--text2)" }}>{a.notes ?? "—"}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+              )}
+              {assessments.length > visibleAssessments.length && (
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginTop: 14 }}>
+                  <span style={{ fontSize: 12, color: "var(--text3)" }}>
+                    Showing {visibleAssessments.length} of {assessments.length}
+                  </span>
+                  <PiqBtn size="sm" variant="secondary" onClick={() => setAssessmentsShown((n) => n + ASSESSMENTS_PAGE_SIZE)}>
+                    Show more
+                  </PiqBtn>
+                </div>
               )}
             </div>
           )}
@@ -559,31 +629,125 @@ export default function SkillPage() {
           {/* Tab 4: Skill Catalog */}
           {tab === "Skill Catalog" && (
             <div>
-              {categories.map((cat) => (
-                <div key={cat} style={{ marginBottom: 20 }}>
-                  <SectionLabel>{cat}</SectionLabel>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    {masterSkills.filter((s) => s.category === cat).map((s) => {
-                      const added = addedIds.has(s.id);
-                      return (
-                        <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 20, border: `1px solid ${added ? "var(--accent)" : "var(--border)"}`, background: added ? "var(--accentD)" : "var(--surf2)", fontSize: 13 }}>
-                          <span style={{ color: added ? "var(--accent)" : "var(--text)" }}>{s.name}</span>
-                          {added ? (
-                            <span style={{ fontSize: 11, color: "var(--accent)" }}>✓</span>
-                          ) : (
-                            <button onClick={() => { setAddSkillId(s.id); setShowAddModal(true); setTab("My Skills"); }}
-                              style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 16, lineHeight: 1 }}>+</button>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+              <div style={{ display: "flex", gap: 10, marginBottom: 18, flexWrap: "wrap", alignItems: "center" }}>
+                <input
+                  type="search"
+                  value={catalogSearch}
+                  onChange={(e) => setCatalogSearch(e.target.value)}
+                  placeholder="Search skills…"
+                  aria-label="Search the skill catalog"
+                  style={{ flex: "1 1 220px", padding: "8px 12px", borderRadius: "var(--radius)", border: "1px solid var(--border2)", background: "var(--surf2)", color: "var(--text)", fontSize: 14 }}
+                />
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {TYPE_FILTERS.map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setCatalogType(t)}
+                      style={{
+                        padding: "6px 12px", borderRadius: 20, cursor: "pointer", fontSize: 13,
+                        border: `1px solid ${catalogType === t ? "var(--accent)" : "var(--border)"}`,
+                        background: catalogType === t ? "var(--accentD)" : "transparent",
+                        color: catalogType === t ? "var(--accent)" : "var(--text2)",
+                      }}
+                    >{TYPE_LABELS[t]}</button>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {masterSkills.length === 0 ? (
+                <EmptyState text="The skill catalog is empty or couldn't be loaded." />
+              ) : catalogFiltered.length === 0 ? (
+                <EmptyState text="No skills match your search or filter." />
+              ) : (
+                catalogCategories.map((cat) => (
+                  <div key={cat} style={{ marginBottom: 20 }}>
+                    <SectionLabel>{cat}</SectionLabel>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                      {catalogFiltered.filter((s) => s.category === cat).map((s) => {
+                        const added = addedIds.has(s.id);
+                        return (
+                          <div key={s.id} title={s.description ?? undefined} style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 20, border: `1px solid ${added ? "var(--accent)" : "var(--border)"}`, background: added ? "var(--accentD)" : "var(--surf2)", fontSize: 13 }}>
+                            <span style={{ color: added ? "var(--accent)" : "var(--text)" }}>{s.name}</span>
+                            {added ? (
+                              <span style={{ fontSize: 11, color: "var(--accent)" }}>✓</span>
+                            ) : (
+                              // Opens the shared Add-Skill modal in place — no
+                              // longer yanks the user over to the My Skills tab.
+                              <button onClick={() => { setAddSkillId(s.id); setShowAddModal(true); }}
+                                title={`Add ${s.name}`}
+                                style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 16, lineHeight: 1 }}>+</button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           )}
         </>
       )}
+
+      {/* Page-level so it can be opened from either My Skills or Skill Catalog. */}
+      <PiqModal
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        title="Add Skill"
+        width={380}
+        footer={
+          <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+            <PiqBtn variant="secondary" onClick={() => setShowAddModal(false)}>Cancel</PiqBtn>
+            <PiqBtn onClick={handleAddSkill} disabled={!addSkillId}>Add</PiqBtn>
+          </div>
+        }
+      >
+        <label style={{ fontSize: 13, color: "var(--text2)", display: "block", marginBottom: 4 }}>Skill</label>
+        <select value={addSkillId} onChange={(e) => setAddSkillId(e.target.value)}
+          style={{ width: "100%", padding: "8px 10px", borderRadius: "var(--radius)", border: "1px solid var(--border2)", background: "var(--surf2)", color: "var(--text)", fontSize: 14, marginBottom: 14 }}>
+          <option value="">Select a skill…</option>
+          {addableCategories.map((cat) => (
+            <optgroup key={cat} label={cat}>
+              {available.filter((s) => s.category === cat).map((s) => (
+                <option key={s.id} value={s.id}>{s.name}</option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+        <label style={{ fontSize: 13, color: "var(--text2)", display: "block", marginBottom: 6 }}>Proficiency</label>
+        <div style={{ display: "flex", gap: 8 }}>
+          {PROF_LABELS.map((p) => (
+            <button key={p} onClick={() => setAddProf(p)} style={{
+              flex: 1, padding: "6px 0", borderRadius: "var(--radius)", cursor: "pointer",
+              border: `1px solid ${addProf === p ? PROF_COLORS[p] : "var(--border)"}`,
+              background: addProf === p ? `${PROF_COLORS[p]}20` : "transparent",
+              color: addProf === p ? PROF_COLORS[p] : "var(--text2)", fontSize: 13,
+            }}>{p}</button>
+          ))}
+        </div>
+      </PiqModal>
+
+      <ConfirmDialog
+        open={confirmDisconnect}
+        title="Disconnect GitHub?"
+        message="Your GitHub account will be unlinked and every skill verified from it will lose its verification badge. You can reconnect and re-verify at any time."
+        confirmLabel="Disconnect"
+        destructive
+        busy={disconnecting}
+        onConfirm={handleDisconnectGitHub}
+        onCancel={() => setConfirmDisconnect(false)}
+      />
+
+      <ConfirmDialog
+        open={pendingRemoval !== null}
+        title="Remove skill?"
+        message={`"${pendingRemoval?.skills?.name ?? "This skill"}" will be removed from your profile. Assessments you've already logged against it are kept.`}
+        confirmLabel="Remove"
+        destructive
+        busy={removing}
+        onConfirm={handleRemoveSkill}
+        onCancel={() => setPendingRemoval(null)}
+      />
     </div>
   );
 }
