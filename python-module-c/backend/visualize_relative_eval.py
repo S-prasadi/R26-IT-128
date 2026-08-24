@@ -48,7 +48,7 @@ from utils.relative_eval import (
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 MODULE_ROOT = os.path.dirname(BASE)
-MODEL_PATH = os.path.join(BASE, "models", "cv_job_score_model.pkl")
+MODEL_PATH = os.path.join(BASE, "models", "cv_job_score_model_v2.pkl")
 
 REPORT_DIR = os.path.join(MODULE_ROOT, "reports", "phase4-relative-evaluation")
 os.makedirs(REPORT_DIR, exist_ok=True)

@@ -180,7 +180,7 @@ function Start-Node([string]$name, [string]$relDir, [int]$port, [string]$cmdStr 
 # Module D uses local Ollama. Override these variables only when using a
 # non-default Ollama host or a different locally installed model.
 if (-not $env:OLLAMA_BASE_URL) { $env:OLLAMA_BASE_URL = "http://127.0.0.1:11434" }
-if (-not $env:OLLAMA_MODEL)    { $env:OLLAMA_MODEL    = "gemma4:e2b" }
+if (-not $env:OLLAMA_MODEL)    { $env:OLLAMA_MODEL    = "qwen2.5:3b-instruct" }
 
 function Test-OllamaUp {
     try {

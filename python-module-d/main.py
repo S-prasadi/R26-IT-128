@@ -200,7 +200,7 @@ def _get_ocr_reader() -> easyocr.Reader:
 # Local Ollama endpoint. No cloud token or CV data leaves the machine.
 load_dotenv(Path(__file__).parent / ".env")
 OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434").rstrip("/").removesuffix("/v1")
-OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "gemma4:e2b")
+OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "qwen2.5:3b-instruct")
 
 
 def _ollama_json(prompt: str, max_tokens: int, temperature: float = 0.0) -> dict:

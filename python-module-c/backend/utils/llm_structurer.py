@@ -8,7 +8,7 @@ import requests
 # not a call to Module D's API. Module D happens to use the same model tag
 # independently; this module knows nothing about Module D's existence.
 _OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
-_OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "gemma4:e2b")
+_OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "qwen2.5:3b-instruct")
 
 # Warm-cache calls measured at ~1.6s on this machine; a cold model load can
 # add ~12-15s on top of that (first call after Ollama has been idle). This
