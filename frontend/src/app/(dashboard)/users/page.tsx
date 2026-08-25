@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { toast } from "sonner";
 import { Icon } from "@/components/piq/icon";
 import { PiqAvatar } from "@/components/piq/avatar";
 import { PiqBadge } from "@/components/piq/badge";
@@ -59,9 +60,6 @@ export default function UsersPage() {
   const [addOpen, setAddOpen]         = useState(false);
   const [inviteStaffOpen, setInviteStaffOpen] = useState(false);
   const [confirmDel, setConfirmDel] = useState<PageUser | null>(null);
-  const [toast, setToast]           = useState<string | null>(null);
-
-  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 2800); };
 
   useEffect(() => {
     setLoading(true);
@@ -91,9 +89,9 @@ export default function UsersPage() {
     try {
       await userService.update(id, { is_active: !u.is_active } as never);
       setUsers((us) => us.map((x) => x.id === id ? { ...x, is_active: !x.is_active } : x));
-      showToast("User status updated");
+      toast.success("User status updated");
     } catch {
-      showToast("Failed to update user status");
+      toast.error("Failed to update user status");
     }
   }
 
@@ -102,9 +100,9 @@ export default function UsersPage() {
       await userService.delete(id);
       setUsers((us) => us.filter((u) => u.id !== id));
       setConfirmDel(null);
-      showToast("User removed");
+      toast.success("User removed");
     } catch {
-      showToast("Failed to delete user");
+      toast.error("Failed to delete user");
     }
   }
 
@@ -117,9 +115,9 @@ export default function UsersPage() {
       } as never);
       setUsers((us) => us.map((u) => u.id === updated.id ? updated : u));
       setEditUser(null);
-      showToast("User saved");
+      toast.success("User saved");
     } catch {
-      showToast("Failed to save user");
+      toast.error("Failed to save user");
     }
   }
 
@@ -133,9 +131,9 @@ export default function UsersPage() {
       const created = mapApiUser(res.data.data as ApiUserShape);
       setUsers((us) => [created, ...us]);
       setAddOpen(false);
-      showToast("User created");
+      toast.success("User created");
     } catch {
-      showToast("Failed to create user");
+      toast.error("Failed to create user");
     }
   }
 
@@ -300,13 +298,6 @@ export default function UsersPage() {
           This removes their auth record and all associated data. This action cannot be undone.
         </div>
       </PiqModal>
-
-      {/* Toast */}
-      {toast && (
-        <div className="anim-up" style={{ position: "fixed", bottom: 24, right: 24, zIndex: 2000, background: "var(--greenD)", border: "1px solid var(--green)40", color: "var(--green)", padding: "10px 16px", borderRadius: "var(--radiusLg)", fontSize: 15, fontWeight: 500, display: "flex", alignItems: "center", gap: 8 }}>
-          <Icon n="check" s={15} c="var(--green)" /> {toast}
-        </div>
-      )}
     </div>
   );
 }

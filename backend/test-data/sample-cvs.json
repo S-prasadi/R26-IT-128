@@ -1,0 +1,303 @@
+[
+  {
+    "persona": "Fresh graduate — one internship (~7 months experience)",
+    "title": "Nadeesha Perera — Frontend Intern CV",
+    "github_url": "https://github.com/nadeesha-perera",
+    "linkedin_url": "https://linkedin.com/in/nadeesha-perera",
+    "summary": "Final-year Computer Science undergraduate with hands-on experience building React interfaces during a frontend internship. Comfortable with modern JavaScript tooling and eager to grow into a full-time frontend role.",
+    "experience": [
+      {
+        "company": "Zone24x7",
+        "role": "Frontend Development Intern",
+        "start_date": "January 2026",
+        "end_date": "Present",
+        "location": "Colombo, Sri Lanka",
+        "bullets": [
+          "Built and styled 12+ reusable React components for an internal admin dashboard using TypeScript and CSS Modules",
+          "Fixed 20+ UI bugs reported through the team's Jira backlog during the sprint cycle",
+          "Wrote unit tests with Jest and React Testing Library, raising component test coverage from 40% to 68%",
+          "Paired with senior engineers on code reviews and picked up the team's Git branching workflow"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "institution": "University of Moratuwa",
+        "degree": "BSc (Hons) in Computer Science",
+        "field": "Computer Science",
+        "start_date": "2022",
+        "end_date": "2026",
+        "grade": "Second Class Upper"
+      }
+    ],
+    "skills": {
+      "languages": ["JavaScript", "TypeScript", "HTML", "CSS"],
+      "frameworks": ["React", "Next.js"],
+      "tools": ["Git", "Jest", "Figma", "VS Code"],
+      "other": ["Responsive Design", "REST APIs"]
+    },
+    "projects": [
+      {
+        "name": "Campus Event Finder",
+        "description": "A React + Firebase web app for discovering and RSVPing to university club events, built as a final-year coursework project.",
+        "tech_stack": ["React", "Firebase", "CSS"],
+        "url": "https://github.com/nadeesha-perera/campus-event-finder",
+        "start_date": "August 2025",
+        "end_date": "November 2025"
+      }
+    ]
+  },
+  {
+    "persona": "Junior developer — first full-time job (~17 months experience)",
+    "title": "Ashan Fernando — Junior Software Engineer CV",
+    "github_url": "https://github.com/ashan-fernando",
+    "linkedin_url": "https://linkedin.com/in/ashan-fernando",
+    "summary": "Junior software engineer with just over a year of professional experience building and maintaining features in a production Node.js/React application. Strong fundamentals in full-stack JavaScript and a growing interest in system design.",
+    "experience": [
+      {
+        "company": "99X Technology",
+        "role": "Junior Software Engineer",
+        "start_date": "March 2025",
+        "end_date": "Present",
+        "location": "Colombo, Sri Lanka",
+        "bullets": [
+          "Developed and shipped 8 customer-facing features across a React/Node.js SaaS product used by 3,000+ monthly active users",
+          "Reduced average API response time on the reporting endpoint from 1.4s to 420ms by adding targeted PostgreSQL indexes",
+          "Migrated 15 class-based React components to functional components with hooks as part of a team-wide modernization effort",
+          "On-call rotation participant; resolved 10+ production incidents with root-cause writeups"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "institution": "Sri Lanka Institute of Information Technology (SLIIT)",
+        "degree": "BSc (Hons) in Information Technology",
+        "field": "Software Engineering",
+        "start_date": "2020",
+        "end_date": "2024",
+        "grade": "First Class"
+      }
+    ],
+    "skills": {
+      "languages": ["JavaScript", "TypeScript", "SQL"],
+      "frameworks": ["React", "Node.js", "Express"],
+      "tools": ["Git", "Docker", "PostgreSQL", "Postman"],
+      "other": ["REST APIs", "Agile/Scrum", "CI/CD"]
+    },
+    "projects": [
+      {
+        "name": "Expense Splitter",
+        "description": "A full-stack app for splitting shared expenses among groups, with real-time balance updates via WebSockets.",
+        "tech_stack": ["React", "Node.js", "Socket.io", "PostgreSQL"],
+        "url": "https://github.com/ashan-fernando/expense-splitter",
+        "start_date": "June 2024",
+        "end_date": "September 2024"
+      }
+    ]
+  },
+  {
+    "persona": "Mid-level engineer — two roles (~46 months / ~3.8 years experience)",
+    "title": "Sanduni Wickramasinghe — Full-Stack Engineer CV",
+    "github_url": "https://github.com/sanduni-w",
+    "linkedin_url": "https://linkedin.com/in/sanduni-wickramasinghe",
+    "summary": "Full-stack engineer with almost 4 years of experience across two product teams, specializing in React front ends backed by Node.js and Python services. Comfortable owning a feature end-to-end, from API design to deployment.",
+    "experience": [
+      {
+        "company": "WSO2",
+        "role": "Software Engineer",
+        "start_date": "September 2022",
+        "end_date": "August 2024",
+        "location": "Colombo, Sri Lanka",
+        "bullets": [
+          "Built REST and GraphQL APIs for an identity-management product used by enterprise customers across 6 countries",
+          "Led migration of the team's CI pipeline from Jenkins to GitHub Actions, cutting average build time by 35%",
+          "Mentored 2 interns and led onboarding sessions on the codebase's internal service architecture",
+          "Authored integration tests that caught 3 critical regressions before release over the course of the year"
+        ]
+      },
+      {
+        "company": "IFS",
+        "role": "Software Engineer II",
+        "start_date": "September 2024",
+        "end_date": "Present",
+        "location": "Colombo, Sri Lanka",
+        "bullets": [
+          "Own the scheduling module of an ERP product, coordinating changes across 3 downstream teams",
+          "Redesigned a legacy batch job into an event-driven pipeline, cutting nightly processing time from 90 to 22 minutes",
+          "Introduced feature-flagged rollouts for the module, reducing rollback incidents to zero over two quarters",
+          "Presented architecture proposals in design reviews and drove adoption of a shared component library"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "institution": "University of Colombo School of Computing",
+        "degree": "BSc (Hons) in Computer Science",
+        "field": "Computer Science",
+        "start_date": "2018",
+        "end_date": "2022",
+        "grade": "First Class"
+      }
+    ],
+    "skills": {
+      "languages": ["JavaScript", "TypeScript", "Python", "SQL"],
+      "frameworks": ["React", "Node.js", "Express", "FastAPI"],
+      "tools": ["Docker", "Kubernetes", "GitHub Actions", "PostgreSQL", "Redis"],
+      "other": ["System Design", "GraphQL", "Microservices", "Mentoring"]
+    },
+    "projects": [
+      {
+        "name": "OpenShelf",
+        "description": "An open-source community library-management system with a React admin panel and a Python FastAPI backend.",
+        "tech_stack": ["React", "FastAPI", "PostgreSQL", "Docker"],
+        "url": "https://github.com/sanduni-w/openshelf",
+        "start_date": "January 2024",
+        "end_date": "Present"
+      }
+    ]
+  },
+  {
+    "persona": "Senior engineer — three roles (~83 months / ~6.9 years experience)",
+    "title": "Ruwan Jayasekara — Senior Software Engineer CV",
+    "github_url": "https://github.com/ruwan-jayasekara",
+    "linkedin_url": "https://linkedin.com/in/ruwan-jayasekara",
+    "summary": "Senior software engineer with nearly 7 years of experience spanning startups and enterprise product teams. Deep expertise in distributed systems, API design, and leading small engineering pods through ambiguous problems.",
+    "experience": [
+      {
+        "company": "Calcey Technologies",
+        "role": "Software Engineer",
+        "start_date": "July 2019",
+        "end_date": "June 2021",
+        "location": "Colombo, Sri Lanka",
+        "bullets": [
+          "Built the core booking engine for a travel-tech client's platform, handling 50,000+ bookings/month at peak season",
+          "Reduced page load time on the booking flow by 60% through code-splitting and image optimization",
+          "Collaborated directly with the client's product team across time zones on weekly delivery syncs"
+        ]
+      },
+      {
+        "company": "Sysco LABS",
+        "role": "Software Engineer II",
+        "start_date": "July 2021",
+        "end_date": "June 2023",
+        "location": "Colombo, Sri Lanka",
+        "bullets": [
+          "Designed and built a real-time inventory-sync service processing 2M+ events/day across regional warehouses",
+          "Drove adoption of contract testing between 4 microservices, cutting integration-bug escapes by half",
+          "Ran the team's incident response process as primary on-call for a 6-month rotation"
+        ]
+      },
+      {
+        "company": "WSO2",
+        "role": "Senior Software Engineer",
+        "start_date": "July 2023",
+        "end_date": "Present",
+        "location": "Colombo, Sri Lanka",
+        "bullets": [
+          "Lead a 4-engineer pod owning the API gateway's rate-limiting and analytics subsystems",
+          "Architected a multi-tenant caching layer that cut average gateway latency by 45% under peak load",
+          "Represent the team in cross-org architecture review board, evaluating proposals from 5 other teams",
+          "Interview and mentor candidates for senior engineering roles as part of the hiring loop"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "institution": "University of Peradeniya",
+        "degree": "BSc (Hons) in Engineering",
+        "field": "Computer Engineering",
+        "start_date": "2014",
+        "end_date": "2018",
+        "grade": "First Class"
+      }
+    ],
+    "skills": {
+      "languages": ["Java", "TypeScript", "Go", "SQL"],
+      "frameworks": ["Spring Boot", "React", "Node.js"],
+      "tools": ["Kubernetes", "Kafka", "Docker", "Terraform", "PostgreSQL", "Redis"],
+      "other": ["Distributed Systems", "System Design", "API Gateway Design", "Team Leadership"]
+    },
+    "projects": [
+      {
+        "name": "RateLimiterX",
+        "description": "An open-source, pluggable rate-limiting library for API gateways, supporting token-bucket and sliding-window strategies.",
+        "tech_stack": ["Go", "Redis"],
+        "url": "https://github.com/ruwan-jayasekara/ratelimiterx",
+        "start_date": "March 2023",
+        "end_date": "Present"
+      }
+    ]
+  },
+  {
+    "persona": "Lead / Staff engineer — long history (~125 months / ~10.4 years experience)",
+    "title": "Dilani Rajapaksa — Staff Engineer CV",
+    "github_url": "https://github.com/dilani-rajapaksa",
+    "linkedin_url": "https://linkedin.com/in/dilani-rajapaksa",
+    "summary": "Staff engineer with over a decade of experience, including 6+ years in technical leadership roles. Track record of scaling engineering teams and platforms from early-stage startups through to enterprise-grade systems.",
+    "experience": [
+      {
+        "company": "Virtusa",
+        "role": "Software Engineer",
+        "start_date": "January 2016",
+        "end_date": "December 2018",
+        "location": "Colombo, Sri Lanka",
+        "bullets": [
+          "Delivered core banking-integration modules for a Fortune 500 financial-services client",
+          "Built automated regression suites that cut manual QA time on release cycles by 70%",
+          "Promoted from Associate Engineer to Software Engineer within 18 months for consistent delivery"
+        ]
+      },
+      {
+        "company": "PickMe",
+        "role": "Senior Software Engineer",
+        "start_date": "January 2019",
+        "end_date": "December 2021",
+        "location": "Colombo, Sri Lanka",
+        "bullets": [
+          "Led the rebuild of the ride-matching service, improving driver-match latency from 3.2s to under 800ms",
+          "Scaled the service to handle 4x ride volume during a national expansion without a full team headcount increase",
+          "Established the team's first on-call and postmortem process, adopted company-wide within a year"
+        ]
+      },
+      {
+        "company": "WSO2",
+        "role": "Staff Engineer",
+        "start_date": "January 2022",
+        "end_date": "Present",
+        "location": "Colombo, Sri Lanka",
+        "bullets": [
+          "Set technical direction for a 20-engineer org spanning 4 product squads",
+          "Led the platform's migration to a multi-region active-active architecture, achieving 99.99% uptime SLA",
+          "Coach 3 engineering managers and run the org's technical interview calibration process",
+          "Author of the internal 'API Design Standards' guide adopted across 12 engineering teams"
+        ]
+      }
+    ],
+    "education": [
+      {
+        "institution": "University of Moratuwa",
+        "degree": "BSc (Hons) in Engineering",
+        "field": "Computer Science and Engineering",
+        "start_date": "2011",
+        "end_date": "2015",
+        "grade": "First Class"
+      }
+    ],
+    "skills": {
+      "languages": ["Java", "Go", "TypeScript", "SQL"],
+      "frameworks": ["Spring Boot", "React", "Node.js"],
+      "tools": ["Kubernetes", "Kafka", "Terraform", "AWS", "PostgreSQL", "Redis", "Datadog"],
+      "other": ["Distributed Systems", "Technical Leadership", "Org Design", "Capacity Planning"]
+    },
+    "projects": [
+      {
+        "name": "API Design Standards Guide",
+        "description": "An internal-turned-open-source style guide and linter for REST/GraphQL API design conventions, adopted across multiple engineering orgs.",
+        "tech_stack": ["TypeScript", "Node.js"],
+        "url": "https://github.com/dilani-rajapaksa/api-design-standards",
+        "start_date": "May 2023",
+        "end_date": "Present"
+      }
+    ]
+  }
+]

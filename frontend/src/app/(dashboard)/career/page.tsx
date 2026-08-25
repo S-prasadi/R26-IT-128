@@ -523,7 +523,7 @@ export default function CareerPage() {
   };
 
   return (
-    <div style={{ maxWidth: 960, margin: "0 auto" }}>
+    <div>
       <style>{`
         @keyframes piq-done-pop {
           0%   { opacity: 0; transform: scale(0.5); }
@@ -543,7 +543,7 @@ export default function CareerPage() {
       <PageHeader title="Career Pathway" description="Set goals, predict your career path, track your roadmap" />
 
       {!loading && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 24 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 260px))", gap: 14, marginBottom: 24, justifyContent: "start" }}>
           <PiqStatCard label="Career Goal" value={goal ? "Set" : "Not yet"} icon="target" color="var(--accent)" sub="Your target" />
           <PiqStatCard label="Roadmap Items" value={roadmap.length} icon="list" color="var(--teal)" sub="Total items" />
           <PiqStatCard label="Completed" value={done} icon="check" color="var(--violet)" sub="Done items" />

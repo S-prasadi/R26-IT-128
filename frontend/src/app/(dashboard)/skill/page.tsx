@@ -264,11 +264,11 @@ export default function SkillPage() {
   const visibleAssessments = assessments.slice(0, assessmentsShown);
 
   return (
-    <div style={{ maxWidth: 960, margin: "0 auto" }}>
+    <div>
       <PageHeader title="Skill Intelligence" description="Track skills, forecast demand, log assessments" />
 
       {!loading && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 14, marginBottom: 24 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 260px))", gap: 14, marginBottom: 24, justifyContent: "start" }}>
           <PiqStatCard label="Skills in Profile" value={userSkills.length} icon="skill" color="var(--accent)" sub="Tracked skills" />
           <PiqStatCard label="Verified via GitHub" value={userSkills.filter((s) => s.github_verified).length} icon="github" color="var(--teal)" sub="Confirmed skills" />
           <PiqStatCard label="Assessments Logged" value={assessments.length} icon="chart" color="var(--amber)" sub="Test scores" />

@@ -78,7 +78,7 @@ export default function DashboardPage() {
     <div className="anim-up" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
       {/* Stats row */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 260px))", gap: 14, justifyContent: "start" }}>
         <PiqStatCard label="Total Users"    value={users.length}  icon="users"   color="var(--accent)" sub="Registered accounts" />
         <PiqStatCard label="Active Users"   value={activeCount}   icon="person"  color="var(--green)"  sub={`${users.length - activeCount} inactive`} />
         <PiqStatCard label="Roles"          value={3}             icon="shield"  color="var(--violet)" sub="Access policy layers" />

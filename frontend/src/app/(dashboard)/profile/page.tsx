@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { PiqAvatar } from "@/components/piq/avatar";
 import { PiqBadge } from "@/components/piq/badge";
 import { PiqStatCard, PiqBtn, PiqInput, PiqSpinner } from "@/components/piq/primitives";
@@ -10,7 +11,8 @@ import { userService } from "@/services/user.service";
 import { skillService } from "@/services/skill.service";
 import { progressService } from "@/services/progress.service";
 import { githubService } from "@/services/github.service";
-import type { UserSkill, ProgressModule } from "@/types";
+import { cvService } from "@/services/cv.service";
+import type { UserSkill, ProgressModule, SuggestedDifficulty } from "@/types";
 
 type ApiMe = {
   id: string;
@@ -46,6 +48,16 @@ const scoreColor = (s: number) => s >= 80 ? "var(--green)" : s >= 65 ? "var(--ac
 
 const proficiencyPct = (level: number) => Math.min(100, Math.round((level / 5) * 100));
 
+function formatExperience(months?: number | null): string | null {
+  if (months == null) return null;
+  const years = Math.floor(months / 12);
+  const rem = months % 12;
+  const parts: string[] = [];
+  if (years > 0) parts.push(`${years}y`);
+  if (rem > 0 || years === 0) parts.push(`${rem}m`);
+  return parts.join(" ");
+}
+
 function ProgressRing({ pct, color, size = 56 }: { pct: number; color: string; size?: number }) {
   const r = (size - 8) / 2;
   const circ = 2 * Math.PI * r;
@@ -65,7 +77,6 @@ export default function ProfilePage() {
   const [loading, setLoading]         = useState(true);
   const [saving, setSaving]           = useState(false);
   const [apiError, setApiError]       = useState<string | null>(null);
-  const [toast, setToast]             = useState<string | null>(null);
   const [userId, setUserId]           = useState<string>("");
   const [editing, setEditing]         = useState(false);
   const [skills, setSkills]           = useState<UserSkill[]>([]);
@@ -74,9 +85,9 @@ export default function ProfilePage() {
   const [info, setInfo] = useState({ email: "", role: "", joined: "", department: "", intake: "" });
   const [form, setForm] = useState({ full_name: "", bio: "", github: "", linkedin: "" });
   const [githubStatus, setGithubStatus] = useState<{ connected: boolean; github_username?: string } | null>(null);
+  const [difficultySuggestion, setDifficultySuggestion] = useState<SuggestedDifficulty | null>(null);
+  const [showDifficulty, setShowDifficulty] = useState(false);
   const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
-
-  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 2800); };
 
   useEffect(() => {
     setLoading(true);
@@ -106,14 +117,29 @@ export default function ProfilePage() {
       setGithubStatus(ghRes.data.data);
     }).catch(() => setApiError("Failed to load profile. Please refresh."))
       .finally(() => setLoading(false));
+
+    // Independent of the profile load above — its failure shouldn't block
+    // the rest of the page, it's just a personalization hint.
+    cvService.getSuggestedDifficulty()
+      .then((res) => setDifficultySuggestion(res.data.data))
+      .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!showDifficulty) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setShowDifficulty(false);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [showDifficulty]);
 
   async function handleConnectGitHub() {
     try {
       const res = await githubService.getAuthUrl();
       window.location.href = res.data.data.url;
     } catch {
-      showToast("Failed to get GitHub auth URL");
+      toast.error("Failed to get GitHub auth URL");
     }
   }
 
@@ -121,9 +147,9 @@ export default function ProfilePage() {
     try {
       await githubService.disconnect();
       setGithubStatus({ connected: false });
-      showToast("GitHub disconnected");
+      toast.success("GitHub disconnected");
     } catch {
-      showToast("Failed to disconnect GitHub");
+      toast.error("Failed to disconnect GitHub");
     }
   }
 
@@ -138,9 +164,9 @@ export default function ProfilePage() {
         linkedin: form.linkedin,
       } as never);
       setEditing(false);
-      showToast("Profile saved");
+      toast.success("Profile saved");
     } catch {
-      showToast("Failed to save — please try again");
+      toast.error("Failed to save — please try again");
     } finally {
       setSaving(false);
     }
@@ -180,7 +206,7 @@ export default function ProfilePage() {
     <div className="anim-up" style={{ display: "flex", flexDirection: "column", gap: 18 }}>
 
       {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 260px))", gap: 12, justifyContent: "start" }}>
         <PiqStatCard label="Overall Progress"  value={`${overallPct}%`}    icon="trend"  color="var(--accent)" sub="Across all modules" />
         <PiqStatCard label="Skills Tracked"    value={skills.length}       icon="trend"  color="var(--teal)"   sub="In your skill profile" />
         <PiqStatCard label="GitHub Verified"   value={skills.filter((s) => s.github_verified).length} icon="cv" color="var(--green)" sub="Skills verified" />
@@ -237,7 +263,15 @@ export default function ProfilePage() {
                     <span style={{ fontSize: 14, color: "var(--text2)" }}>{r.value}</span>
                   </div>
                 ))}
-                <PiqBtn variant="secondary" size="sm" icon="person" onClick={() => setEditing(true)}>Edit Profile</PiqBtn>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <PiqBtn variant="secondary" size="sm" icon="person" onClick={() => setEditing(true)}>Edit Profile</PiqBtn>
+                  <button onClick={() => setShowDifficulty(true)} title="Suggested interview difficulty" style={{
+                    padding: "6px 10px", fontSize: 13, border: "1px solid var(--border)", borderRadius: "var(--radius)",
+                    cursor: "pointer", background: "var(--surf2)", color: "var(--text2)", display: "flex", alignItems: "center", gap: 6,
+                  }}>
+                    <Icon n="settings" s={14} /> Difficulty
+                  </button>
+                </div>
               </>
             )}
           </div>
@@ -354,10 +388,49 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Toast */}
-      {toast && (
-        <div className="anim-up" style={{ position: "fixed", bottom: 24, right: 24, zIndex: 2000, background: "var(--greenD)", border: "1px solid var(--green)40", color: "var(--green)", padding: "10px 16px", borderRadius: "var(--radiusLg)", fontSize: 15, fontWeight: 500, display: "flex", alignItems: "center", gap: 8 }}>
-          <Icon n="check" s={15} c="var(--green)" /> {toast}
+      {showDifficulty && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="difficulty-suggestion-title"
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 50, padding: 16 }}
+          onClick={() => setShowDifficulty(false)}
+        >
+          <div
+            style={{ background: "var(--surf2)", borderRadius: "var(--radius)", border: "1px solid var(--border)", boxShadow: "0 12px 40px rgba(0,0,0,0.35)", padding: 24, width: 380, maxWidth: "100%" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+              <div id="difficulty-suggestion-title" style={{ fontWeight: 600, fontSize: 16 }}>Interview Difficulty</div>
+              <button onClick={() => setShowDifficulty(false)} aria-label="Close" style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text2)", padding: 4, borderRadius: "var(--radius)", display: "flex" }}>
+                <Icon n="close" s={16} />
+              </button>
+            </div>
+            <div style={{ fontSize: 12, color: "var(--text3)", marginBottom: 16 }}>
+              Auto-suggested from your default CV&apos;s work experience — used as the starting point on the Interview module&apos;s difficulty slider, which you can still adjust per session.
+            </div>
+
+            {difficultySuggestion?.source === "default_cv" ? (
+              <>
+                <div style={{ marginBottom: 12 }}>
+                  <label style={{ fontSize: 13, color: "var(--text2)", display: "block", marginBottom: 4 }}>
+                    Suggested Difficulty: {difficultySuggestion.difficulty}/5
+                  </label>
+                  <input type="range" min={1} max={5} value={difficultySuggestion.difficulty} readOnly disabled style={{ width: "100%" }} />
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--text3)" }}><span>Easy</span><span>Hard</span></div>
+                </div>
+                <div style={{ fontSize: 13, color: "var(--text2)" }}>
+                  <strong>{difficultySuggestion.level_label}</strong>
+                  {formatExperience(difficultySuggestion.experience_months) && ` — ~${formatExperience(difficultySuggestion.experience_months)} experience`}
+                  {difficultySuggestion.cv_title && ` (from "${difficultySuggestion.cv_title}")`}
+                </div>
+              </>
+            ) : (
+              <div style={{ fontSize: 13, color: "var(--text2)" }}>
+                No default CV set yet. <Link href="/cv" style={{ color: "var(--accent)" }}>Go to the CV module</Link> and mark a CV as default to personalize this.
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

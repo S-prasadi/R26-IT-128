@@ -19,6 +19,10 @@ router.use(authenticate);
 router.get("/", requirePermission("cv:read"),
   (req, res) => cvController.list(req as AuthRequest, res as Response));
 
+// Must come before "/:id" — otherwise Express matches "suggested-difficulty" as an :id param.
+router.get("/suggested-difficulty", requirePermission("cv:read"),
+  (req, res) => cvController.suggestedDifficulty(req as AuthRequest, res as Response));
+
 router.get("/:id", requirePermission("cv:read"),
   (req, res) => cvController.get(req as AuthRequest, res as Response));
 
@@ -32,6 +36,9 @@ router.patch("/:id", requirePermission("cv:write"),
 
 router.delete("/:id", requirePermission("cv:write"),
   (req, res) => cvController.remove(req as AuthRequest, res as Response));
+
+router.patch("/:id/default", requirePermission("cv:write"),
+  (req, res) => cvController.setDefault(req as AuthRequest, res as Response));
 
 router.put("/:id/sections", requirePermission("cv:write"),
   validate(upsertSectionsSchema),

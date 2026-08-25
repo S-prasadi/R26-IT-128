@@ -7,7 +7,8 @@ import { PiqBadge } from "@/components/piq/badge";
 import { Icon } from "@/components/piq/icon";
 import { PageHeader } from "@/components/common/PageHeader";
 import { interviewService } from "@/services/interview.service";
-import type { InterviewSession, InterviewQuestion } from "@/types";
+import { cvService } from "@/services/cv.service";
+import type { InterviewSession, InterviewQuestion, SuggestedDifficulty } from "@/types";
 import { LineChart, Line, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { PiqChartContainer, PiqTooltip, PIQ_COLORS } from "@/components/piq/charts";
 
@@ -29,6 +30,16 @@ const Q_TYPE_COLORS: Record<string, string> = { behavioral: "var(--teal)", techn
 function scoreColor(score: number | null | undefined): string {
   if (score == null) return "var(--text2)";
   return score >= 80 ? "var(--teal)" : score >= 60 ? "var(--amber)" : "var(--rose)";
+}
+
+function formatExperience(months?: number | null): string | null {
+  if (months == null) return null;
+  const years = Math.floor(months / 12);
+  const rem = months % 12;
+  const parts: string[] = [];
+  if (years > 0) parts.push(`${years}y`);
+  if (rem > 0 || years === 0) parts.push(`${rem}m`);
+  return parts.join(" ");
 }
 
 export default function InterviewPage() {
@@ -63,6 +74,7 @@ export default function InterviewPage() {
   const baseTextRef     = useRef<string>("");
 
   const [form, setForm] = useState({ topic: "Frontend Development", difficulty: 3, emotionSensitivity: 50 });
+  const [difficultySuggestion, setDifficultySuggestion] = useState<SuggestedDifficulty | null>(null);
   const [currentEmotion, setCurrentEmotion] = useState("Neutral");
   const [cameraError, setCameraError] = useState("");
   const [docFile, setDocFile] = useState<File | null>(null);
@@ -75,6 +87,16 @@ export default function InterviewPage() {
 
   useEffect(() => {
     loadSessions();
+    // Pre-fill the difficulty slider from the user's default CV — runs once
+    // on mount, before the user has touched the slider, so it's safe to
+    // overwrite the hardcoded default without clobbering a manual choice.
+    cvService.getSuggestedDifficulty()
+      .then((res) => {
+        const suggestion = res.data.data;
+        setDifficultySuggestion(suggestion);
+        setForm((f) => ({ ...f, difficulty: suggestion.difficulty }));
+      })
+      .catch(() => {});
     const SpeechRecognitionClass = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognitionClass) {
       setSpeechSupported(true);
@@ -471,11 +493,11 @@ export default function InterviewPage() {
 
   return (
     <>
-    <div style={{ maxWidth: 960, margin: "0 auto" }}>
+    <div>
       <PageHeader title="Interview Simulator" description="Practice with AI-generated questions and real-time emotion tracking" />
 
       {!loading && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 14, marginBottom: 24 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 260px))", gap: 14, marginBottom: 24, justifyContent: "start" }}>
           <PiqStatCard label="Sessions Completed" value={completedSessions} icon="chat" color="var(--accent)" sub="Total sessions" />
           <PiqStatCard label="Best Score" value={bestScore > 0 ? bestScore : "—"} icon="trend" color="var(--teal)" sub="Top score" />
           <PiqStatCard label="Avg Engagement" value={avgEngagement > 0 ? avgEngagement : "—"} icon="person" color="var(--amber)" sub="Average %" />
@@ -530,6 +552,13 @@ export default function InterviewPage() {
                   <input type="range" min={1} max={5} value={form.difficulty} onChange={(e) => setForm({ ...form, difficulty: +e.target.value })}
                     style={{ width: "100%" }} />
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--text3)" }}><span>Easy</span><span>Hard</span></div>
+                  {difficultySuggestion && (
+                    <div style={{ fontSize: 12, color: "var(--text3)", marginTop: 6 }}>
+                      {difficultySuggestion.source === "default_cv"
+                        ? `Suggested from your default CV — ${difficultySuggestion.level_label}${formatExperience(difficultySuggestion.experience_months) ? `, ~${formatExperience(difficultySuggestion.experience_months)} experience` : ""}. Adjust the slider to override.`
+                        : "Set a default CV in the CV module to personalize this suggestion."}
+                    </div>
+                  )}
                 </div>
 
                 {/* Document upload for context-aware question generation */}

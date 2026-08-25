@@ -39,6 +39,16 @@ export const cvController = {
     sendSuccess(res, data, "Sections saved");
   },
 
+  async setDefault(req: AuthRequest, res: Response): Promise<void> {
+    const data = await cvService.setDefaultCV(p(req.params["id"]), req.user!.id);
+    sendSuccess(res, data, "Default CV updated");
+  },
+
+  async suggestedDifficulty(req: AuthRequest, res: Response): Promise<void> {
+    const data = await cvService.getSuggestedDifficulty(req.user!.id);
+    sendSuccess(res, data, "Suggested difficulty computed");
+  },
+
   async upload(req: AuthRequest, res: Response): Promise<void> {
     if (!req.file) {
       res.status(400).json({ success: false, message: "No file uploaded." });

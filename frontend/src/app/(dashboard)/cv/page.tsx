@@ -6,7 +6,9 @@ import { toast } from "sonner";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { PiqChartContainer, PiqTooltip, PIQ_COLORS } from "@/components/piq/charts";
 import { PiqBtn, PiqSpinner, PiqStatCard } from "@/components/piq/primitives";
+import { PiqBadge } from "@/components/piq/badge";
 import { PageHeader } from "@/components/common/PageHeader";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { cvService } from "@/services/cv.service";
 import type {
   CV, CVSection, CVJobMatch, CVSuggestion, CVAnalysisResult,
@@ -26,6 +28,16 @@ const EMPTY_SKILLS: CVSkillsContent = { languages: [], frameworks: [], tools: []
 const EMPTY_STRUCTURED: CVSectionContent = {
   summary: "", experience: [], education: [], skills: { ...EMPTY_SKILLS }, projects: [],
 };
+
+function formatExperience(months?: number | null): string | null {
+  if (months == null) return null;
+  const years = Math.floor(months / 12);
+  const rem = months % 12;
+  const parts: string[] = [];
+  if (years > 0) parts.push(`${years}y`);
+  if (rem > 0 || years === 0) parts.push(`${rem}m`);
+  return parts.join(" ");
+}
 
 export default function CVPage() {
   const [step, setStep]             = useState<Step>("My CVs");
@@ -53,6 +65,11 @@ export default function CVPage() {
   const [jobTitle, setJobTitle] = useState("");
   const [jobText, setJobText] = useState("");
   const [comparing, setComparing] = useState(false);
+  const [confirmDeleteCV, setConfirmDeleteCV] = useState<CV | null>(null);
+  const [deletingCV, setDeletingCV] = useState(false);
+  const [confirmDeleteJobPost, setConfirmDeleteJobPost] = useState<CVJobPost | null>(null);
+  const [deletingJobPost, setDeletingJobPost] = useState(false);
+  const [analysisTab, setAnalysisTab] = useState<"cv" | "job">("cv");
 
   useEffect(() => { loadCVList(); }, []);
 
@@ -257,14 +274,30 @@ export default function CVPage() {
     }
   }
 
-  async function handleDeleteCV(id: string) {
+  async function handleSetDefaultCV(id: string) {
+    try {
+      await cvService.setDefaultCV(id);
+      setCVList((prev) => prev.map((c) => ({ ...c, is_default: c.id === id })));
+      toast.success("Default CV set — interview difficulty will be suggested from this CV");
+    } catch {
+      toast.error("Failed to set default CV");
+    }
+  }
+
+  async function handleDeleteCV() {
+    if (!confirmDeleteCV) return;
+    const id = confirmDeleteCV.id;
+    setDeletingCV(true);
     try {
       await cvService.deleteCV(id);
       setCVList((prev) => prev.filter((c) => c.id !== id));
       if (selected?.id === id) { setSelected(null); setStep("My CVs"); }
+      setConfirmDeleteCV(null);
       toast.success("CV deleted");
     } catch {
       toast.error("Failed to delete CV");
+    } finally {
+      setDeletingCV(false);
     }
   }
 
@@ -305,14 +338,19 @@ export default function CVPage() {
     }
   }
 
-  async function handleDeleteJobPost(jobPostId: string) {
-    if (!selected) return;
+  async function handleDeleteJobPost() {
+    if (!selected || !confirmDeleteJobPost) return;
+    const jobPostId = confirmDeleteJobPost.id;
+    setDeletingJobPost(true);
     try {
       await cvService.deleteJobPost(selected.id, jobPostId);
       setJobPosts((prev) => prev.filter((p) => p.id !== jobPostId));
+      setConfirmDeleteJobPost(null);
       toast.success("Job post removed");
     } catch {
       toast.error("Failed to remove job post");
+    } finally {
+      setDeletingJobPost(false);
     }
   }
 
@@ -377,11 +415,11 @@ export default function CVPage() {
   const analysedCount = cvList.filter((c) => c.match_score != null).length;
 
   return (
-    <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+    <div>
       <PageHeader title="CV & Proficiency" description="Build, optimise, and analyse your CV against real job postings" />
 
       {!loading && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 24 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 260px))", gap: 14, marginBottom: 24, justifyContent: "start" }}>
           <PiqStatCard label="CVs Created"   value={cvList.length}                    icon="cv"    color="var(--accent)" sub="Total CVs" />
           <PiqStatCard label="Best Match Score" value={bestMatch > 0 ? bestMatch : "—"} icon="trend" color="var(--teal)" sub="Top role match" />
           <PiqStatCard label="Analysed CVs"   value={analysedCount}                   icon="check" color="var(--amber)"  sub="With feedback" />
@@ -412,18 +450,25 @@ export default function CVPage() {
               ) : (
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px,1fr))", gap: 12 }}>
                   {cvList.map((cv) => (
-                    <div key={cv.id} style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 18, border: "1px solid var(--border)" }}>
+                    <div key={cv.id} style={{ background: "var(--surf2)", borderRadius: "var(--radius)", padding: 18, border: cv.is_default ? "1px solid var(--accent)" : "1px solid var(--border)" }}>
                       <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 8 }}>{cv.title}</div>
                       <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+                        {cv.is_default && <PiqBadge label="Default" variant="active" />}
                         {cv.match_score != null && (
                           <span style={{ fontSize: 12, padding: "2px 8px", borderRadius: 20, background: "var(--accentD)", color: "var(--accent)", border: "1px solid var(--accentL)" }}>Match {cv.match_score}%</span>
                         )}
                       </div>
-                      <div style={{ fontSize: 12, color: "var(--text3)", marginBottom: 12 }}>{new Date(cv.created_at).toLocaleDateString()}</div>
-                      <div style={{ display: "flex", gap: 8 }}>
+                      <div style={{ fontSize: 12, color: "var(--text3)", marginBottom: 4 }}>{new Date(cv.created_at).toLocaleDateString()}</div>
+                      {formatExperience(cv.experience_months) && (
+                        <div style={{ fontSize: 12, color: "var(--text3)", marginBottom: 8 }}>~{formatExperience(cv.experience_months)} experience detected</div>
+                      )}
+                      <div style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
                         <PiqBtn size="sm" variant="secondary" onClick={() => handleSelectCV(cv.id)}>Edit</PiqBtn>
                         <PiqBtn size="sm" variant="outline" onClick={() => { handleSelectCV(cv.id).then(() => setStep("Analysis")); }}>Analyse</PiqBtn>
-                        <button onClick={() => handleDeleteCV(cv.id)} style={{ marginLeft: "auto", background: "none", border: "none", cursor: "pointer", color: "var(--rose)", fontSize: 18 }}>×</button>
+                        {!cv.is_default && (
+                          <PiqBtn size="sm" variant="outline" onClick={() => handleSetDefaultCV(cv.id)}>Set Default</PiqBtn>
+                        )}
+                        <button onClick={() => setConfirmDeleteCV(cv)} style={{ marginLeft: "auto", background: "none", border: "none", cursor: "pointer", color: "var(--rose)", fontSize: 18 }}>×</button>
                       </div>
                     </div>
                   ))}
@@ -590,14 +635,28 @@ export default function CVPage() {
                 </div>
               )}
 
-              {!analysing && !analysis && (
-                <div style={{ textAlign: "center", padding: "24px", color: "var(--text2)", marginBottom: 16 }}>
-                  <p style={{ fontSize: 14, margin: 0 }}>Go to CV Editor and select Analyse CV to run Module C analysis.</p>
-                  <div style={{ marginTop: 16 }}><PiqBtn variant="secondary" onClick={() => setStep("CV Editor")}>← Back to Editor</PiqBtn></div>
-                </div>
-              )}
+              {!analysing && (
+                <>
+                  <div style={{ display: "flex", gap: 4, marginBottom: 20, borderBottom: "1px solid var(--border)" }}>
+                    <button onClick={() => setAnalysisTab("cv")}
+                      style={{ padding: "8px 16px", fontSize: 14, border: "none", cursor: "pointer", background: "transparent", fontWeight: analysisTab === "cv" ? 600 : 400, color: analysisTab === "cv" ? "var(--accent)" : "var(--text2)", borderBottom: analysisTab === "cv" ? "2px solid var(--accent)" : "2px solid transparent", marginBottom: -1 }}>
+                      CV Analysis
+                    </button>
+                    <button onClick={() => setAnalysisTab("job")}
+                      style={{ padding: "8px 16px", fontSize: 14, border: "none", cursor: "pointer", background: "transparent", fontWeight: analysisTab === "job" ? 600 : 400, color: analysisTab === "job" ? "var(--accent)" : "var(--text2)", borderBottom: analysisTab === "job" ? "2px solid var(--accent)" : "2px solid transparent", marginBottom: -1 }}>
+                      Job Analysis{jobPosts.length > 0 ? ` (${jobPosts.length})` : ""}
+                    </button>
+                  </div>
+                  {analysisTab === "cv" && (
+                    <>
+                      {!analysis && (
+                        <div style={{ textAlign: "center", padding: "24px", color: "var(--text2)", marginBottom: 16 }}>
+                          <p style={{ fontSize: 14, margin: 0 }}>Go to CV Editor and select Analyse CV to run Module C analysis.</p>
+                          <div style={{ marginTop: 16 }}><PiqBtn variant="secondary" onClick={() => setStep("CV Editor")}>← Back to Editor</PiqBtn></div>
+                        </div>
+                      )}
 
-              {analysis && !analysing && (
+                      {analysis && (
                 <div>
                   {/* Saved results header + re-analyse */}
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
@@ -731,7 +790,7 @@ export default function CVPage() {
                 </div>
               )}
 
-              {selected && !analysing && (
+              {selected && (
                 <>
                   {/* GitHub project validation */}
                   <SectionLabel>GitHub Project Validation</SectionLabel>
@@ -783,47 +842,77 @@ export default function CVPage() {
                       </div>
                     )}
                   </div>
+                </>
+              )}
+                    </>
+                  )}
 
-                  {/* Job post comparison */}
-                  <SectionLabel>Compare With a Real Job Post</SectionLabel>
-                  <div style={{ ...cardStyle, marginBottom: 16 }}>
-                    <div style={{ fontSize: 13, color: "var(--text2)", marginBottom: 10 }}>
-                      Paste a job advertisement (or upload it as a PDF/image) to see how this CV matches it — skill gaps with market demand, readiness score, and AI tailoring tips.
-                    </div>
-                    <input
-                      value={jobTitle}
-                      onChange={(e) => setJobTitle(e.target.value)}
-                      placeholder="Job title (optional) — e.g. Associate Software Engineer at WSO2"
-                      style={{ ...inputStyle, marginBottom: 8 }}
-                    />
-                    <textarea
-                      value={jobText}
-                      onChange={(e) => setJobText(e.target.value)}
-                      rows={5}
-                      placeholder="Paste the full job post text here…"
-                      style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5, marginBottom: 10 }}
-                    />
-                    <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-                      <PiqBtn size="sm" onClick={() => handleAttachJobPost()} disabled={comparing}>
-                        {comparing ? "Comparing…" : "Compare With CV"}
-                      </PiqBtn>
-                      <label style={{ fontSize: 13, color: "var(--accent)", cursor: "pointer" }}>
-                        📎 or upload job post file
-                        <input type="file" accept=".pdf,.docx,.png,.jpg,.jpeg,.txt" style={{ display: "none" }}
-                          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleAttachJobPost(f); e.target.value = ""; }} />
-                      </label>
-                    </div>
-                  </div>
+                  {analysisTab === "job" && selected && (
+                    <>
+                      {/* Job post comparison */}
+                      <SectionLabel>Compare With a Real Job Post</SectionLabel>
+                      <div style={{ ...cardStyle, marginBottom: 16 }}>
+                        <div style={{ fontSize: 13, color: "var(--text2)", marginBottom: 10 }}>
+                          Paste a job advertisement (or upload it as a PDF/image) to see how this CV matches it — skill gaps with market demand, readiness score, and AI tailoring tips.
+                        </div>
+                        <input
+                          value={jobTitle}
+                          onChange={(e) => setJobTitle(e.target.value)}
+                          placeholder="Job title (optional) — e.g. Associate Software Engineer at WSO2"
+                          style={{ ...inputStyle, marginBottom: 8 }}
+                        />
+                        <textarea
+                          value={jobText}
+                          onChange={(e) => setJobText(e.target.value)}
+                          rows={5}
+                          placeholder="Paste the full job post text here…"
+                          style={{ ...inputStyle, resize: "vertical", lineHeight: 1.5, marginBottom: 10 }}
+                        />
+                        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                          <PiqBtn size="sm" onClick={() => handleAttachJobPost()} disabled={comparing}>
+                            {comparing ? "Comparing…" : "Compare With CV"}
+                          </PiqBtn>
+                          <label style={{ fontSize: 13, color: "var(--accent)", cursor: "pointer" }}>
+                            📎 or upload job post file
+                            <input type="file" accept=".pdf,.docx,.png,.jpg,.jpeg,.txt" style={{ display: "none" }}
+                              onChange={(e) => { const f = e.target.files?.[0]; if (f) handleAttachJobPost(f); e.target.value = ""; }} />
+                          </label>
+                        </div>
+                      </div>
 
-                  {jobPosts.map((post) => (
-                    <JobPostResult key={post.id} post={post} onApply={handleApplySuggestion} onDelete={() => handleDeleteJobPost(post.id)} />
-                  ))}
+                      {jobPosts.map((post) => (
+                        <JobPostResult key={post.id} post={post} onApply={handleApplySuggestion} onDelete={() => setConfirmDeleteJobPost(post)} />
+                      ))}
+                    </>
+                  )}
                 </>
               )}
             </div>
           )}
         </>
       )}
+
+      <ConfirmDialog
+        open={confirmDeleteCV !== null}
+        title="Delete CV?"
+        message={`"${confirmDeleteCV?.title ?? "This CV"}" and all its sections, suggestions, and job comparisons will be permanently deleted.`}
+        confirmLabel="Delete"
+        destructive
+        busy={deletingCV}
+        onConfirm={handleDeleteCV}
+        onCancel={() => setConfirmDeleteCV(null)}
+      />
+
+      <ConfirmDialog
+        open={confirmDeleteJobPost !== null}
+        title="Remove job post?"
+        message={`"${confirmDeleteJobPost?.title ?? "This job post"}" and its comparison results will be removed.`}
+        confirmLabel="Remove"
+        destructive
+        busy={deletingJobPost}
+        onConfirm={handleDeleteJobPost}
+        onCancel={() => setConfirmDeleteJobPost(null)}
+      />
     </div>
   );
 }

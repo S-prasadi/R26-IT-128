@@ -63,7 +63,7 @@ export default function HomePage() {
   if (!ready) return null;
 
   return (
-    <div style={{ fontFamily: "var(--font-dm-sans), 'DM Sans', system-ui, sans-serif", background: "var(--bg)", color: "var(--text)", minHeight: "100vh" }}>
+    <div className="piq-canvas" style={{ fontFamily: "var(--font-dm-sans), 'DM Sans', system-ui, sans-serif", color: "var(--text)", minHeight: "100vh" }}>
 
       {/* ── Navbar ── */}
       <nav style={{

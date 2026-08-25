@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
 import { ROUTES } from "@/constants/routes";
 import { authService } from "@/services/auth.service";
 import { persistUser } from "@/hooks/useAuth";
@@ -67,6 +68,7 @@ export default function LoginPage() {
       localStorage.setItem("token", session.access_token);
       localStorage.setItem("refresh_token", session.refresh_token);
       persistUser({ id: user.id, name: user.name ?? user.email, email: user.email, role });
+      toast.success("Successfully logged in", { description: `Welcome back, ${user.name ?? user.email}!` });
       router.push(ROUTES.SKILL);
     } catch (err) {
       const axiosError = err as AxiosError<{ message?: string }>;
@@ -162,7 +164,7 @@ export default function LoginPage() {
       </div>
 
       {/* ── Right panel ── */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "var(--bg)", padding: "48px 56px", position: "relative" }}>
+      <div className="piq-canvas" style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "48px 56px", position: "relative" }}>
         {/* Top accent bar */}
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, var(--accent), var(--teal))" }} />
 

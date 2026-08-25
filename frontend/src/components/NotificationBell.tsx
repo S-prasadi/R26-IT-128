@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useNotifications } from "@/hooks/useNotifications";
 import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 
 export function NotificationBell() {
   const {
@@ -15,6 +16,8 @@ export function NotificationBell() {
   } = useNotifications();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<{ id: string; title: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const getIconForType = (type: string) => {
     switch (type) {
@@ -47,9 +50,16 @@ export function NotificationBell() {
     toast.success("Notification marked as read");
   };
 
-  const handleDelete = async (notificationId: string) => {
-    await deleteNotification(notificationId);
-    toast.success("Notification deleted");
+  const handleDelete = async () => {
+    if (!confirmDelete) return;
+    setDeleting(true);
+    try {
+      await deleteNotification(confirmDelete.id);
+      setConfirmDelete(null);
+      toast.success("Notification deleted");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const handleMarkAllAsRead = async () => {
@@ -288,7 +298,7 @@ export function NotificationBell() {
                           </button>
                         )}
                         <button
-                          onClick={() => handleDelete(notification.id)}
+                          onClick={() => setConfirmDelete({ id: notification.id, title: notification.title })}
                           style={{
                             fontSize: "12px",
                             color: "var(--rose)",
@@ -333,6 +343,17 @@ export function NotificationBell() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmDelete !== null}
+        title="Delete notification?"
+        message={`"${confirmDelete?.title ?? "This notification"}" will be permanently deleted.`}
+        confirmLabel="Delete"
+        destructive
+        busy={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmDelete(null)}
+      />
     </div>
   );
 }

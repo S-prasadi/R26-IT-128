@@ -38,7 +38,7 @@ export function PiqBtn({
     primary:   { bg: hov ? "var(--accentH)" : "var(--accent)",  color: "#fff",             border: "none" },
     secondary: { bg: hov ? "var(--surf3)"   : "var(--surf2)",   color: "var(--text)",       border: "1px solid var(--border2)" },
     ghost:     { bg: hov ? "var(--surf2)"   : "transparent",    color: "var(--text2)",      border: "none" },
-    danger:    { bg: hov ? "oklch(55% 0.18 25)" : "var(--roseD)", color: "var(--rose)",    border: "1px solid oklch(63% 0.18 25 / 30%)" },
+    danger:    { bg: hov ? "oklch(55% 0.18 25)" : "var(--roseD)", color: hov ? "#fff" : "var(--rose)", border: "1px solid oklch(63% 0.18 25 / 30%)" },
     outline:   { bg: hov ? "var(--accentD)" : "transparent",    color: "var(--accent)",     border: "1px solid oklch(63% 0.19 232 / 40%)" },
   };
   const v = variants[variant];

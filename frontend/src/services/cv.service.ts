@@ -1,5 +1,5 @@
 import apiClient from "@/lib/axios";
-import type { ApiResponse, CV, CVSection, CVJobMatch, CVSuggestion, CVAnalysisResult, CVSectionContent, CVProjectVerification, CVJobPost } from "@/types";
+import type { ApiResponse, CV, CVSection, CVJobMatch, CVSuggestion, CVAnalysisResult, CVSectionContent, CVProjectVerification, CVJobPost, SuggestedDifficulty } from "@/types";
 
 type CVWithDetails = CV & { sections: CVSection[]; job_matches: CVJobMatch[]; suggestions: CVSuggestion[]; job_posts: CVJobPost[] };
 
@@ -18,6 +18,12 @@ export const cvService = {
 
   deleteCV: (id: string) =>
     apiClient.delete<ApiResponse<{ success: boolean }>>(`/cv/${id}`),
+
+  setDefaultCV: (id: string) =>
+    apiClient.patch<ApiResponse<{ id: string; title: string; is_default: boolean }>>(`/cv/${id}/default`),
+
+  getSuggestedDifficulty: () =>
+    apiClient.get<ApiResponse<SuggestedDifficulty>>("/cv/suggested-difficulty"),
 
   upsertSections: (id: string, sections: Omit<CVSection, "id">[]) =>
     apiClient.put<ApiResponse<CVSection[]>>(`/cv/${id}/sections`, { sections }),

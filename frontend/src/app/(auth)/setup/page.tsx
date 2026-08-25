@@ -35,7 +35,7 @@ export default function SetupPage() {
   }
 
   return (
-    <div style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center", background: "var(--bg)", fontFamily: "var(--font-dm-sans), 'DM Sans', system-ui, sans-serif" }}>
+    <div className="piq-canvas" style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-dm-sans), 'DM Sans', system-ui, sans-serif" }}>
       <div style={{ width: "100%", maxWidth: 420, padding: "0 24px" }}>
 
         {/* Logo */}

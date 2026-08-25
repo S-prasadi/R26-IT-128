@@ -65,7 +65,7 @@ export default function ProgressPage() {
   const achievedCount = milestones.filter((m) => !!m.achieved_at).length;
 
   return (
-    <div style={{ maxWidth: 960, margin: "0 auto" }}>
+    <div>
       <PageHeader title="Progress Tracker" description="Track your journey across all four PathwayIQ modules" />
 
       {loading ? (

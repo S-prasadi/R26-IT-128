@@ -37,8 +37,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <Sidebar />
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         <Header />
-        <main style={{ flex: 1, overflowY: "auto", padding: 24, background: "var(--bg)" }}>
-          {children}
+        <main className="piq-canvas" style={{ flex: 1, overflowY: "auto", padding: 24 }}>
+          <div style={{ maxWidth: 1600 }}>
+            {children}
+          </div>
         </main>
       </div>
     </div>

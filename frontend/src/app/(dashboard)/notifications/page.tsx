@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/common/PageHeader";
 import { PiqSpinner } from "@/components/piq/primitives";
 import { PiqBtn } from "@/components/piq/primitives";
 import { PiqToggle } from "@/components/piq/primitives";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 
 type NotifType = "skill" | "career" | "cv" | "interview" | "system";
 
@@ -52,6 +53,8 @@ export default function NotificationsPage() {
   const [prefs, setPrefs] = useState<NotificationPreferences | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<{ id: string; title: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     async function loadPreferences() {
@@ -91,6 +94,18 @@ export default function NotificationsPage() {
     markAsRead(id);
   }
 
+  async function handleDelete() {
+    if (!confirmDelete) return;
+    setDeleting(true);
+    try {
+      await deleteNotification(confirmDelete.id);
+      setConfirmDelete(null);
+      toast.success("Notification deleted");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   const filtered =
     filter === "all"
       ? notifications
@@ -98,7 +113,7 @@ export default function NotificationsPage() {
   const unread = notifications.filter((n) => !n.read).length;
 
   return (
-    <div style={{ maxWidth: 800, margin: "0 auto" }}>
+    <div>
       <PageHeader
         title="Notifications"
         description="Stay updated on skills, career paths, CV analysis and interview results"
@@ -322,7 +337,7 @@ export default function NotificationsPage() {
                           </button>
                         )}
                         <button
-                          onClick={() => deleteNotification(n.id)}
+                          onClick={() => setConfirmDelete({ id: n.id, title: n.title })}
                           style={{
                             background: "none",
                             border: "none",
@@ -447,6 +462,17 @@ export default function NotificationsPage() {
           )}
         </>
       )}
+
+      <ConfirmDialog
+        open={confirmDelete !== null}
+        title="Delete notification?"
+        message={`"${confirmDelete?.title ?? "This notification"}" will be permanently deleted.`}
+        confirmLabel="Delete"
+        destructive
+        busy={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmDelete(null)}
+      />
     </div>
   );
 }

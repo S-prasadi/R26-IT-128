@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { toast } from "sonner";
 import { Icon } from "@/components/piq/icon";
 import { PiqBadge } from "@/components/piq/badge";
 import { PiqBtn, PiqInput, PiqModal, PiqSpinner, ActionBtn } from "@/components/piq/primitives";
@@ -33,9 +34,6 @@ export default function RolesPage() {
   const [editOpen, setEditOpen]     = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [confirmDel, setConfirmDel] = useState<Role | null>(null);
-  const [toast, setToast]           = useState<string | null>(null);
-
-  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 2800); };
 
   function loadData() {
     setLoading(true);
@@ -67,9 +65,9 @@ export default function RolesPage() {
       });
       setRoles((rs) => rs.map((r) => r.id === updated.id ? updated : r));
       setEditOpen(false);
-      showToast("Role saved");
+      toast.success("Role saved");
     } catch {
-      showToast("Failed to save role");
+      toast.error("Failed to save role");
     }
   }
 
@@ -82,9 +80,9 @@ export default function RolesPage() {
       });
       setRoles((rs) => [...rs, res.data.data]);
       setCreateOpen(false);
-      showToast("Role created");
+      toast.success("Role created");
     } catch {
-      showToast("Failed to create role");
+      toast.error("Failed to create role");
     }
   }
 
@@ -94,9 +92,9 @@ export default function RolesPage() {
       setRoles((rs) => rs.filter((r) => r.id !== id));
       if (selected === id) setSelected(null);
       setConfirmDel(null);
-      showToast("Role deleted");
+      toast.success("Role deleted");
     } catch {
-      showToast("Failed to delete role");
+      toast.error("Failed to delete role");
     }
   }
 
@@ -292,12 +290,6 @@ export default function RolesPage() {
           Users assigned only this role will lose all associated permissions.
         </div>
       </PiqModal>
-
-      {toast && (
-        <div className="anim-up" style={{ position: "fixed", bottom: 24, right: 24, zIndex: 2000, background: "var(--greenD)", border: "1px solid var(--green)40", color: "var(--green)", padding: "10px 16px", borderRadius: "var(--radiusLg)", fontSize: 15, fontWeight: 500, display: "flex", alignItems: "center", gap: 8 }}>
-          <Icon n="check" s={15} c="var(--green)" /> {toast}
-        </div>
-      )}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { callPython, pythonUrls } from "./python.service";
 import { notificationService } from "./notification.service";
 import { progressService } from "./progress.service";
 import { githubService } from "./github.service";
+import { computeExperienceMonths, monthsToDifficulty, monthsToLevelLabel } from "../utils/experience";
 import type {
   CreateCVDto,
   UpdateCVDto,
@@ -81,7 +82,7 @@ export const cvService = {
   async listCVs(userId: string) {
     const { data, error } = await supabaseAdmin
       .from("cvs")
-      .select("id, title, match_score, github_url, linkedin_url, created_at, updated_at")
+      .select("id, title, match_score, github_url, linkedin_url, is_default, experience_months, created_at, updated_at")
       .eq("user_id", userId)
       .order("created_at", { ascending: false });
     if (error) throw new AppError(error.message, HTTP_STATUS.INTERNAL_SERVER_ERROR);
@@ -168,7 +169,62 @@ export const cvService = {
     const { data, error } = await supabaseAdmin
       .from("cv_sections").insert(rows).select("*");
     if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
+
+    // Manual edits to work-history dates should keep the suggested
+    // difficulty in sync, same as a fresh upload does.
+    const experienceSection = dto.sections.find((s) => s.section_type === "experience");
+    if (experienceSection) {
+      const entries = ((experienceSection.content as { entries?: unknown })?.entries ?? []) as
+        Array<{ start_date?: string; end_date?: string }>;
+      await supabaseAdmin
+        .from("cvs")
+        .update({ experience_months: computeExperienceMonths(entries) })
+        .eq("id", cvId);
+    }
+
     return data ?? [];
+  },
+
+  /** Marks one CV as the user's default (the "correct" one to base
+   *  CV-derived features, like suggested interview difficulty, on). */
+  async setDefaultCV(cvId: string, userId: string) {
+    const { data: cv } = await supabaseAdmin
+      .from("cvs").select("id").eq("id", cvId).eq("user_id", userId).single();
+    if (!cv) throw new AppError("CV not found", HTTP_STATUS.NOT_FOUND);
+
+    const { error: clearError } = await supabaseAdmin
+      .from("cvs").update({ is_default: false }).eq("user_id", userId).eq("is_default", true);
+    if (clearError) throw new AppError(clearError.message, HTTP_STATUS.INTERNAL_SERVER_ERROR);
+
+    const { data, error } = await supabaseAdmin
+      .from("cvs").update({ is_default: true }).eq("id", cvId)
+      .select("id, title, is_default").single();
+    if (error) throw new AppError(error.message, HTTP_STATUS.BAD_REQUEST);
+    return data;
+  },
+
+  /** Interview difficulty (1-5) auto-suggested from the user's default CV's
+   *  computed work experience. No default CV set → a flagged, unpersonalized
+   *  fallback rather than guessing from an arbitrary CV. */
+  async getSuggestedDifficulty(userId: string) {
+    const { data: cv } = await supabaseAdmin
+      .from("cvs")
+      .select("id, title, experience_months")
+      .eq("user_id", userId)
+      .eq("is_default", true)
+      .maybeSingle();
+
+    if (!cv) {
+      return { difficulty: 3, experience_months: null, level_label: null, source: "none" as const, cv_title: null };
+    }
+
+    return {
+      difficulty: monthsToDifficulty(cv.experience_months),
+      experience_months: cv.experience_months,
+      level_label: monthsToLevelLabel(cv.experience_months),
+      source: "default_cv" as const,
+      cv_title: cv.title,
+    };
   },
 
   async uploadCV(cvId: string, userId: string, file: Express.Multer.File): Promise<{ file_url: string; extracted_text: string; sections: Record<string, unknown>; links: Record<string, string>; extraction: Record<string, unknown> }> {
@@ -221,6 +277,13 @@ export const cvService = {
       file_path: storagePath,
       file_url: null,
       extracted_text: cvResult.raw_text ?? "",
+      // Derived from Module D's already-segmented per-role dates, not a
+      // fresh text scan — feeds the interview difficulty auto-suggestion.
+      experience_months: computeExperienceMonths(
+        Array.isArray(sections.experience)
+          ? (sections.experience as Array<{ start_date?: string; end_date?: string }>)
+          : []
+      ),
     };
     if (links.github)   cvUpdate.github_url   = links.github;
     if (links.linkedin) cvUpdate.linkedin_url = links.linkedin;

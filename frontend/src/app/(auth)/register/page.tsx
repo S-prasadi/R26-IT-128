@@ -154,7 +154,7 @@ export default function RegisterPage() {
       </div>
 
       {/* ── Right panel ── */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "var(--bg)", padding: "40px 56px", position: "relative", overflowY: "auto" }}>
+      <div className="piq-canvas" style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 56px", position: "relative", overflowY: "auto" }}>
         {/* Top accent bar */}
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, var(--teal), var(--accent))" }} />
 

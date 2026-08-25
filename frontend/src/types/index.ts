@@ -296,8 +296,21 @@ export interface CV {
   percentile_label?: string | null;
   project_verification?: CVProjectVerification | null;
   file_url?: string;
+  /** Whether this is the user's designated "correct" CV — the one used to
+   *  auto-suggest interview difficulty from computed work experience. */
+  is_default?: boolean;
+  /** Total work experience computed from this CV's experience entries. */
+  experience_months?: number | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface SuggestedDifficulty {
+  difficulty: number;
+  experience_months: number | null;
+  level_label: string | null;
+  source: "default_cv" | "none";
+  cv_title: string | null;
 }
 
 export interface CVSection {
